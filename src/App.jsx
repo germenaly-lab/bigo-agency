@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import BadgesSection from './components/BadgesSection';
@@ -290,6 +291,7 @@ export default function App() {
       </main>
 
       <Footer setActiveTab={setActiveTab} onOpenApplyModal={handleOpenApplyModal} />
+      <Analytics />
     </div>
   );
 }
