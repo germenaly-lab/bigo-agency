@@ -201,39 +201,33 @@ export default function App() {
 
   return (
     <div className="app-container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Navbar
-        navItems={navItems}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        user={user}
-        onLogout={handleLogout}
-        themeMode={themeMode}
-        onToggleThemeMode={handleToggleThemeMode}
-      />
+      {/* Top Navbar: Rendered ONLY when user is authenticated or in Admin mode */}
+      {(user || activeTab === 'admin') && (
+        <Navbar
+          navItems={navItems}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          user={user}
+          onLogout={handleLogout}
+          themeMode={themeMode}
+          onToggleThemeMode={handleToggleThemeMode}
+        />
+      )}
 
-      {/* DEDICATED LOGIN GATE: If not logged in and not admin, show dedicated Login view only */}
+      {/* DEDICATED LOGIN GATE: No top bar, pure luxury professional login experience */}
       {!user && activeTab !== 'admin' ? (
-        <main
-          className="main-content"
-          style={{
-            flex: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '24px 16px'
+        <LoginSection
+          user={user}
+          setUser={(newUser) => {
+            setUser(newUser);
+            setActiveTab('home');
           }}
-        >
-          <LoginSection
-            user={user}
-            setUser={(newUser) => {
-              setUser(newUser);
-              setActiveTab('home');
-            }}
-            setActiveTab={setActiveTab}
-          />
-        </main>
+          setActiveTab={setActiveTab}
+          themeMode={themeMode}
+          onToggleThemeMode={handleToggleThemeMode}
+        />
       ) : (
         /* AUTHENTICATED ACCESS / ADMIN: Full Platform Available */
         <main className="main-content" style={{ flex: 1 }}>
@@ -332,7 +326,9 @@ export default function App() {
         </main>
       )}
 
-      <Footer setActiveTab={setActiveTab} user={user} />
+      {(user || activeTab === 'admin') && (
+        <Footer setActiveTab={setActiveTab} user={user} />
+      )}
       <Analytics />
     </div>
   );

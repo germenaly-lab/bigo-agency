@@ -1,11 +1,11 @@
 // Site Data - Scope Agency Management Platform
 
 export const siteInfo = {
-  title: "Scope",
+  title: "Scoop",
   subtitle: "المنصة المتكاملة لإدارة وتطوير وكالات البث المباشر",
-  description: "منظومة Scope المتقدمة لإدارة المذيعين، احتساب الرواتب، متابعة النقاط، وسحب الأرباح بأعلى معايير الاحترافية.",
+  description: "منظومة Scoop المتقدمة لإدارة المذيعين، احتساب الرواتب، متابعة النقاط، وسحب الأرباح بأعلى معايير الاحترافية.",
   heroBanner: "/images/image_1.png",
-  logoAsset: "/assets/scope-logo.svg",
+  logoAsset: "/assets/scope-logo.png",
   contactLinks: {
     whatsapp: "https://wa.me/",
     telegram: "https://t.me/",

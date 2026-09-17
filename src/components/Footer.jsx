@@ -7,7 +7,7 @@ export default function Footer({ setActiveTab, user }) {
       <footer className="main-footer" style={{ marginTop: 'auto', padding: '24px 0' }}>
         <div className="footer-content" style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '13px', color: 'var(--text-dim)' }}>
-            © 2026 Scope. جميع الحقوق محفوظة لمنظومة إدارة وتطوير الوكالات.
+            © 2026 Scoop Agency. جميع الحقوق محفوظة لمنظومة إدارة وتطوير الوكالات.
           </div>
         </div>
       </footer>
@@ -36,7 +36,7 @@ export default function Footer({ setActiveTab, user }) {
         </div>
 
         <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid var(--glass-border)', width: '100%', fontSize: '12px', color: 'var(--text-dim)', textAlign: 'center' }}>
-          © 2026 Scope. جميع الحقوق محفوظة لمنظومة إدارة وتطوير الوكالات.
+          © 2026 Scoop Agency. جميع الحقوق محفوظة لمنظومة إدارة وتطوير الوكالات.
         </div>
       </div>
     </footer>

@@ -13,7 +13,7 @@ export default function Hero({ setActiveTab, siteInfo: propSiteInfo }) {
           {/* Badge Tag */}
           <div className="hero-badge-tag" style={{ marginBottom: '14px' }}>
             <ShieldCheck size={16} />
-            <span>منصة Scope الرسمية لإدارة الوكالات</span>
+            <span>منصة Scoop الرسمية لإدارة الوكالات</span>
           </div>
 
           <div style={{ marginBottom: '16px' }}>
@@ -24,7 +24,7 @@ export default function Hero({ setActiveTab, siteInfo: propSiteInfo }) {
             {currentSiteInfo.subtitle || 'المنصة المتكاملة لإدارة وتطوير وكالات البث المباشر'}
           </h1>
           <p className="hero-desc" style={{ fontSize: '15px', lineHeight: '1.7', marginBottom: '24px' }}>
-            {currentSiteInfo.description || 'منظومة Scope المتقدمة لإدارة المذيعين، احتساب الرواتب، متابعة النقاط، وسحب الأرباح بأعلى معايير الاحترافية.'}
+            {currentSiteInfo.description || 'منظومة Scoop المتقدمة لإدارة المذيعين، احتساب الرواتب، متابعة النقاط، وسحب الأرباح بأعلى معايير الاحترافية.'}
           </p>
 
           <div className="hero-actions" style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
