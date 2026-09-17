@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   AlertCircle,
   ShieldCheck,
-  Zap,
   Sun,
   Moon,
   HelpCircle,
@@ -59,31 +58,6 @@ export default function LoginSection({
           badge: 'القلادة الذهبية',
           status: 'نشط',
           joinDate: 'سبتمبر 2026'
-        });
-        if (setActiveTab) setActiveTab('home');
-      }, 400);
-    }, 500);
-  };
-
-  // 1-Click Quick Demo Login handler
-  const handleQuickDemoLogin = () => {
-    setIdentifier('admin@scoopagency.online');
-    setPassword('••••••••');
-    setErrorMessage('');
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setSuccessMessage('مرحباً بك! تم تسجيل الدخول كـ مدير معتمد...');
-      setTimeout(() => {
-        setUser({
-          name: 'مدير وكالة سكوب',
-          identifier: 'admin@scoopagency.online',
-          role: 'owner',
-          email: 'admin@scoopagency.online',
-          phone: '+966 50 888 9999',
-          badge: 'الماسة الملكية',
-          status: 'معتمد رسمياً',
-          joinDate: '2026'
         });
         if (setActiveTab) setActiveTab('home');
       }, 400);
@@ -474,42 +448,6 @@ export default function LoginSection({
             )}
           </button>
         </form>
-
-        {/* Quick 1-Click Demo Login Button (Compact Bar) */}
-        <div style={{ marginTop: '10px' }}>
-          <button
-            type="button"
-            onClick={handleQuickDemoLogin}
-            disabled={isLoading}
-            style={{
-              width: '100%',
-              height: '35px',
-              fontSize: '12px',
-              fontWeight: '700',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              borderRadius: '10px',
-              border: '1px solid rgba(245, 158, 11, 0.35)',
-              background: 'rgba(245, 158, 11, 0.08)',
-              color: '#f59e0b',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(245, 158, 11, 0.16)';
-              e.currentTarget.style.borderColor = '#f59e0b';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(245, 158, 11, 0.08)';
-              e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.35)';
-            }}
-          >
-            <Zap size={14} />
-            <span>دخول تجريبي فوري (مدير معتمد)</span>
-          </button>
-        </div>
 
         {/* Security Assurance Badges */}
         <div
