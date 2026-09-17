@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import HomeCategories from './components/HomeCategories';
+import AgencyManagementSection from './components/AgencyManagementSection';
+import PointsUsageSection from './components/PointsUsageSection';
+import BeanWithdrawalSection from './components/BeanWithdrawalSection';
+import SalarySection from './components/SalarySection';
+import LiveQualitySection from './components/LiveQualitySection';
 import BadgesSection from './components/BadgesSection';
-import PointsCalculator from './components/PointsCalculator';
 import UpdatesSection from './components/UpdatesSection';
-import GuideSection from './components/GuideSection';
 import GalaSection from './components/GalaSection';
 import EnglishGuide from './components/EnglishGuide';
 import LoginSection from './components/LoginSection';
@@ -37,36 +41,35 @@ export default function App() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [user, setUser] = useState(null);
-  const [isRegisterMode, setIsRegisterMode] = useState(false);
 
   // Dynamic Site State with localStorage persistence
   const [siteInfo, setSiteInfo] = useState(() => {
-    const saved = localStorage.getItem('bigo_siteInfo') || localStorage.getItem('gogo_siteInfo');
+    const saved = localStorage.getItem('scope_siteInfo') || localStorage.getItem('bigo_siteInfo') || localStorage.getItem('gogo_siteInfo');
     return saved ? JSON.parse(saved) : defaultSiteInfo;
   });
 
   const [themeConfig, setThemeConfig] = useState(() => {
-    const saved = localStorage.getItem('bigo_themeConfig') || localStorage.getItem('gogo_themeConfig');
+    const saved = localStorage.getItem('scope_themeConfig') || localStorage.getItem('bigo_themeConfig') || localStorage.getItem('gogo_themeConfig');
     return saved ? JSON.parse(saved) : defaultThemeConfig;
   });
 
   const [updatesData, setUpdatesData] = useState(() => {
-    const saved = localStorage.getItem('bigo_updatesData') || localStorage.getItem('gogo_updatesData');
+    const saved = localStorage.getItem('scope_updatesData') || localStorage.getItem('bigo_updatesData') || localStorage.getItem('gogo_updatesData');
     return saved ? JSON.parse(saved) : defaultUpdatesData;
   });
 
   const [badgesData, setBadgesData] = useState(() => {
-    const saved = localStorage.getItem('bigo_badgesData') || localStorage.getItem('gogo_badgesData');
+    const saved = localStorage.getItem('scope_badgesData') || localStorage.getItem('bigo_badgesData') || localStorage.getItem('gogo_badgesData');
     return saved ? JSON.parse(saved) : defaultBadgesData;
   });
 
   const [customBlocks, setCustomBlocks] = useState(() => {
-    const saved = localStorage.getItem('bigo_customBlocks') || localStorage.getItem('gogo_customBlocks');
+    const saved = localStorage.getItem('scope_customBlocks') || localStorage.getItem('bigo_customBlocks') || localStorage.getItem('gogo_customBlocks');
     return saved ? JSON.parse(saved) : defaultCustomBlocks;
   });
 
   const [accountsData, setAccountsData] = useState(() => {
-    const saved = localStorage.getItem('bigo_accountsData') || localStorage.getItem('gogo_accountsData');
+    const saved = localStorage.getItem('scope_accountsData') || localStorage.getItem('bigo_accountsData') || localStorage.getItem('gogo_accountsData');
     return saved ? JSON.parse(saved) : defaultAccountsData;
   });
 
@@ -91,35 +94,35 @@ export default function App() {
 
   // Sync state to localStorage
   useEffect(() => {
-    localStorage.setItem('bigo_siteInfo', JSON.stringify(siteInfo));
+    localStorage.setItem('scope_siteInfo', JSON.stringify(siteInfo));
   }, [siteInfo]);
 
   useEffect(() => {
-    localStorage.setItem('bigo_themeConfig', JSON.stringify(themeConfig));
+    localStorage.setItem('scope_themeConfig', JSON.stringify(themeConfig));
   }, [themeConfig]);
 
   useEffect(() => {
-    localStorage.setItem('bigo_updatesData', JSON.stringify(updatesData));
+    localStorage.setItem('scope_updatesData', JSON.stringify(updatesData));
   }, [updatesData]);
 
   useEffect(() => {
-    localStorage.setItem('bigo_badgesData', JSON.stringify(badgesData));
+    localStorage.setItem('scope_badgesData', JSON.stringify(badgesData));
   }, [badgesData]);
 
   useEffect(() => {
-    localStorage.setItem('bigo_customBlocks', JSON.stringify(customBlocks));
+    localStorage.setItem('scope_customBlocks', JSON.stringify(customBlocks));
   }, [customBlocks]);
 
   useEffect(() => {
-    localStorage.setItem('bigo_accountsData', JSON.stringify(accountsData));
+    localStorage.setItem('scope_accountsData', JSON.stringify(accountsData));
   }, [accountsData]);
 
   const [themeMode, setThemeMode] = useState(() => {
-    return localStorage.getItem('bigo_themeMode') || localStorage.getItem('gogo_themeMode') || 'dark';
+    return localStorage.getItem('scope_themeMode') || localStorage.getItem('bigo_themeMode') || 'dark';
   });
 
   useEffect(() => {
-    localStorage.setItem('bigo_themeMode', themeMode);
+    localStorage.setItem('scope_themeMode', themeMode);
     document.documentElement.setAttribute('data-theme', themeMode);
   }, [themeMode]);
 
@@ -147,14 +150,16 @@ export default function App() {
   const handleLogout = () => {
     setUser(null);
     setActiveTab('login');
-    setIsRegisterMode(false);
-  };
-
-  const handleOpenApplyModal = () => {
-    setIsRegisterMode(true);
   };
 
   const handleResetDefaults = () => {
+    localStorage.removeItem('scope_siteInfo');
+    localStorage.removeItem('scope_themeConfig');
+    localStorage.removeItem('scope_updatesData');
+    localStorage.removeItem('scope_badgesData');
+    localStorage.removeItem('scope_customBlocks');
+    localStorage.removeItem('scope_accountsData');
+    localStorage.removeItem('scope_themeMode');
     localStorage.removeItem('bigo_siteInfo');
     localStorage.removeItem('bigo_themeConfig');
     localStorage.removeItem('bigo_updatesData');
@@ -162,13 +167,6 @@ export default function App() {
     localStorage.removeItem('bigo_customBlocks');
     localStorage.removeItem('bigo_accountsData');
     localStorage.removeItem('bigo_themeMode');
-    localStorage.removeItem('gogo_siteInfo');
-    localStorage.removeItem('gogo_themeConfig');
-    localStorage.removeItem('gogo_updatesData');
-    localStorage.removeItem('gogo_badgesData');
-    localStorage.removeItem('gogo_customBlocks');
-    localStorage.removeItem('gogo_accountsData');
-    localStorage.removeItem('gogo_themeMode');
 
     setSiteInfo(defaultSiteInfo);
     setThemeConfig(defaultThemeConfig);
@@ -204,7 +202,6 @@ export default function App() {
         setSearchQuery={setSearchQuery}
         user={user}
         onLogout={handleLogout}
-        siteTitle={siteInfo.title}
         themeMode={themeMode}
         onToggleThemeMode={handleToggleThemeMode}
       />
@@ -247,50 +244,73 @@ export default function App() {
           />
         )}
 
-        {/* Tab 1: Home */}
-        {activeTab === 'home' && (
-          <>
-            <Hero setActiveTab={setActiveTab} onOpenApplyModal={handleOpenApplyModal} siteInfo={siteInfo} />
-            <CustomBlocksSection customBlocks={customBlocks} setActiveTab={setActiveTab} />
-            <BadgesSection badgesData={filteredBadges} />
-            <div style={{ margin: '40px 0' }}>
-              <PointsCalculator />
-            </div>
-            <UpdatesSection updatesData={filteredUpdates} />
-          </>
-        )}
-
-        {/* Tab 2: Updates */}
-        {activeTab === 'updates' && <UpdatesSection updatesData={filteredUpdates} />}
-
-        {/* Tab 3: Badges */}
-        {activeTab === 'badges' && <BadgesSection badgesData={filteredBadges} />}
-
-        {/* Tab 4: Points & Calculator */}
-        {activeTab === 'points' && <PointsCalculator />}
-
-        {/* Tab 5: New Agencies Guide */}
-        {activeTab === 'guide' && <GuideSection onOpenApplyModal={handleOpenApplyModal} />}
-
-        {/* Tab 6: Bigo GALA */}
-        {activeTab === 'gala' && <GalaSection />}
-
-        {/* Tab 7: English Guide */}
-        {activeTab === 'english' && <EnglishGuide />}
-
-        {/* Tab 8: User Account Login Section */}
+        {/* Tab: LOGIN SECTION (Login Only) */}
         {activeTab === 'login' && (
           <LoginSection
             user={user}
             setUser={setUser}
             setActiveTab={setActiveTab}
-            isRegisterMode={isRegisterMode}
-            setIsRegisterMode={setIsRegisterMode}
           />
         )}
+
+        {/* Tab 1: HOME - Shows Scope Hero, the 5 Primary Categories, Custom Blocks, and Updates */}
+        {activeTab === 'home' && (
+          <>
+            <Hero setActiveTab={setActiveTab} siteInfo={siteInfo} />
+            <HomeCategories onSelectCategory={(catId) => setActiveTab(catId)} />
+            <CustomBlocksSection customBlocks={customBlocks} setActiveTab={setActiveTab} />
+            <UpdatesSection updatesData={filteredUpdates} />
+          </>
+        )}
+
+        {/* Category 1: إدارة الوكالة (Agency Management) */}
+        {activeTab === 'agency-management' && (
+          <AgencyManagementSection
+            onBackToHome={() => setActiveTab('home')}
+            setActiveTab={setActiveTab}
+          />
+        )}
+
+        {/* Category 2: استخدام النقاط (Points Usage) */}
+        {activeTab === 'points-usage' && (
+          <PointsUsageSection
+            onBackToHome={() => setActiveTab('home')}
+            setActiveTab={setActiveTab}
+          />
+        )}
+
+        {/* Category 3: سحب الفاصوليا (Bean Withdrawal) */}
+        {activeTab === 'bean-withdrawal' && (
+          <BeanWithdrawalSection
+            onBackToHome={() => setActiveTab('home')}
+            setActiveTab={setActiveTab}
+          />
+        )}
+
+        {/* Category 4: الرواتب (Salaries) */}
+        {activeTab === 'salaries' && (
+          <SalarySection
+            onBackToHome={() => setActiveTab('home')}
+            setActiveTab={setActiveTab}
+          />
+        )}
+
+        {/* Category 5: كواليتي اللايف (Live Quality) */}
+        {activeTab === 'live-quality' && (
+          <LiveQualitySection
+            onBackToHome={() => setActiveTab('home')}
+            setActiveTab={setActiveTab}
+          />
+        )}
+
+        {/* Additional Reference Sections (Accessible via Admin / Links) */}
+        {activeTab === 'badges' && <BadgesSection badgesData={filteredBadges} />}
+        {activeTab === 'updates' && <UpdatesSection updatesData={filteredUpdates} />}
+        {activeTab === 'gala' && <GalaSection />}
+        {activeTab === 'english' && <EnglishGuide />}
       </main>
 
-      <Footer setActiveTab={setActiveTab} onOpenApplyModal={handleOpenApplyModal} />
+      <Footer setActiveTab={setActiveTab} />
       <Analytics />
     </div>
   );

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60" fill="none">
+  <defs>
+    <linearGradient id="scopeGradPublic" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="50%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="textGradPublic" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+  </defs>
+  <g transform="translate(6, 6)">
+    <circle cx="24" cy="24" r="22" stroke="url(#scopeGradPublic)" stroke-width="3.5" fill="none" opacity="0.9" />
+    <line x1="24" y1="2" x2="24" y2="10" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" />
+    <line x1="24" y1="38" x2="24" y2="46" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" />
+    <line x1="2" y1="24" x2="10" y2="24" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round" />
+    <line x1="38" y1="24" x2="46" y2="24" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round" />
+    <path d="M 29 17 C 29 17 21 14 18 19 C 15 24 33 24 30 31 C 27 38 18 33 18 33" stroke="url(#scopeGradPublic)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    <circle cx="24" cy="24" r="2.5" fill="#f59e0b" />
+  </g>
+  <text x="66" y="38" font-family="'Cairo', system-ui, sans-serif" font-size="28" font-weight="900" letter-spacing="1.5" fill="url(#textGradPublic)">Scope</text>
+</svg>

@@ -1,31 +1,56 @@
 import React from 'react';
-import { Home, Bell, Award, Calculator, BookOpen, Sparkles, Globe, Search, User, LogOut, ShieldCheck, Sliders, Sun, Moon } from 'lucide-react';
+import {
+  Home,
+  Users,
+  Sparkles,
+  CreditCard,
+  DollarSign,
+  Tv,
+  Search,
+  User,
+  LogOut,
+  Sliders,
+  Sun,
+  Moon
+} from 'lucide-react';
+import ScopeLogo from './ScopeLogo';
 
 const iconMap = {
   Home: Home,
-  Bell: Bell,
-  Award: Award,
-  Calculator: Calculator,
-  BookOpen: BookOpen,
+  Users: Users,
   Sparkles: Sparkles,
-  Globe: Globe,
+  CreditCard: CreditCard,
+  DollarSign: DollarSign,
+  Tv: Tv
 };
 
-export default function Navbar({ navItems, activeTab, setActiveTab, searchQuery, setSearchQuery, user, onLogout, siteTitle, themeMode, onToggleThemeMode }) {
+export default function Navbar({
+  navItems,
+  activeTab,
+  setActiveTab,
+  searchQuery,
+  setSearchQuery,
+  user,
+  onLogout,
+  themeMode,
+  onToggleThemeMode
+}) {
   return (
     <header className="main-header">
       <nav className="nav-bar">
-        <div className="logo-area" onClick={() => setActiveTab('home')}>
-          <div className="logo-badge">G</div>
-          <div className="logo-text">
-            <h1>{siteTitle || 'وكالات Bigo Live'}</h1>
-            <p>الموقع الرسمي - Agency Book</p>
-          </div>
+        {/* Brand Logo */}
+        <div
+          className="logo-area"
+          onClick={() => setActiveTab('home')}
+          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+        >
+          <ScopeLogo size="md" showText={true} />
         </div>
 
+        {/* Navigation Links (5 Main Categories + Home) */}
         <ul className="nav-links">
           {navItems.map((item) => {
-            if (item.id === 'login') return null; // We handle user account button separately
+            if (item.id === 'login' || item.id === 'admin') return null;
             const Icon = iconMap[item.icon] || Home;
             const isActive = activeTab === item.id;
             return (
@@ -46,6 +71,7 @@ export default function Navbar({ navItems, activeTab, setActiveTab, searchQuery,
             );
           })}
 
+          {/* Admin Dashboard Tab */}
           <li>
             <button
               className={`nav-tab ${activeTab === 'admin' ? 'active' : ''}`}
@@ -54,7 +80,10 @@ export default function Navbar({ navItems, activeTab, setActiveTab, searchQuery,
                 window.location.hash = '#admin';
               }}
               style={{
-                background: activeTab === 'admin' ? 'linear-gradient(135deg, rgba(245,158,11,0.3), rgba(236,72,153,0.3))' : 'rgba(245,158,11,0.1)',
+                background:
+                  activeTab === 'admin'
+                    ? 'linear-gradient(135deg, rgba(245,158,11,0.3), rgba(236,72,153,0.3))'
+                    : 'rgba(245,158,11,0.08)',
                 borderColor: '#f59e0b',
                 color: '#f59e0b',
                 fontWeight: '800'
@@ -66,6 +95,7 @@ export default function Navbar({ navItems, activeTab, setActiveTab, searchQuery,
           </li>
         </ul>
 
+        {/* Controls: Theme toggle, Search, and Account Button */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <button
             type="button"
@@ -79,10 +109,13 @@ export default function Navbar({ navItems, activeTab, setActiveTab, searchQuery,
 
           {user && (
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-              <Search size={16} style={{ position: 'absolute', right: '12px', color: '#94a3b8', pointerEvents: 'none' }} />
+              <Search
+                size={16}
+                style={{ position: 'absolute', right: '12px', color: '#94a3b8', pointerEvents: 'none' }}
+              />
               <input
                 type="text"
-                placeholder="بحث في الدليل..."
+                placeholder="بحث في الأقسام..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
@@ -105,7 +138,7 @@ export default function Navbar({ navItems, activeTab, setActiveTab, searchQuery,
               <button
                 className="action-btn-secondary"
                 onClick={() => setActiveTab('login')}
-                style={{ borderColor: '#06b6d4', color: '#06b6d4' }}
+                style={{ borderColor: '#06b6d4', color: '#06b6d4', display: 'flex', alignItems: 'center', gap: '6px' }}
               >
                 <User size={16} />
                 <span>{user.name.split(' ')[0]}</span>
@@ -124,9 +157,9 @@ export default function Navbar({ navItems, activeTab, setActiveTab, searchQuery,
             <button
               className="action-btn-secondary"
               onClick={() => setActiveTab('login')}
-              style={{ borderColor: '#f59e0b', color: '#f59e0b', padding: '8px 16px' }}
+              style={{ borderColor: '#f59e0b', color: '#f59e0b', padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '6px' }}
             >
-              <ShieldCheck size={18} color="#f59e0b" />
+              <User size={16} color="#f59e0b" />
               <span>تسجيل الدخول</span>
             </button>
           )}
@@ -135,4 +168,3 @@ export default function Navbar({ navItems, activeTab, setActiveTab, searchQuery,
     </header>
   );
 }
-

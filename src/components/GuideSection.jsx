@@ -1,8 +1,8 @@
 import React from 'react';
-import { BookOpen, CheckCircle, ArrowLeft } from 'lucide-react';
+import { BookOpen, CheckCircle, ArrowLeft, Users } from 'lucide-react';
 import { newAgenciesGuide } from '../data/siteData';
 
-export default function GuideSection({ onOpenApplyModal }) {
+export default function GuideSection({ setActiveTab }) {
   return (
     <section>
       <div className="section-title-wrap">
@@ -17,7 +17,7 @@ export default function GuideSection({ onOpenApplyModal }) {
           {newAgenciesGuide.subtitle}
         </p>
         <p style={{ fontSize: '15px', color: '#94a3b8', lineHeight: '1.7', marginBottom: '24px' }}>
-          دليلك المتكامل للانطلاق في عالم وكالات Bigo Live وبناء فريق بث مباشر قوي وتحقيق أعلى المستويات والعمولات الشهرية.
+          دليلك المتكامل للانطلاق في إدارة الوكالة وبناء فريق بث مباشر قوي وتحقيق أعلى المستويات والعمولات الشهرية.
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
@@ -43,18 +43,20 @@ export default function GuideSection({ onOpenApplyModal }) {
           ))}
         </div>
 
-        <div style={{ marginTop: '32px', textAlign: 'center', background: 'rgba(245,158,11,0.1)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(245,158,11,0.3)' }}>
-          <h4 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '8px' }}>
-            هل أنت جاهز لبدء وكالتك المعتمدة الآن؟
-          </h4>
-          <p style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '16px' }}>
-            تواصل معنا وقدم بيانات وكالتك للحصول على الدعم والمتابعة والقلادة الذهبية.
-          </p>
-          <button className="action-btn-primary" onClick={onOpenApplyModal}>
-            <span>تقديم طلب إنشاء وكالة</span>
-            <ArrowLeft size={18} />
-          </button>
-        </div>
+        {setActiveTab && (
+          <div style={{ marginTop: '32px', textAlign: 'center', background: 'rgba(6,182,212,0.08)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(6,182,212,0.3)' }}>
+            <h4 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '8px' }}>
+              الانتقال إلى لوحة إدارة الوكالة
+            </h4>
+            <p style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '16px' }}>
+              استعرض خطوات تسجيل المذيعين وإدارة الطاقم الداخلي للوكالة.
+            </p>
+            <button className="action-btn-primary" onClick={() => setActiveTab('agency-management')}>
+              <span>الانتقال لإدارة الوكالة</span>
+              <ArrowLeft size={18} />
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

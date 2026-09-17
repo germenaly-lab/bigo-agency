@@ -1,5 +1,5 @@
 import React from 'react';
-import { Award, Shield, Star, CheckCircle } from 'lucide-react';
+import { Award, Shield, Star } from 'lucide-react';
 
 export default function BadgesSection({ badgesData }) {
   return (
