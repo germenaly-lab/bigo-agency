@@ -12,9 +12,12 @@ import {
   Coins,
   DollarSign
 } from 'lucide-react';
+import { defaultBeanWithdrawalItems } from '../data/siteData';
+import { resolveIcon } from '../utils/iconHelper';
 
-export default function BeanWithdrawalSection({ onBackToHome, setActiveTab }) {
-  const [activeTab, setActiveTabLocal] = useState('agent'); // 'agent' (وكيل شحن) or 'withdrawal' (طريقة السحب)
+export default function BeanWithdrawalSection({ onBackToHome, setActiveTab, items = defaultBeanWithdrawalItems }) {
+  const currentItems = items && items.length > 0 ? items : defaultBeanWithdrawalItems;
+  const [activeTab, setActiveTabLocal] = useState(currentItems[0]?.id || 'agent');
 
   return (
     <section style={{ maxWidth: '1080px', margin: '0 auto' }}>
@@ -92,7 +95,7 @@ export default function BeanWithdrawalSection({ onBackToHome, setActiveTab }) {
         </button>
       </div>
 
-      {/* Main Dual Cards / Sub-section Switcher */}
+      {/* Main Cards / Sub-section Switcher */}
       <div
         style={{
           display: 'grid',
@@ -101,95 +104,60 @@ export default function BeanWithdrawalSection({ onBackToHome, setActiveTab }) {
           marginBottom: '32px'
         }}
       >
-        {/* Option 1: وكيل شحن */}
-        <div
-          onClick={() => setActiveTabLocal('agent')}
-          className="glass-card"
-          style={{
-            padding: '28px',
-            cursor: 'pointer',
-            border: activeTab === 'agent' ? '2px solid #8b5cf6' : '1px solid var(--glass-border)',
-            background: activeTab === 'agent' ? 'rgba(139,92,246,0.1)' : 'var(--bg-card)',
-            transition: 'var(--transition-fast)'
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        {currentItems.map((item, idx) => {
+          const Icon = resolveIcon(item.icon, CreditCard);
+          const isSelected = activeTab === item.id || (idx === 0 && activeTab === 'agent') || (idx === 1 && activeTab === 'withdrawal');
+          return (
             <div
+              key={item.id || idx}
+              onClick={() => setActiveTabLocal(item.id)}
+              className="glass-card"
               style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: '12px',
-                background: 'rgba(139,92,246,0.2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
+                padding: '28px',
+                cursor: 'pointer',
+                border: isSelected ? `2px solid ${item.color || '#8b5cf6'}` : '1px solid var(--glass-border)',
+                background: isSelected ? `${item.color || '#8b5cf6'}18` : 'var(--bg-card)',
+                transition: 'var(--transition-fast)'
               }}
             >
-              <RefreshCw size={24} color="#8b5cf6" />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <div
+                  style={{
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '12px',
+                    background: `${item.color || '#8b5cf6'}22`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <Icon size={24} color={item.color || '#8b5cf6'} />
+                </div>
+                <span
+                  style={{
+                    fontSize: '12px',
+                    padding: '4px 10px',
+                    borderRadius: '9999px',
+                    background: isSelected ? (item.color || '#8b5cf6') : 'rgba(255,255,255,0.06)',
+                    color: isSelected ? '#fff' : 'var(--text-muted)',
+                    fontWeight: '800'
+                  }}
+                >
+                  {item.category || `الخيار ${idx + 1}`}
+                </span>
+              </div>
+              <h2 style={{ fontSize: '20px', fontWeight: '900', marginBottom: '8px' }}>{item.title}</h2>
+              {item.features && item.features.length > 0 && (
+                <ul style={{ paddingRight: '18px', margin: '10px 0 0 0', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {item.features.slice(0, 3).map((feat, fIdx) => (
+                    <li key={fIdx} style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{feat}</li>
+                  ))}
+                </ul>
+              )}
             </div>
-            <span
-              style={{
-                fontSize: '12px',
-                padding: '4px 10px',
-                borderRadius: '9999px',
-                background: activeTab === 'agent' ? '#8b5cf6' : 'rgba(255,255,255,0.06)',
-                color: activeTab === 'agent' ? '#fff' : 'var(--text-muted)',
-                fontWeight: '800'
-              }}
-            >
-              الخيار الأول
-            </span>
-          </div>
-          <h2 style={{ fontSize: '20px', fontWeight: '900', marginBottom: '8px' }}>وكيل شحن</h2>
-          <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-            شرح كامل لآلية وكيل الشحن، شراء الفاصوليا والماس، أسعار الوكالات، وإعادة التوزيع للمستخدمين والمذيعين.
-          </p>
-        </div>
-
-        {/* Option 2: طريقة السحب */}
-        <div
-          onClick={() => setActiveTabLocal('withdrawal')}
-          className="glass-card"
-          style={{
-            padding: '28px',
-            cursor: 'pointer',
-            border: activeTab === 'withdrawal' ? '2px solid #06b6d4' : '1px solid var(--glass-border)',
-            background: activeTab === 'withdrawal' ? 'rgba(6,182,212,0.1)' : 'var(--bg-card)',
-            transition: 'var(--transition-fast)'
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <div
-              style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: '12px',
-                background: 'rgba(6,182,212,0.2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <ArrowDownCircle size={24} color="#06b6d4" />
-            </div>
-            <span
-              style={{
-                fontSize: '12px',
-                padding: '4px 10px',
-                borderRadius: '9999px',
-                background: activeTab === 'withdrawal' ? '#06b6d4' : 'rgba(255,255,255,0.06)',
-                color: activeTab === 'withdrawal' ? '#fff' : 'var(--text-muted)',
-                fontWeight: '800'
-              }}
-            >
-              الخيار الثاني
-            </span>
-          </div>
-          <h2 style={{ fontSize: '20px', fontWeight: '900', marginBottom: '8px' }}>طريقة السحب</h2>
-          <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-            الخطوات التفصيلية لتحويل الفاصوليا إلى مبالغ نقدية عبر الحساب البنكي، Payoneer، أو المحافظ الرقمية.
-          </p>
-        </div>
+          );
+        })}
       </div>
 
       {/* ======================================================== */}
@@ -356,6 +324,63 @@ export default function BeanWithdrawalSection({ onBackToHome, setActiveTab }) {
             </ul>
           </div>
         </div>
+      )}
+
+      {/* Dynamic Details for custom withdrawal items */}
+      {!['agent', 'withdrawal'].includes(activeTab) && (
+        (() => {
+          const activeItem = currentItems.find((it) => it.id === activeTab);
+          if (!activeItem) return null;
+          const ActiveIcon = resolveIcon(activeItem.icon, CreditCard);
+          return (
+            <div className="glass-card" style={{ padding: '32px', border: `1px solid ${activeItem.color || '#8b5cf6'}44` }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                <div
+                  style={{
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '12px',
+                    background: `${activeItem.color || '#8b5cf6'}22`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <ActiveIcon size={24} color={activeItem.color || '#8b5cf6'} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '22px', fontWeight: '900' }}>{activeItem.title}</h3>
+                  {activeItem.category && (
+                    <span style={{ fontSize: '12px', color: activeItem.color || '#8b5cf6', fontWeight: '700' }}>
+                      {activeItem.category}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {activeItem.features && activeItem.features.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {activeItem.features.map((feat, fIdx) => (
+                    <div
+                      key={fIdx}
+                      className="glass-card"
+                      style={{
+                        padding: '16px 20px',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '12px',
+                        border: `1px solid ${activeItem.color || '#8b5cf6'}22`
+                      }}
+                    >
+                      <CheckCircle2 size={18} color={activeItem.color || '#8b5cf6'} style={{ flexShrink: 0, marginTop: '2px' }} />
+                      <span style={{ fontSize: '14px', lineHeight: '1.6' }}>{feat}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })()
       )}
     </section>
   );

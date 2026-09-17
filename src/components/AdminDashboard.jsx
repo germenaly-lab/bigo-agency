@@ -1,36 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
-  Sliders,
-  Type,
-  Image as ImageIcon,
-  FileText,
-  Award,
-  Grid,
-  Plus,
-  Trash2,
-  Edit3,
-  Check,
-  RotateCcw,
-  Sparkles,
-  Eye,
-  EyeOff,
-  Layers,
-  Palette,
-  ExternalLink,
-  ShieldCheck,
-  Save,
-  Download,
-  Upload,
-  ArrowRight,
-  Lock,
+  LayoutDashboard,
   Users,
   UserPlus,
-  UserCheck,
-  ShieldAlert,
-  User,
-  KeyRound,
-  LogOut
+  FileText,
+  Grid,
+  Sliders,
+  Palette,
+  Award,
+  Database,
+  LogOut,
+  ExternalLink,
+  Plus,
+  Edit2,
+  Trash2,
+  X,
+  Search,
+  Download,
+  Upload,
+  RotateCcw,
+  AlertTriangle,
+  CheckCircle2,
+  Sparkles,
+  CreditCard,
+  DollarSign,
+  Tv,
+  Eye,
+  EyeOff,
+  Lock,
+  Layers
 } from 'lucide-react';
+import { resolveIcon, AVAILABLE_ICON_NAMES } from '../utils/iconHelper';
 
 export default function AdminDashboard({
   siteInfo,
@@ -45,1549 +45,1476 @@ export default function AdminDashboard({
   setCustomBlocks,
   accountsData = [],
   setAccountsData = () => {},
+  agencyManagementItems = [],
+  setAgencyManagementItems = () => {},
+  pointsUsageItems = [],
+  setPointsUsageItems = () => {},
+  beanWithdrawalItems = [],
+  setBeanWithdrawalItems = () => {},
+  salaryTiers = [],
+  setSalaryTiers = () => {},
+  liveQualityItems = [],
+  setLiveQualityItems = () => {},
   onResetDefaults,
   onCloseAdmin
 }) {
+  // Authentication State
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
-    return sessionStorage.getItem('bigo_admin_auth') === 'true' || sessionStorage.getItem('gogo_admin_auth') === 'true';
+    return sessionStorage.getItem('scope_admin_auth') === 'true' || sessionStorage.getItem('bigo_admin_auth') === 'true';
   });
-
   const [adminUsername, setAdminUsername] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
-  const [showAdminPassword, setShowAdminPassword] = useState(false);
-  const [adminLoginError, setAdminLoginError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState('');
 
-  const [adminTab, setAdminTab] = useState('appearance'); // 'appearance', 'updates', 'badges', 'blocks', 'accounts', 'system'
+  // Main Active Admin Tab
+  const [activeTab, setActiveTab] = useState('overview'); 
+  // 'overview', 'crm', 'sections', 'articles', 'blocks', 'settings', 'appearance', 'badges', 'backup'
 
-  // Accounts Form & Filter State
-  const [editingAccount, setEditingAccount] = useState(null);
-  const [accountRoleFilter, setAccountRoleFilter] = useState('all');
-  const [accountForm, setAccountForm] = useState({
-    name: '',
-    email: '',
-    bigoId: '',
-    role: 'manager',
-    badge: 'القلادة الذهبية',
-    beans: '100,000',
-    monthlySalary: '$800 USD',
-    status: 'active',
-    joinDate: 'أغسطس 2026'
-  });
+  // Sub-tab for Core 5 Sections
+  const [coreSectionTab, setCoreSectionTab] = useState('agency');
+  // 'agency', 'points', 'beans', 'salaries', 'quality'
 
-  const handleSaveAccount = (e) => {
+  // Success / Feedback Toast
+  const [toastMessage, setToastMessage] = useState('');
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(''), 3500);
+  };
+
+  // ==========================================
+  // AUTHENTICATION HANDLERS
+  // ==========================================
+  const handleAdminLogin = (e) => {
     e.preventDefault();
-    if (editingAccount) {
-      setAccountsData((prev) =>
-        prev.map((acc) =>
-          acc.id === editingAccount.id
-            ? { ...acc, ...accountForm }
-            : acc
-        )
-      );
-      setEditingAccount(null);
-    } else {
-      const newAcc = {
-        id: 'acc-' + Date.now(),
-        ...accountForm
-      };
-      setAccountsData((prev) => [...prev, newAcc]);
-    }
-
-    setAccountForm({
-      name: '',
-      email: '',
-      bigoId: '',
-      role: 'manager',
-      badge: 'القلادة الذهبية',
-      beans: '100,000',
-      monthlySalary: '$800 USD',
-      status: 'active',
-      joinDate: 'أغسطس 2026'
-    });
-  };
-
-  const handleEditAccountClick = (acc) => {
-    setEditingAccount(acc);
-    setAccountForm({
-      name: acc.name,
-      email: acc.email,
-      bigoId: acc.bigoId,
-      role: acc.role,
-      badge: acc.badge,
-      beans: acc.beans,
-      monthlySalary: acc.monthlySalary,
-      status: acc.status,
-      joinDate: acc.joinDate || 'أغسطس 2026'
-    });
-  };
-
-  const handleDeleteAccount = (id) => {
-    if (confirm('هل أنت تأكد من حذف هذا الحساب؟')) {
-      setAccountsData((prev) => prev.filter((a) => a.id !== id));
-    }
-  };
-
-  const handleToggleAccountStatus = (id) => {
-    setAccountsData((prev) =>
-      prev.map((a) =>
-        a.id === id
-          ? { ...a, status: a.status === 'active' ? 'suspended' : 'active' }
-          : a
-      )
-    );
-  };
-
-  const filteredAccounts = accountsData.filter((a) => {
-    if (accountRoleFilter === 'all') return true;
-    return a.role === accountRoleFilter;
-  });
-
-  // Forms local states
-  const [editingArticle, setEditingArticle] = useState(null);
-  const [articleForm, setArticleForm] = useState({
-    title: '',
-    category: 'تحديث جديد',
-    summary: '',
-    date: 'أغسطس 2026',
-    badge: 'جديد',
-    detailsText: ''
-  });
-
-  const [editingBadge, setEditingBadge] = useState(null);
-  const [badgeForm, setBadgeForm] = useState({
-    title: '',
-    badgeType: 'رتبة معتمدة',
-    color: 'gold',
-    description: '',
-    image: '/images/image_7.png',
-    featuresText: ''
-  });
-
-  const [editingBlock, setEditingBlock] = useState(null);
-  const [blockForm, setBlockForm] = useState({
-    title: '',
-    subtitle: '',
-    category: 'قسم مميز',
-    icon: 'Sparkles',
-    color: '#f59e0b',
-    image: '/images/image_1.png',
-    buttonText: 'عرض التفاصيل',
-    buttonLink: '#home'
-  });
-
-  // Fonts list
-  const fontOptions = [
-    { name: 'Cairo (افتراضي)', value: "'Cairo', sans-serif" },
-    { name: 'Tajawal (تجوال)', value: "'Tajawal', sans-serif" },
-    { name: 'IBM Plex Sans Arabic', value: "'IBM Plex Sans Arabic', sans-serif" },
-    { name: 'Readex Pro', value: "'Readex Pro', sans-serif" },
-    { name: 'Almarai (المراعي)', value: "'Almarai', sans-serif" },
-    { name: 'El Messiri (المسيري)', value: "'El Messiri', sans-serif" },
-    { name: 'Changa (تشانغا)', value: "'Changa', sans-serif" }
-  ];
-
-  // Colors list
-  const colorOptions = [
-    { name: 'ذهبي بيجو (Gold)', color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.3)' },
-    { name: 'أزرق سماوي (Cyan)', color: '#06b6d4', glow: 'rgba(6, 182, 212, 0.3)' },
-    { name: 'بنفسجي ملبي (Purple)', color: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.3)' },
-    { name: 'أخضر زمردي (Emerald)', color: '#10b981', glow: 'rgba(16, 185, 129, 0.3)' },
-    { name: 'وردي ياقوتي (Pink)', color: '#ec4899', glow: 'rgba(236, 72, 153, 0.3)' },
-    { name: 'أحمر ناري (Red)', color: '#ef4444', glow: 'rgba(239, 68, 68, 0.3)' }
-  ];
-
-  // Image Presets
-  const imagePresets = [
-    { label: 'صورة الدليل الرئيسية', url: '/images/image_1.png' },
-    { label: 'شعارات بيجو والقلادات', url: '/images/image_7.png' },
-    { label: 'القلادة الفضية', url: '/images/image_8.png' },
-    { label: 'تكريم المشاهير', url: '/images/image_9.png' }
-  ];
-
-  // ---------------- ARTICLES HANDLERS ----------------
-  const handleSaveArticle = (e) => {
-    e.preventDefault();
-    const detailsArray = articleForm.detailsText
-      .split('\n')
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0);
-
-    if (editingArticle) {
-      setUpdatesData((prev) =>
-        prev.map((item) =>
-          item.id === editingArticle.id
-            ? {
-                ...item,
-                title: articleForm.title,
-                category: articleForm.category,
-                summary: articleForm.summary,
-                date: articleForm.date,
-                badge: articleForm.badge,
-                details: detailsArray
-              }
-            : item
-        )
-      );
-      setEditingArticle(null);
-    } else {
-      const newArt = {
-        id: Date.now(),
-        title: articleForm.title,
-        category: articleForm.category,
-        summary: articleForm.summary,
-        date: articleForm.date || 'أغسطس 2026',
-        badge: articleForm.badge || 'جديد',
-        details: detailsArray.length > 0 ? detailsArray : ['تحديث جديد مضاف من لوحة التحكم']
-      };
-      setUpdatesData((prev) => [newArt, ...prev]);
-    }
-
-    setArticleForm({ title: '', category: 'تحديث جديد', summary: '', date: 'أغسطس 2026', badge: 'جديد', detailsText: '' });
-  };
-
-  const handleEditArticleClick = (art) => {
-    setEditingArticle(art);
-    setArticleForm({
-      title: art.title,
-      category: art.category,
-      summary: art.summary,
-      date: art.date,
-      badge: art.badge,
-      detailsText: art.details ? art.details.join('\n') : ''
-    });
-  };
-
-  const handleDeleteArticle = (id) => {
-    if (confirm('هل أنت تأكد من حذف المقال / التحديث؟')) {
-      setUpdatesData((prev) => prev.filter((a) => a.id !== id));
-    }
-  };
-
-  // ---------------- BADGES HANDLERS ----------------
-  const handleSaveBadge = (e) => {
-    e.preventDefault();
-    const featuresArr = badgeForm.featuresText
-      .split('\n')
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0);
-
-    if (editingBadge) {
-      setBadgesData((prev) =>
-        prev.map((b) =>
-          b.id === editingBadge.id
-            ? {
-                ...b,
-                title: badgeForm.title,
-                badgeType: badgeForm.badgeType,
-                color: badgeForm.color,
-                description: badgeForm.description,
-                image: badgeForm.image,
-                features: featuresArr
-              }
-            : b
-        )
-      );
-      setEditingBadge(null);
-    } else {
-      const newBadgeObj = {
-        id: 'badge-' + Date.now(),
-        title: badgeForm.title,
-        badgeType: badgeForm.badgeType,
-        color: badgeForm.color,
-        description: badgeForm.description,
-        image: badgeForm.image,
-        features: featuresArr.length > 0 ? featuresArr : ['ميزة رتبة جديدة']
-      };
-      setBadgesData((prev) => [...prev, newBadgeObj]);
-    }
-
-    setBadgeForm({ title: '', badgeType: 'رتبة معتمدة', color: 'gold', description: '', image: '/images/image_7.png', featuresText: '' });
-  };
-
-  const handleEditBadgeClick = (badge) => {
-    setEditingBadge(badge);
-    setBadgeForm({
-      title: badge.title,
-      badgeType: badge.badgeType,
-      color: badge.color,
-      description: badge.description,
-      image: badge.image,
-      featuresText: badge.features ? badge.features.join('\n') : ''
-    });
-  };
-
-  const handleDeleteBadge = (id) => {
-    if (confirm('هل أنت تأكد من حذف هذه القلادة؟')) {
-      setBadgesData((prev) => prev.filter((b) => b.id !== id));
-    }
-  };
-
-  // ---------------- CUSTOM BLOCKS HANDLERS ----------------
-  const handleSaveBlock = (e) => {
-    e.preventDefault();
-    if (editingBlock) {
-      setCustomBlocks((prev) =>
-        prev.map((blk) =>
-          blk.id === editingBlock.id
-            ? { ...blk, ...blockForm }
-            : blk
-        )
-      );
-      setEditingBlock(null);
-    } else {
-      const newBlk = {
-        id: 'block-' + Date.now(),
-        ...blockForm,
-        enabled: true
-      };
-      setCustomBlocks((prev) => [...prev, newBlk]);
-    }
-
-    setBlockForm({
-      title: '',
-      subtitle: '',
-      category: 'قسم مميز',
-      icon: 'Sparkles',
-      color: '#f59e0b',
-      image: '/images/image_1.png',
-      buttonText: 'عرض التفاصيل',
-      buttonLink: '#home'
-    });
-  };
-
-  const handleEditBlockClick = (blk) => {
-    setEditingBlock(blk);
-    setBlockForm({
-      title: blk.title,
-      subtitle: blk.subtitle || '',
-      category: blk.category || '',
-      icon: blk.icon || 'Sparkles',
-      color: blk.color || '#f59e0b',
-      image: blk.image || '',
-      buttonText: blk.buttonText || '',
-      buttonLink: blk.buttonLink || '#home'
-    });
-  };
-
-  const handleDeleteBlock = (id) => {
-    if (confirm('هل تريد مسح هذا المربع بالكامل من الموقع؟')) {
-      setCustomBlocks((prev) => prev.filter((b) => b.id !== id));
-    }
-  };
-
-  const handleToggleBlock = (id) => {
-    setCustomBlocks((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, enabled: !b.enabled } : b))
-    );
-  };
-
-  const handleAdminLoginSubmit = (e) => {
-    e.preventDefault();
-    const u = adminUsername.trim().toLowerCase();
-    const p = adminPassword.trim().toLowerCase();
-
-    const isUserValid = ['admin', 'ادمن', 'أدمن', 'إدمن', 'آدمن'].includes(u);
-    const isPassValid = ['admin', 'ادمن', 'أدمن', 'إدمن', 'آدمن'].includes(p);
-
-    if (isUserValid && isPassValid) {
-      sessionStorage.setItem('bigo_admin_auth', 'true');
+    if (adminUsername.trim() === 'admin' && adminPassword === 'admin') {
+      sessionStorage.setItem('scope_admin_auth', 'true');
       setIsAdminLoggedIn(true);
-      setAdminLoginError('');
+      setLoginError('');
+      showToast('Welcome to Scope Admin Portal!');
     } else {
-      setAdminLoginError('بيانات الدخول غير صحيحة. يمكنك تجربة: admin / admin أو ادمن / ادمن');
+      setLoginError('Invalid username or password. Default is admin / admin');
     }
   };
 
   const handleAdminLogout = () => {
+    sessionStorage.removeItem('scope_admin_auth');
     sessionStorage.removeItem('bigo_admin_auth');
-    sessionStorage.removeItem('gogo_admin_auth');
     setIsAdminLoggedIn(false);
-    setAdminUsername('');
-    setAdminPassword('');
   };
 
-  // IF ADMIN IS NOT LOGGED IN -> RENDER ADMIN LOGIN SCREEN
+  // ==========================================
+  // MODAL MANAGEMENT STATES
+  // ==========================================
+  // CRM Host/Client Modal
+  const [crmModalOpen, setCrmModalOpen] = useState(false);
+  const [editingCrmItem, setEditingCrmItem] = useState(null);
+  const [crmFormData, setCrmFormData] = useState({
+    name: '',
+    bigoId: '',
+    email: '',
+    phone: '',
+    role: 'host',
+    badge: 'الفئة الفضية',
+    tier: 'T3',
+    targetBeans: '100,000',
+    streamHours: '20',
+    status: 'active',
+    joinDate: 'September 2026',
+    notes: ''
+  });
+
+  // Core Section Item Modal
+  const [sectionModalOpen, setSectionModalOpen] = useState(false);
+  const [editingSectionItem, setEditingSectionItem] = useState(null);
+  const [sectionFormData, setSectionFormData] = useState({
+    id: '',
+    title: '',
+    badge: '',
+    category: '',
+    icon: 'Sparkles',
+    color: '#06b6d4',
+    shortDesc: '',
+    desc: '',
+    detailsText: '',
+    featuresText: '',
+    // For Salary Tiers
+    tier: 'T1',
+    targetDisplay: '100,000 - 999,999',
+    minBeans: 100000,
+    maxBeans: 999999,
+    baseRatio: 120,
+    requiredHours: 20,
+    bonusRatio: 5,
+    totalRatio: 125
+  });
+
+  // Article Modal
+  const [articleModalOpen, setArticleModalOpen] = useState(false);
+  const [editingArticle, setEditingArticle] = useState(null);
+  const [articleFormData, setArticleFormData] = useState({
+    title: '',
+    summary: '',
+    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    category: 'Agency News',
+    link: '#',
+    pinned: false
+  });
+
+  // Custom Block Modal
+  const [blockModalOpen, setBlockModalOpen] = useState(false);
+  const [editingBlock, setEditingBlock] = useState(null);
+  const [blockFormData, setBlockFormData] = useState({
+    title: '',
+    subtitle: '',
+    category: 'Feature',
+    icon: 'Sparkles',
+    color: '#f59e0b',
+    buttonText: 'Learn More',
+    buttonLink: '#',
+    enabled: true
+  });
+
+  // Search & Filters
+  const [crmSearch, setCrmSearch] = useState('');
+  const [crmRoleFilter, setCrmRoleFilter] = useState('all');
+
+  // ==========================================
+  // CRM HANDLERS
+  // ==========================================
+  const filteredAccounts = useMemo(() => {
+    return accountsData.filter((acc) => {
+      const matchRole = crmRoleFilter === 'all' || acc.role === crmRoleFilter;
+      const q = crmSearch.toLowerCase();
+      const matchSearch =
+        !q ||
+        (acc.name && acc.name.toLowerCase().includes(q)) ||
+        (acc.bigoId && acc.bigoId.toLowerCase().includes(q)) ||
+        (acc.phone && acc.phone.includes(q)) ||
+        (acc.email && acc.email.toLowerCase().includes(q));
+      return matchRole && matchSearch;
+    });
+  }, [accountsData, crmRoleFilter, crmSearch]);
+
+  const openNewCrmModal = () => {
+    setEditingCrmItem(null);
+    setCrmFormData({
+      name: '',
+      bigoId: '',
+      email: '',
+      phone: '',
+      role: 'host',
+      badge: 'الفئة الفضية',
+      tier: 'T3',
+      targetBeans: '100,000',
+      streamHours: '20',
+      status: 'active',
+      joinDate: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+      notes: ''
+    });
+    setCrmModalOpen(true);
+  };
+
+  const openEditCrmModal = (acc) => {
+    setEditingCrmItem(acc);
+    setCrmFormData({
+      name: acc.name || '',
+      bigoId: acc.bigoId || '',
+      email: acc.email || '',
+      phone: acc.phone || '',
+      role: acc.role || 'host',
+      badge: acc.badge || 'الفئة الفضية',
+      tier: acc.tier || 'T3',
+      targetBeans: acc.targetBeans || '100,000',
+      streamHours: acc.streamHours || '20',
+      status: acc.status || 'active',
+      joinDate: acc.joinDate || 'September 2026',
+      notes: acc.notes || ''
+    });
+    setCrmModalOpen(true);
+  };
+
+  const handleSaveCrm = (e) => {
+    e.preventDefault();
+    if (!crmFormData.name.trim() || !crmFormData.bigoId.trim()) {
+      alert('Please provide Full Name and Bigo ID.');
+      return;
+    }
+
+    if (editingCrmItem) {
+      setAccountsData((prev) =>
+        prev.map((acc) => (acc.id === editingCrmItem.id ? { ...acc, ...crmFormData } : acc))
+      );
+      showToast(`Updated profile for ${crmFormData.name}`);
+    } else {
+      const newAcc = {
+        id: 'acc-' + Date.now(),
+        ...crmFormData
+      };
+      setAccountsData((prev) => [newAcc, ...prev]);
+      showToast(`Registered new broadcaster/client: ${crmFormData.name}`);
+    }
+    setCrmModalOpen(false);
+  };
+
+  const handleDeleteCrm = (id, name) => {
+    if (window.confirm(`Are you sure you want to delete profile "${name}"?`)) {
+      setAccountsData((prev) => prev.filter((acc) => acc.id !== id));
+      showToast(`Removed profile: ${name}`);
+    }
+  };
+
+  const toggleCrmStatus = (id) => {
+    setAccountsData((prev) =>
+      prev.map((acc) => {
+        if (acc.id !== id) return acc;
+        const newStatus = acc.status === 'active' ? 'suspended' : 'active';
+        return { ...acc, status: newStatus };
+      })
+    );
+    showToast('Account status updated');
+  };
+
+  const exportCrmCsv = () => {
+    const headers = ['Name', 'Bigo ID', 'Role', 'Status', 'Phone', 'Email', 'Tier', 'Target Beans', 'Hours', 'Joined', 'Notes'];
+    const rows = accountsData.map((a) => [
+      `"${a.name || ''}"`,
+      `"${a.bigoId || ''}"`,
+      `"${a.role || ''}"`,
+      `"${a.status || ''}"`,
+      `"${a.phone || ''}"`,
+      `"${a.email || ''}"`,
+      `"${a.tier || ''}"`,
+      `"${a.targetBeans || ''}"`,
+      `"${a.streamHours || ''}"`,
+      `"${a.joinDate || ''}"`,
+      `"${(a.notes || '').replace(/"/g, '""')}"`
+    ]);
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `scope_agency_crm_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('Exported CRM data to CSV');
+  };
+
+  // ==========================================
+  // CORE 5 SECTIONS CRUD HANDLERS
+  // ==========================================
+  const openNewSectionItemModal = () => {
+    setEditingSectionItem(null);
+    setSectionFormData({
+      id: 'item-' + Date.now(),
+      title: '',
+      badge: '',
+      category: '',
+      icon: 'Sparkles',
+      color: '#06b6d4',
+      shortDesc: '',
+      desc: '',
+      detailsText: '',
+      featuresText: '',
+      tier: 'T' + (salaryTiers.length + 1),
+      targetDisplay: '100,000 - 500,000',
+      minBeans: 100000,
+      maxBeans: 500000,
+      baseRatio: 120,
+      requiredHours: 20,
+      bonusRatio: 5,
+      totalRatio: 125
+    });
+    setSectionModalOpen(true);
+  };
+
+  const openEditSectionItemModal = (item) => {
+    setEditingSectionItem(item);
+    setSectionFormData({
+      id: item.id || '',
+      title: item.title || item.name || '',
+      badge: item.badge || '',
+      category: item.category || '',
+      icon: typeof item.icon === 'string' ? item.icon : 'Sparkles',
+      color: item.color || '#06b6d4',
+      shortDesc: item.shortDesc || '',
+      desc: item.desc || '',
+      detailsText: Array.isArray(item.details) ? item.details.join('\n') : '',
+      featuresText: Array.isArray(item.features) ? item.features.join('\n') : '',
+      tier: item.tier || 'T1',
+      targetDisplay: item.targetDisplay || '',
+      minBeans: item.minBeans || 0,
+      maxBeans: item.maxBeans || 9999999,
+      baseRatio: item.baseRatio || 120,
+      requiredHours: item.requiredHours || 20,
+      bonusRatio: item.bonusRatio || 5,
+      totalRatio: item.totalRatio || 125
+    });
+    setSectionModalOpen(true);
+  };
+
+  const handleSaveSectionItem = (e) => {
+    e.preventDefault();
+    const cleanDetails = sectionFormData.detailsText
+      .split('\n')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const cleanFeatures = sectionFormData.featuresText
+      .split('\n')
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    if (coreSectionTab === 'agency') {
+      const payload = {
+        id: editingSectionItem ? editingSectionItem.id : 'agency-' + Date.now(),
+        title: sectionFormData.title,
+        badge: sectionFormData.badge || 'Operation',
+        icon: sectionFormData.icon,
+        color: sectionFormData.color,
+        shortDesc: sectionFormData.shortDesc || sectionFormData.desc,
+        details: cleanDetails.length > 0 ? cleanDetails : ['Operational protocol step']
+      };
+      setAgencyManagementItems((prev) =>
+        editingSectionItem
+          ? prev.map((it) => (it.id === editingSectionItem.id ? { ...it, ...payload } : it))
+          : [...prev, payload]
+      );
+      showToast(`Saved Agency Management Item`);
+    } else if (coreSectionTab === 'points') {
+      const payload = {
+        id: editingSectionItem ? editingSectionItem.id : 'points-' + Date.now(),
+        title: sectionFormData.title,
+        icon: sectionFormData.icon,
+        color: sectionFormData.color,
+        desc: sectionFormData.desc || sectionFormData.shortDesc
+      };
+      setPointsUsageItems((prev) =>
+        editingSectionItem
+          ? prev.map((it) => (it.id === editingSectionItem.id ? { ...it, ...payload } : it))
+          : [...prev, payload]
+      );
+      showToast(`Saved Points Usage Item`);
+    } else if (coreSectionTab === 'beans') {
+      const payload = {
+        id: editingSectionItem ? editingSectionItem.id : 'beans-' + Date.now(),
+        title: sectionFormData.title,
+        category: sectionFormData.category || 'Official Option',
+        icon: sectionFormData.icon,
+        color: sectionFormData.color,
+        features: cleanFeatures.length > 0 ? cleanFeatures : ['Quick payout execution']
+      };
+      setBeanWithdrawalItems((prev) =>
+        editingSectionItem
+          ? prev.map((it) => (it.id === editingSectionItem.id ? { ...it, ...payload } : it))
+          : [...prev, payload]
+      );
+      showToast(`Saved Bean Withdrawal Item`);
+    } else if (coreSectionTab === 'salaries') {
+      const base = Number(sectionFormData.baseRatio) || 120;
+      const bonus = Number(sectionFormData.bonusRatio) || 5;
+      const payload = {
+        id: editingSectionItem ? editingSectionItem.id : 'tier-' + Date.now(),
+        tier: sectionFormData.tier,
+        name: sectionFormData.title || `Tier ${sectionFormData.tier}`,
+        targetDisplay: sectionFormData.targetDisplay,
+        minBeans: Number(sectionFormData.minBeans) || 0,
+        maxBeans: Number(sectionFormData.maxBeans) || 999999999,
+        baseRatio: base,
+        requiredHours: Number(sectionFormData.requiredHours) || 20,
+        bonusRatio: bonus,
+        totalRatio: base + bonus,
+        color: sectionFormData.color,
+        badge: sectionFormData.badge || 'Official Tier',
+        desc: sectionFormData.desc || sectionFormData.shortDesc
+      };
+      setSalaryTiers((prev) =>
+        editingSectionItem
+          ? prev.map((it) => (it.id === editingSectionItem.id || it.tier === editingSectionItem.tier ? { ...it, ...payload } : it))
+          : [...prev, payload]
+      );
+      showToast(`Saved Salary Tier: ${sectionFormData.tier}`);
+    } else if (coreSectionTab === 'quality') {
+      const payload = {
+        id: editingSectionItem ? editingSectionItem.id : 'quality-' + Date.now(),
+        title: sectionFormData.title,
+        icon: sectionFormData.icon,
+        color: sectionFormData.color,
+        desc: sectionFormData.desc || sectionFormData.shortDesc
+      };
+      setLiveQualityItems((prev) =>
+        editingSectionItem
+          ? prev.map((it) => (it.id === editingSectionItem.id ? { ...it, ...payload } : it))
+          : [...prev, payload]
+      );
+      showToast(`Saved Live Quality Pillar`);
+    }
+
+    setSectionModalOpen(false);
+  };
+
+  const handleDeleteSectionItem = (id) => {
+    if (!window.confirm('Are you sure you want to delete this item?')) return;
+    if (coreSectionTab === 'agency') {
+      setAgencyManagementItems((prev) => prev.filter((it) => it.id !== id));
+    } else if (coreSectionTab === 'points') {
+      setPointsUsageItems((prev) => prev.filter((it) => it.id !== id));
+    } else if (coreSectionTab === 'beans') {
+      setBeanWithdrawalItems((prev) => prev.filter((it) => it.id !== id));
+    } else if (coreSectionTab === 'salaries') {
+      setSalaryTiers((prev) => prev.filter((it) => it.id !== id && it.tier !== id));
+    } else if (coreSectionTab === 'quality') {
+      setLiveQualityItems((prev) => prev.filter((it) => it.id !== id));
+    }
+    showToast('Item deleted successfully');
+  };
+
+  // ==========================================
+  // ARTICLES HANDLERS
+  // ==========================================
+  const openNewArticleModal = () => {
+    setEditingArticle(null);
+    setArticleFormData({
+      title: '',
+      summary: '',
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      category: 'Agency Updates',
+      link: '#',
+      pinned: false
+    });
+    setArticleModalOpen(true);
+  };
+
+  const openEditArticleModal = (art) => {
+    setEditingArticle(art);
+    setArticleFormData({
+      title: art.title || '',
+      summary: art.summary || '',
+      date: art.date || '',
+      category: art.category || 'Agency Updates',
+      link: art.link || '#',
+      pinned: art.pinned || false
+    });
+    setArticleModalOpen(true);
+  };
+
+  const handleSaveArticle = (e) => {
+    e.preventDefault();
+    if (!articleFormData.title.trim()) {
+      alert('Article title is required.');
+      return;
+    }
+    if (editingArticle) {
+      setUpdatesData((prev) =>
+        prev.map((a) => (a.id === editingArticle.id ? { ...a, ...articleFormData } : a))
+      );
+      showToast(`Updated article: "${articleFormData.title}"`);
+    } else {
+      const newArticle = {
+        id: 'art-' + Date.now(),
+        ...articleFormData
+      };
+      setUpdatesData((prev) => [newArticle, ...prev]);
+      showToast(`Published article: "${articleFormData.title}"`);
+    }
+    setArticleModalOpen(false);
+  };
+
+  const handleDeleteArticle = (id, title) => {
+    if (window.confirm(`Delete article "${title}"?`)) {
+      setUpdatesData((prev) => prev.filter((a) => a.id !== id));
+      showToast('Article deleted');
+    }
+  };
+
+  // ==========================================
+  // CUSTOM BLOCKS HANDLERS
+  // ==========================================
+  const openNewBlockModal = () => {
+    setEditingBlock(null);
+    setBlockFormData({
+      title: '',
+      subtitle: '',
+      category: 'Featured Highlight',
+      icon: 'Zap',
+      color: '#f59e0b',
+      buttonText: 'Explore',
+      buttonLink: '#',
+      enabled: true
+    });
+    setBlockModalOpen(true);
+  };
+
+  const openEditBlockModal = (block) => {
+    setEditingBlock(block);
+    setBlockFormData({
+      title: block.title || '',
+      subtitle: block.subtitle || '',
+      category: block.category || 'Featured Highlight',
+      icon: block.icon || 'Zap',
+      color: block.color || '#f59e0b',
+      buttonText: block.buttonText || 'Explore',
+      buttonLink: block.buttonLink || '#',
+      enabled: block.enabled !== false
+    });
+    setBlockModalOpen(true);
+  };
+
+  const handleSaveBlock = (e) => {
+    e.preventDefault();
+    if (!blockFormData.title.trim()) {
+      alert('Block title is required.');
+      return;
+    }
+    if (editingBlock) {
+      setCustomBlocks((prev) =>
+        prev.map((b) => (b.id === editingBlock.id ? { ...b, ...blockFormData } : b))
+      );
+      showToast(`Updated custom block: "${blockFormData.title}"`);
+    } else {
+      const newBlock = {
+        id: 'block-' + Date.now(),
+        ...blockFormData
+      };
+      setCustomBlocks((prev) => [...prev, newBlock]);
+      showToast(`Added custom block: "${blockFormData.title}"`);
+    }
+    setBlockModalOpen(false);
+  };
+
+  const handleDeleteBlock = (id, title) => {
+    if (window.confirm(`Delete custom block "${title}"?`)) {
+      setCustomBlocks((prev) => prev.filter((b) => b.id !== id));
+      showToast('Custom block deleted');
+    }
+  };
+
+  const toggleBlockEnabled = (id) => {
+    setCustomBlocks((prev) =>
+      prev.map((b) => (b.id === id ? { ...b, enabled: !b.enabled } : b))
+    );
+    showToast('Block visibility toggled');
+  };
+
+  // ==========================================
+  // BACKUP & RESTORE
+  // ==========================================
+  const exportFullBackup = () => {
+    const fullState = {
+      exportedAt: new Date().toISOString(),
+      platform: 'Scope Agency Platform',
+      version: '2.5',
+      siteInfo,
+      themeConfig,
+      accountsData,
+      agencyManagementItems,
+      pointsUsageItems,
+      beanWithdrawalItems,
+      salaryTiers,
+      liveQualityItems,
+      updatesData,
+      customBlocks,
+      badgesData
+    };
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(fullState, null, 2));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute('href', dataStr);
+    dlAnchor.setAttribute('download', `scope_full_backup_${new Date().toISOString().slice(0, 10)}.json`);
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+    showToast('Full JSON backup downloaded successfully');
+  };
+
+  const handleImportBackupFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const parsed = JSON.parse(event.target.result);
+        if (parsed.siteInfo) setSiteInfo(parsed.siteInfo);
+        if (parsed.themeConfig) setThemeConfig(parsed.themeConfig);
+        if (parsed.accountsData) setAccountsData(parsed.accountsData);
+        if (parsed.agencyManagementItems) setAgencyManagementItems(parsed.agencyManagementItems);
+        if (parsed.pointsUsageItems) setPointsUsageItems(parsed.pointsUsageItems);
+        if (parsed.beanWithdrawalItems) setBeanWithdrawalItems(parsed.beanWithdrawalItems);
+        if (parsed.salaryTiers) setSalaryTiers(parsed.salaryTiers);
+        if (parsed.liveQualityItems) setLiveQualityItems(parsed.liveQualityItems);
+        if (parsed.updatesData) setUpdatesData(parsed.updatesData);
+        if (parsed.customBlocks) setCustomBlocks(parsed.customBlocks);
+        if (parsed.badgesData) setBadgesData(parsed.badgesData);
+        showToast('Backup restored successfully! All data updated.');
+      } catch (err) {
+        alert('Failed to parse JSON file: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
+  // ==========================================
+  // UN-AUTHENTICATED ADMIN LOGIN SCREEN (ENGLISH)
+  // ==========================================
   if (!isAdminLoggedIn) {
     return (
-      <div style={{ maxWidth: '480px', margin: '40px auto' }}>
+      <div
+        dir="ltr"
+        style={{
+          minHeight: '88vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '24px',
+          background: 'radial-gradient(ellipse at center, rgba(6,182,212,0.08) 0%, rgba(11,15,25,0.95) 100%)'
+        }}
+      >
         <div
           className="glass-card"
           style={{
-            padding: '36px',
-            background: 'linear-gradient(145deg, rgba(22, 30, 49, 0.98), rgba(15, 23, 42, 0.99))',
-            border: '1px solid rgba(245,158,11,0.5)',
-            boxShadow: '0 20px 50px rgba(0,0,0,0.6)'
+            width: '100%',
+            maxWidth: '440px',
+            padding: '36px 32px',
+            borderRadius: '24px',
+            border: '1px solid rgba(6,182,212,0.3)',
+            boxShadow: '0 25px 60px rgba(0,0,0,0.5)'
           }}
         >
-          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
             <div
               style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                width: '56px',
+                height: '56px',
+                borderRadius: '16px',
+                background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 0 25px rgba(245,158,11,0.4)',
-                marginBottom: '14px'
+                boxShadow: '0 10px 25px rgba(6,182,212,0.4)',
+                marginBottom: '16px'
               }}
             >
-              <Lock size={32} color="#0b0f19" />
+              <Lock size={28} color="#ffffff" />
             </div>
-            <h2 style={{ fontSize: '24px', fontWeight: '900', marginBottom: '6px' }}>
-              تسجيل دخول الأدمن (Admin Login)
+            <h2 style={{ fontSize: '24px', fontWeight: '900', color: '#f8fafc', marginBottom: '6px' }}>
+              Admin Console
             </h2>
-            <p style={{ fontSize: '13px', color: '#94a3b8' }}>
-              أدخل اسم المستخدم وكلمة المرور للوصول إلى لوحة التحكم
+            <p style={{ fontSize: '13.5px', color: 'var(--text-muted)' }}>
+              Scope Agency Management Platform Control Center
             </p>
           </div>
 
-
-
-          {adminLoginError && (
-            <div style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid #ef4444', color: '#fca5a5', padding: '10px 14px', borderRadius: '10px', fontSize: '13px', marginBottom: '16px', textAlign: 'center' }}>
-              {adminLoginError}
+          {loginError && (
+            <div
+              style={{
+                padding: '12px 16px',
+                borderRadius: '12px',
+                background: 'rgba(239, 68, 68, 0.12)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                color: '#f87171',
+                fontSize: '13px',
+                marginBottom: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              <AlertTriangle size={16} />
+              <span>{loginError}</span>
             </div>
           )}
 
-          <form onSubmit={handleAdminLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <form onSubmit={handleAdminLogin} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             <div>
-              <label className="form-label">اسم المستخدم (Username):</label>
-              <div style={{ position: 'relative' }}>
-                <User size={18} style={{ position: 'absolute', right: '14px', top: '16px', color: '#64748b' }} />
-                <input
-                  type="text"
-                  required
-                  className="form-input"
-                  style={{ paddingRight: '44px' }}
-                  placeholder="admin"
-                  value={adminUsername}
-                  onChange={(e) => setAdminUsername(e.target.value)}
-                />
-              </div>
+              <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '6px' }}>
+                Admin Username
+              </label>
+              <input
+                type="text"
+                value={adminUsername}
+                onChange={(e) => setAdminUsername(e.target.value)}
+                placeholder="Enter admin username (admin)"
+                required
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid var(--glass-border)',
+                  color: '#f8fafc',
+                  fontSize: '14px',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
             </div>
 
             <div>
-              <label className="form-label">كلمة المرور (Password):</label>
+              <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '6px' }}>
+                Master Password
+              </label>
               <div style={{ position: 'relative' }}>
-                <KeyRound size={18} style={{ position: 'absolute', right: '14px', top: '16px', color: '#64748b' }} />
                 <input
-                  type={showAdminPassword ? 'text' : 'password'}
-                  required
-                  className="form-input"
-                  style={{ paddingRight: '44px', paddingLeft: '44px' }}
-                  placeholder="admin"
+                  type={showPassword ? 'text' : 'password'}
                   value={adminPassword}
                   onChange={(e) => setAdminPassword(e.target.value)}
+                  placeholder="Enter master password (admin)"
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '12px 42px 12px 16px',
+                    borderRadius: '12px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '14px',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
                 />
                 <button
                   type="button"
-                  onClick={() => setShowAdminPassword(!showAdminPassword)}
-                  style={{ position: 'absolute', left: '14px', top: '14px', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: '#94a3b8',
+                    cursor: 'pointer'
+                  }}
                 >
-                  {showAdminPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
 
-            <button type="submit" className="action-btn-primary" style={{ width: '100%', marginTop: '10px', padding: '12px' }}>
-              <Lock size={18} />
-              <span>تسجيل الدخول إلى الأدمن</span>
-            </button>
-
             <button
-              type="button"
-              onClick={() => {
-                setAdminUsername('admin');
-                setAdminPassword('admin');
-              }}
+              type="submit"
+              className="action-btn-primary"
               style={{
                 width: '100%',
-                marginTop: '4px',
-                padding: '8px',
-                background: 'rgba(245, 158, 11, 0.1)',
-                border: '1px dashed rgba(245, 158, 11, 0.4)',
-                color: '#f59e0b',
-                borderRadius: '10px',
-                fontSize: '12px',
+                padding: '14px',
+                borderRadius: '12px',
+                fontSize: '14.5px',
+                fontWeight: '800',
+                background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+                border: 'none',
+                color: '#ffffff',
                 cursor: 'pointer',
-                fontWeight: 700
+                marginTop: '6px',
+                boxShadow: '0 8px 20px rgba(6,182,212,0.3)'
               }}
             >
-              ⚡ كتابة البيانات تلقائياً (admin / admin)
-            </button>
-
-            <button
-              type="button"
-              className="action-btn-secondary"
-              onClick={onCloseAdmin}
-              style={{ width: '100%', marginTop: '6px' }}
-            >
-              <span>الرجوع إلى الصفحة الرئيسية</span>
+              Sign In to Admin Portal
             </button>
           </form>
+
+          <div style={{ marginTop: '24px', textAlign: 'center' }}>
+            <button
+              onClick={onCloseAdmin}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#64748b',
+                fontSize: '13px',
+                cursor: 'pointer',
+                textDecoration: 'underline'
+              }}
+            >
+              ← Back to Public Website
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
+  // ==========================================
+  // AUTHENTICATED DASHBOARD (ENGLISH LTR)
+  // ==========================================
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-      {/* Header Bar */}
+    <div
+      dir="ltr"
+      style={{
+        maxWidth: '1280px',
+        margin: '0 auto',
+        padding: '0 16px 40px 16px',
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+      }}
+    >
+      {/* Toast Feedback */}
+      {toastMessage && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '20px',
+            right: '24px',
+            zIndex: 9999,
+            background: 'rgba(15, 23, 42, 0.95)',
+            border: '1px solid #06b6d4',
+            color: '#38bdf8',
+            padding: '12px 20px',
+            borderRadius: '12px',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            fontWeight: '700',
+            fontSize: '14px',
+            animation: 'fadeIn 0.3s ease'
+          }}
+        >
+          <CheckCircle2 size={18} color="#06b6d4" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Top Admin Header Bar */}
       <div
         className="glass-card"
         style={{
-          padding: '24px 32px',
-          marginBottom: '28px',
-          background: 'linear-gradient(135deg, rgba(22, 30, 49, 0.95), rgba(15, 23, 42, 0.98))',
-          border: '1px solid #f59e0b'
+          padding: '18px 24px',
+          marginBottom: '20px',
+          borderRadius: '18px',
+          border: '1px solid rgba(255,255,255,0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '16px',
+          background: 'linear-gradient(135deg, rgba(15,23,42,0.9), rgba(30,41,59,0.8))'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div
-              style={{
-                width: '52px',
-                height: '52px',
-                borderRadius: '14px',
-                background: 'linear-gradient(135deg, #f59e0b, #d97706)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 0 20px rgba(245, 158, 11, 0.4)'
-              }}
-            >
-              <Sliders size={28} color="#0b0f19" />
-            </div>
-            <div>
-              <h1 style={{ fontSize: '24px', fontWeight: '900' }}>
-                لوحة التحكم الكاملة بالموقع (Admin Dashboard)
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div
+            style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '12px',
+              background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 14px rgba(6,182,212,0.35)'
+            }}
+          >
+            <Sliders size={22} color="#ffffff" />
+          </div>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <h1 style={{ fontSize: '19px', fontWeight: '900', color: '#f8fafc', margin: 0 }}>
+                Scope Management Console
               </h1>
-              <p style={{ fontSize: '13px', color: '#94a3b8' }}>
-                تعديل النصوص، الصور، المقالات، الخطوط، الأحجام، وإضافة أو مسح المربعات مباشرة
-              </p>
+              <span
+                style={{
+                  fontSize: '11px',
+                  fontWeight: '800',
+                  padding: '2px 8px',
+                  borderRadius: '9999px',
+                  background: 'rgba(6,182,212,0.15)',
+                  color: '#38bdf8',
+                  border: '1px solid rgba(6,182,212,0.3)'
+                }}
+              >
+                PRO v2.5
+              </span>
             </div>
+            <p style={{ fontSize: '12.5px', color: '#94a3b8', margin: '2px 0 0 0' }}>
+              Full Control CMS • CRM Broadcasters & Clients • 5 Core Sections • Live Sync
+            </p>
           </div>
+        </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <button
-              className="action-btn-secondary"
-              onClick={onCloseAdmin}
-              style={{ borderColor: '#06b6d4', color: '#06b6d4' }}
-            >
-              <Eye size={18} />
-              <span>معاينة الموقع الرئيسية</span>
-            </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button
+            onClick={onCloseAdmin}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              borderRadius: '10px',
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              color: '#e2e8f0',
+              fontSize: '13px',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            <ExternalLink size={15} />
+            <span>Public Site</span>
+          </button>
 
-            <button
-              className="action-btn-secondary"
-              onClick={handleAdminLogout}
-              style={{ color: '#ef4444', borderColor: 'rgba(239,68,68,0.4)' }}
-            >
-              <LogOut size={18} />
-              <span>خروج الأدمن</span>
-            </button>
-          </div>
+          <button
+            onClick={() => {
+              if (window.confirm('Reset ALL website content and settings back to factory defaults?')) {
+                onResetDefaults();
+                showToast('Reset to default configurations');
+              }
+            }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              borderRadius: '10px',
+              background: 'rgba(245,158,11,0.12)',
+              border: '1px solid rgba(245,158,11,0.3)',
+              color: '#fbbf24',
+              fontSize: '13px',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            <RotateCcw size={15} />
+            <span>Reset Defaults</span>
+          </button>
+
+          <button
+            onClick={handleAdminLogout}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              borderRadius: '10px',
+              background: 'rgba(239,68,68,0.12)',
+              border: '1px solid rgba(239,68,68,0.3)',
+              color: '#f87171',
+              fontSize: '13px',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            <LogOut size={15} />
+            <span>Sign Out</span>
+          </button>
         </div>
       </div>
 
-      {/* Main Admin Navigation Tabs */}
+      {/* Main Tab Navigation Bar */}
       <div
         style={{
           display: 'flex',
-          gap: '10px',
+          gap: '8px',
           overflowX: 'auto',
           paddingBottom: '12px',
-          marginBottom: '28px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+          marginBottom: '20px'
         }}
       >
-        <button
-          className={`nav-tab ${adminTab === 'appearance' ? 'active' : ''}`}
-          onClick={() => setAdminTab('appearance')}
-        >
-          <Type size={18} />
-          <span>المظهر والخطوط والأحجام والصورة</span>
-        </button>
-
-        <button
-          className={`nav-tab ${adminTab === 'updates' ? 'active' : ''}`}
-          onClick={() => setAdminTab('updates')}
-        >
-          <FileText size={18} />
-          <span>إدارة المقالات والأخبار ({updatesData.length})</span>
-        </button>
-
-        <button
-          className={`nav-tab ${adminTab === 'badges' ? 'active' : ''}`}
-          onClick={() => setAdminTab('badges')}
-        >
-          <Award size={18} />
-          <span>إدارة القلادات والرتب ({badgesData.length})</span>
-        </button>
-
-        <button
-          className={`nav-tab ${adminTab === 'blocks' ? 'active' : ''}`}
-          onClick={() => setAdminTab('blocks')}
-        >
-          <Grid size={18} />
-          <span>إدارة المربعات والبطاقات ({customBlocks.length})</span>
-        </button>
-
-        <button
-          className={`nav-tab ${adminTab === 'accounts' ? 'active' : ''}`}
-          onClick={() => setAdminTab('accounts')}
-        >
-          <Users size={18} />
-          <span>إدارة الحسابات والاشتراكات ({accountsData.length})</span>
-        </button>
-
-        <button
-          className={`nav-tab ${adminTab === 'system' ? 'active' : ''}`}
-          onClick={() => setAdminTab('system')}
-        >
-          <RotateCcw size={18} />
-          <span>الضبط والنسخ الاحتياطي</span>
-        </button>
+        {[
+          { id: 'overview', label: 'Dashboard Overview', icon: LayoutDashboard },
+          { id: 'crm', label: `Hosts & Clients CRM (${accountsData.length})`, icon: Users },
+          { id: 'sections', label: '5 Core Sections', icon: Layers },
+          { id: 'articles', label: `Articles & News (${updatesData.length})`, icon: FileText },
+          { id: 'blocks', label: `Custom Blocks (${customBlocks.length})`, icon: Grid },
+          { id: 'settings', label: 'Site Settings & Contacts', icon: Sliders },
+          { id: 'appearance', label: 'Appearance & Themes', icon: Palette },
+          { id: 'badges', label: 'Badges & Honors', icon: Award },
+          { id: 'backup', label: 'Backup & Restore', icon: Database }
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 16px',
+                borderRadius: '12px',
+                border: isActive ? '1px solid #06b6d4' : '1px solid rgba(255,255,255,0.08)',
+                background: isActive ? 'rgba(6,182,212,0.15)' : 'rgba(255,255,255,0.03)',
+                color: isActive ? '#38bdf8' : '#94a3b8',
+                fontSize: '13.5px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <Icon size={16} color={isActive ? '#38bdf8' : '#64748b'} />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
       </div>
 
-      {/* ---------------- TAB 1: APPEARANCE & TYPOGRAPHY ---------------- */}
-      {adminTab === 'appearance' && (
-        <div className="glass-card" style={{ padding: '32px' }}>
-          <h2 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '20px', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Palette size={22} />
-            <span>إعدادات النصوص، الخطوط، الألوان، وصورة الموقع</span>
-          </h2>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '28px' }}>
-            {/* Left Column: Text & Hero Banner */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              <div>
-                <label className="form-label">عنوان الموقع الرئيسي:</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={siteInfo.title}
-                  onChange={(e) => setSiteInfo({ ...siteInfo, title: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">وصف الموقع الشامل:</label>
-                <textarea
-                  className="form-input"
-                  rows={3}
-                  value={siteInfo.description}
-                  onChange={(e) => setSiteInfo({ ...siteInfo, description: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">رابط صورة الهيدر / البانر (Hero Banner):</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={siteInfo.heroBanner}
-                  onChange={(e) => setSiteInfo({ ...siteInfo, heroBanner: e.target.value })}
-                  placeholder="/images/image_1.png"
-                />
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '10px' }}>
-                  {imagePresets.map((preset, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => setSiteInfo({ ...siteInfo, heroBanner: preset.url })}
-                      style={{
-                        padding: '4px 10px',
-                        fontSize: '12px',
-                        borderRadius: '6px',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        background: 'rgba(255,255,255,0.05)',
-                        color: '#94a3b8',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {preset.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Fonts & Sizes & Colors */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div>
-                <label className="form-label">نوع الخط العربي (Font Family):</label>
-                <select
-                  className="form-select"
-                  value={themeConfig.fontFamily}
-                  onChange={(e) => setThemeConfig({ ...themeConfig, fontFamily: e.target.value })}
-                >
-                  {fontOptions.map((font, i) => (
-                    <option key={i} value={font.value}>
-                      {font.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div>
-                  <label className="form-label">حجم خط المحتوى ({themeConfig.baseFontSize}px):</label>
-                  <input
-                    type="range"
-                    min="11"
-                    max="20"
-                    value={themeConfig.baseFontSize}
-                    onChange={(e) => setThemeConfig({ ...themeConfig, baseFontSize: Number(e.target.value) })}
-                    style={{ width: '100%', accentColor: '#f59e0b' }}
-                  />
-                </div>
-
-                <div>
-                  <label className="form-label">حجم خط العناوين ({themeConfig.headingFontSize}px):</label>
-                  <input
-                    type="range"
-                    min="16"
-                    max="30"
-                    value={themeConfig.headingFontSize}
-                    onChange={(e) => setThemeConfig({ ...themeConfig, headingFontSize: Number(e.target.value) })}
-                    style={{ width: '100%', accentColor: '#f59e0b' }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="form-label">اللون الرئيسي للموقع (Theme Accent):</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-                  {colorOptions.map((c, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => setThemeConfig({ ...themeConfig, primaryColor: c.color, glowColor: c.glow })}
-                      style={{
-                        padding: '10px 8px',
-                        borderRadius: '10px',
-                        border: themeConfig.primaryColor === c.color ? `2px solid ${c.color}` : '1px solid rgba(255,255,255,0.1)',
-                        background: 'rgba(15,23,42,0.8)',
-                        color: '#fff',
-                        fontSize: '12px',
-                        fontWeight: '700',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px'
-                      }}
-                    >
-                      <span style={{ width: '14px', height: '14px', borderRadius: '50%', background: c.color }} />
-                      <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.name.split(' ')[0]}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Live Style Preview Box */}
-              <div style={{ padding: '16px', background: 'rgba(15,23,42,0.9)', borderRadius: '12px', border: `1px solid ${themeConfig.primaryColor}` }}>
-                <span style={{ fontSize: '12px', color: '#94a3b8', display: 'block', marginBottom: '6px' }}>معاينة حية للخط واللون:</span>
-                <h4 style={{ fontFamily: themeConfig.fontFamily, fontSize: `${themeConfig.headingFontSize}px`, color: themeConfig.primaryColor, fontWeight: '800' }}>
-                  دليل وكالات بيجو لايف المعتمد
-                </h4>
-                <p style={{ fontFamily: themeConfig.fontFamily, fontSize: `${themeConfig.baseFontSize}px`, color: '#cbd5e1', marginTop: '6px' }}>
-                  هذا النص يعرض المعاينة الحية للخط والحجم المختارين حالياً في لوحة التحكم.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ---------------- TAB 2: ARTICLES & UPDATES ---------------- */}
-      {adminTab === 'updates' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-          {/* Article Form */}
-          <div className="glass-card" style={{ padding: '28px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '20px', color: '#06b6d4', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {editingArticle ? <Edit3 size={20} /> : <Plus size={20} />}
-              <span>{editingArticle ? 'تعديل التحديث / المقال الحالي' : 'إضافة مقال / تحديث جديد للموقع'}</span>
-            </h2>
-
-            <form onSubmit={handleSaveArticle} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-              <div>
-                <label className="form-label">عنوان المقال / الإشعار:</label>
-                <input
-                  type="text"
-                  required
-                  className="form-input"
-                  placeholder="مثال: تحديث شروط التارجت والعمولات لشهر جديد"
-                  value={articleForm.title}
-                  onChange={(e) => setArticleForm({ ...articleForm, title: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">التصنيف (Category):</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="سياسات جديدة / أمان وتوثيق / فعاليات"
-                  value={articleForm.category}
-                  onChange={(e) => setArticleForm({ ...articleForm, category: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">التاريخ / الشهر:</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={articleForm.date}
-                  onChange={(e) => setArticleForm({ ...articleForm, date: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">الشارة (Badge Tag):</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="مهم جداً / تحديث أمني / عاجل"
-                  value={articleForm.badge}
-                  onChange={(e) => setArticleForm({ ...articleForm, badge: e.target.value })}
-                />
-              </div>
-
-              <div style={{ gridColumn: '1 / -1' }}>
-                <label className="form-label">الملخص العام للمقال:</label>
-                <textarea
-                  required
-                  className="form-input"
-                  rows={2}
-                  placeholder="اكتب ملخص الإشعار أو المقال ليظهر في الكارت..."
-                  value={articleForm.summary}
-                  onChange={(e) => setArticleForm({ ...articleForm, summary: e.target.value })}
-                />
-              </div>
-
-              <div style={{ gridColumn: '1 / -1' }}>
-                <label className="form-label">التفاصيل والنقاط (ضع كل نقطة في سطر مستقل):</label>
-                <textarea
-                  className="form-input"
-                  rows={4}
-                  placeholder="الشرط الأول&#10;الشرط الثاني&#10;ملاحظات إضافية..."
-                  value={articleForm.detailsText}
-                  onChange={(e) => setArticleForm({ ...articleForm, detailsText: e.target.value })}
-                />
-              </div>
-
-              <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '12px' }}>
-                <button type="submit" className="action-btn-primary">
-                  <Check size={18} />
-                  <span>{editingArticle ? 'حفظ التعديلات' : 'إضافة المقال الآن'}</span>
-                </button>
-
-                {editingArticle && (
-                  <button
-                    type="button"
-                    className="action-btn-secondary"
-                    onClick={() => {
-                      setEditingArticle(null);
-                      setArticleForm({ title: '', category: 'تحديث جديد', summary: '', date: 'أغسطس 2026', badge: 'جديد', detailsText: '' });
-                    }}
-                  >
-                    إلغاء التعديل
-                  </button>
-                )}
-              </div>
-            </form>
-          </div>
-
-          {/* Articles List */}
-          <div className="glass-card" style={{ padding: '28px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px' }}>
-              المقالات والإشعارات الحالية في الموقع:
-            </h3>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {updatesData.map((art) => (
-                <div
-                  key={art.id}
-                  style={{
-                    padding: '16px 20px',
-                    borderRadius: '12px',
-                    background: 'rgba(15,23,42,0.8)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    flexWrap: 'wrap',
-                    gap: '12px'
-                  }}
-                >
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-                      <span style={{ fontSize: '12px', fontWeight: '700', color: '#06b6d4', background: 'rgba(6,182,212,0.15)', padding: '2px 8px', borderRadius: '9999px' }}>
-                        {art.category}
-                      </span>
-                      <span style={{ fontSize: '12px', color: '#94a3b8' }}>{art.date}</span>
-                    </div>
-                    <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fff' }}>{art.title}</h4>
-                    <p style={{ fontSize: '13px', color: '#94a3b8', marginTop: '4px' }}>{art.summary}</p>
-                  </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <button
-                      type="button"
-                      className="action-btn-secondary"
-                      style={{ padding: '6px 12px', fontSize: '12px' }}
-                      onClick={() => handleEditArticleClick(art)}
-                    >
-                      <Edit3 size={14} />
-                      <span>تعديل</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      className="action-btn-secondary"
-                      style={{ padding: '6px 12px', fontSize: '12px', color: '#ef4444', borderColor: 'rgba(239,68,68,0.3)' }}
-                      onClick={() => handleDeleteArticle(art.id)}
-                    >
-                      <Trash2 size={14} />
-                      <span>حذف</span>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ---------------- TAB 3: BADGES CRUD ---------------- */}
-      {adminTab === 'badges' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-          <div className="glass-card" style={{ padding: '28px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '20px', color: '#8b5cf6', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {editingBadge ? <Edit3 size={20} /> : <Plus size={20} />}
-              <span>{editingBadge ? 'تعديل بيانات القلادة الحالية' : 'إضافة قلادة أو رتبة جديدة'}</span>
-            </h2>
-
-            <form onSubmit={handleSaveBadge} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-              <div>
-                <label className="form-label">اسم القلادة / الرتبة:</label>
-                <input
-                  type="text"
-                  required
-                  className="form-input"
-                  placeholder="قلادة الوكالة الذهبية"
-                  value={badgeForm.title}
-                  onChange={(e) => setBadgeForm({ ...badgeForm, title: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">نوع الشارة (Badge Type):</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="الأساسية / المشرف المساعد"
-                  value={badgeForm.badgeType}
-                  onChange={(e) => setBadgeForm({ ...badgeForm, badgeType: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">نوع اللون (Color Style):</label>
-                <select
-                  className="form-select"
-                  value={badgeForm.color}
-                  onChange={(e) => setBadgeForm({ ...badgeForm, color: e.target.value })}
-                >
-                  <option value="gold">ذهبي (Gold)</option>
-                  <option value="silver">فضي (Silver)</option>
-                  <option value="bronze">برونزي / خاص (Bronze)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="form-label">رابط صورة القلادة (Image URL):</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={badgeForm.image}
-                  onChange={(e) => setBadgeForm({ ...badgeForm, image: e.target.value })}
-                />
-              </div>
-
-              <div style={{ gridColumn: '1 / -1' }}>
-                <label className="form-label">الوصف والتعريف بالقلادة:</label>
-                <textarea
-                  required
-                  className="form-input"
-                  rows={2}
-                  value={badgeForm.description}
-                  onChange={(e) => setBadgeForm({ ...badgeForm, description: e.target.value })}
-                />
-              </div>
-
-              <div style={{ gridColumn: '1 / -1' }}>
-                <label className="form-label">المميزات والصلاحيات (سطر مستقل لكل ميزة):</label>
-                <textarea
-                  className="form-input"
-                  rows={3}
-                  placeholder="تثبيت الشعار الذهبي&#10;صلاحية كاملة لإدارة المذيعين..."
-                  value={badgeForm.featuresText}
-                  onChange={(e) => setBadgeForm({ ...badgeForm, featuresText: e.target.value })}
-                />
-              </div>
-
-              <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '12px' }}>
-                <button type="submit" className="action-btn-primary">
-                  <Check size={18} />
-                  <span>{editingBadge ? 'حفظ تعديلات القلادة' : 'إضافة القلادة الجديدة'}</span>
-                </button>
-
-                {editingBadge && (
-                  <button
-                    type="button"
-                    className="action-btn-secondary"
-                    onClick={() => {
-                      setEditingBadge(null);
-                      setBadgeForm({ title: '', badgeType: 'رتبة معتمدة', color: 'gold', description: '', image: '/images/image_7.png', featuresText: '' });
-                    }}
-                  >
-                    إلغاء
-                  </button>
-                )}
-              </div>
-            </form>
-          </div>
-
-          <div className="glass-card" style={{ padding: '28px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px' }}>
-              القلادات المعروضة حالياً:
-            </h3>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
-              {badgesData.map((badge) => (
-                <div
-                  key={badge.id}
-                  style={{
-                    padding: '20px',
-                    borderRadius: '14px',
-                    background: 'rgba(15,23,42,0.8)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '12px'
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '12px', color: '#f59e0b', fontWeight: '800' }}>{badge.badgeType}</span>
-                    <img src={badge.image} alt={badge.title} style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
-                  </div>
-                  <h4 style={{ fontSize: '17px', fontWeight: '800', color: '#fff' }}>{badge.title}</h4>
-                  <p style={{ fontSize: '13px', color: '#94a3b8' }}>{badge.description}</p>
-
-                  <div style={{ display: 'flex', gap: '8px', marginTop: 'auto', paddingTop: '10px' }}>
-                    <button
-                      type="button"
-                      className="action-btn-secondary"
-                      style={{ padding: '6px 12px', fontSize: '12px', width: '100%' }}
-                      onClick={() => handleEditBadgeClick(badge)}
-                    >
-                      <Edit3 size={14} />
-                      <span>تعديل</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="action-btn-secondary"
-                      style={{ padding: '6px 12px', fontSize: '12px', color: '#ef4444', borderColor: 'rgba(239,68,68,0.3)' }}
-                      onClick={() => handleDeleteBadge(badge.id)}
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ---------------- TAB 4: CUSTOM BLOCKS CRUD ("إضافة أو مسح مربعات") ---------------- */}
-      {adminTab === 'blocks' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-          <div className="glass-card" style={{ padding: '28px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '20px', color: '#ec4899', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {editingBlock ? <Edit3 size={20} /> : <Plus size={20} />}
-              <span>{editingBlock ? 'تعديل بيانات المربع الحالي' : 'إضافة مربع جديد (قسم / بطاقة مخصصة)'}</span>
-            </h2>
-
-            <form onSubmit={handleSaveBlock} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-              <div>
-                <label className="form-label">عنوان المربع (Card Title):</label>
-                <input
-                  type="text"
-                  required
-                  className="form-input"
-                  placeholder="عنوان المربع الجديد"
-                  value={blockForm.title}
-                  onChange={(e) => setBlockForm({ ...blockForm, title: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">الوصف الفرعي (Subtitle):</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="شرح موجز لمحتوى المربع..."
-                  value={blockForm.subtitle}
-                  onChange={(e) => setBlockForm({ ...blockForm, subtitle: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">التصنيف أو التاج:</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="قسم مميز / إعلان / تنبيه"
-                  value={blockForm.category}
-                  onChange={(e) => setBlockForm({ ...blockForm, category: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">رمز الأيقونة (Icon):</label>
-                <select
-                  className="form-select"
-                  value={blockForm.icon}
-                  onChange={(e) => setBlockForm({ ...blockForm, icon: e.target.value })}
-                >
-                  <option value="Headphones">Headphones (سماعات دعم)</option>
-                  <option value="ShieldAlert">ShieldAlert (أمان وتنبيه)</option>
-                  <option value="Zap">Zap (بونص وسرعة)</option>
-                  <option value="Star">Star (نجمة تميز)</option>
-                  <option value="Sparkles">Sparkles (بريق وتكريم)</option>
-                  <option value="Layers">Layers (طبقات وإدارة)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="form-label">لون الإطار والإضاءة:</label>
-                <input
-                  type="color"
-                  className="form-input"
-                  style={{ height: '48px', padding: '4px', cursor: 'pointer' }}
-                  value={blockForm.color}
-                  onChange={(e) => setBlockForm({ ...blockForm, color: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">رابط صورة داخلية (اختياري):</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="/images/image_1.png"
-                  value={blockForm.image}
-                  onChange={(e) => setBlockForm({ ...blockForm, image: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">نص زر الإجراء (Button Text):</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="مثال: تواصل معنا أو استعراض التفاصيل"
-                  value={blockForm.buttonText}
-                  onChange={(e) => setBlockForm({ ...blockForm, buttonText: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">رابط الزر (URL أو #tab):</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="https://wa.me/ أو #points"
-                  value={blockForm.buttonLink}
-                  onChange={(e) => setBlockForm({ ...blockForm, buttonLink: e.target.value })}
-                />
-              </div>
-
-              <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '12px' }}>
-                <button type="submit" className="action-btn-primary">
-                  <Check size={18} />
-                  <span>{editingBlock ? 'حفظ تعديلات المربع' : 'إضافة المربع الآن إلى الصفحة'}</span>
-                </button>
-
-                {editingBlock && (
-                  <button
-                    type="button"
-                    className="action-btn-secondary"
-                    onClick={() => {
-                      setEditingBlock(null);
-                      setBlockForm({ title: '', subtitle: '', category: 'قسم مميز', icon: 'Sparkles', color: '#f59e0b', image: '/images/image_1.png', buttonText: 'عرض التفاصيل', buttonLink: '#home' });
-                    }}
-                  >
-                    إلغاء
-                  </button>
-                )}
-              </div>
-            </form>
-          </div>
-
-          {/* Custom Blocks List */}
-          <div className="glass-card" style={{ padding: '28px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px' }}>
-              المربعات المسجلة حالياً على الداشبورد / الصفحة الرئيسية:
-            </h3>
-
-            {customBlocks.length === 0 ? (
-              <p style={{ color: '#94a3b8', fontSize: '14px' }}>لا توجد مربعات مخصصة حالياً. قم بإضافة مربع جديد من النموذج أعلاه.</p>
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
-                {customBlocks.map((blk) => (
-                  <div
-                    key={blk.id}
-                    style={{
-                      padding: '20px',
-                      borderRadius: '14px',
-                      background: 'rgba(15,23,42,0.8)',
-                      border: `1px solid ${blk.color || '#f59e0b'}88`,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '10px'
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '12px', fontWeight: '700', color: blk.color }}>{blk.category}</span>
-                      <button
-                        type="button"
-                        onClick={() => handleToggleBlock(blk.id)}
-                        style={{
-                          padding: '4px 10px',
-                          borderRadius: '9999px',
-                          border: 'none',
-                          background: blk.enabled !== false ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)',
-                          color: blk.enabled !== false ? '#10b981' : '#ef4444',
-                          fontSize: '12px',
-                          fontWeight: '700',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        {blk.enabled !== false ? 'مفعل وراهر' : 'مخفي'}
-                      </button>
-                    </div>
-
-                    <h4 style={{ fontSize: '18px', fontWeight: '800', color: '#fff' }}>{blk.title}</h4>
-                    <p style={{ fontSize: '13px', color: '#94a3b8' }}>{blk.subtitle}</p>
-
-                    <div style={{ display: 'flex', gap: '8px', marginTop: 'auto', paddingTop: '10px' }}>
-                      <button
-                        type="button"
-                        className="action-btn-secondary"
-                        style={{ padding: '6px 12px', fontSize: '12px', width: '100%' }}
-                        onClick={() => handleEditBlockClick(blk)}
-                      >
-                        <Edit3 size={14} />
-                        <span>تعديل</span>
-                      </button>
-                      <button
-                        type="button"
-                        className="action-btn-secondary"
-                        style={{ padding: '6px 12px', fontSize: '12px', color: '#ef4444', borderColor: 'rgba(239,68,68,0.3)' }}
-                        onClick={() => handleDeleteBlock(blk.id)}
-                        title="امسح مربع"
-                      >
-                        <Trash2 size={14} />
-                        <span>حذف المربع</span>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ---------------- TAB 5: ACCOUNTS & SUBSCRIPTIONS MANAGER ---------------- */}
-      {adminTab === 'accounts' && (
+      {/* ======================================================== */}
+      {/* TAB 1: DASHBOARD OVERVIEW */}
+      {/* ======================================================== */}
+      {activeTab === 'overview' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          {/* Summary Stat Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.4)' }}>
-              <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>إجمالي الحسابات المسجلة</span>
-              <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#f59e0b', marginTop: '6px' }}>{accountsData.length} حساب</h3>
+          {/* Top Metric Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.3)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: '600' }}>Registered Broadcasters</span>
+                <Users size={20} color="#06b6d4" />
+              </div>
+              <h2 style={{ fontSize: '28px', fontWeight: '900', color: '#f8fafc', margin: 0 }}>
+                {accountsData.filter((a) => a.role === 'host' || a.role === 'vip_host').length}
+              </h2>
+              <span style={{ fontSize: '12px', color: '#10b981', fontWeight: '700', marginTop: '4px', display: 'block' }}>
+                Active in Agency Roster
+              </span>
             </div>
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.4)' }}>
-              <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>مدراء الوكالات</span>
-              <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#06b6d4', marginTop: '6px' }}>{accountsData.filter(a => a.role === 'manager').length} مدير</h3>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.3)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: '600' }}>Clients & Supervisors</span>
+                <Award size={20} color="#f59e0b" />
+              </div>
+              <h2 style={{ fontSize: '28px', fontWeight: '900', color: '#f8fafc', margin: 0 }}>
+                {accountsData.filter((a) => a.role !== 'host' && a.role !== 'vip_host').length}
+              </h2>
+              <span style={{ fontSize: '12px', color: '#f59e0b', fontWeight: '700', marginTop: '4px', display: 'block' }}>
+                Assigned Key Roles
+              </span>
             </div>
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(139,92,246,0.4)' }}>
-              <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>المذيعون والصناع</span>
-              <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#8b5cf6', marginTop: '6px' }}>{accountsData.filter(a => a.role === 'streamer').length} مذيع</h3>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(139,92,246,0.3)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: '600' }}>Active Articles</span>
+                <FileText size={20} color="#8b5cf6" />
+              </div>
+              <h2 style={{ fontSize: '28px', fontWeight: '900', color: '#f8fafc', margin: 0 }}>
+                {updatesData.length}
+              </h2>
+              <span style={{ fontSize: '12px', color: '#8b5cf6', fontWeight: '700', marginTop: '4px', display: 'block' }}>
+                Live on News Feed
+              </span>
             </div>
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(16,185,129,0.4)' }}>
-              <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>المشرفون وحسابات الأدمن</span>
-              <h3 style={{ fontSize: '24px', fontWeight: '900', color: '#10b981', marginTop: '6px' }}>{accountsData.filter(a => a.role === 'supervisor' || a.role === 'admin').length} حساب</h3>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(16,185,129,0.3)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontSize: '13px', color: '#94a3b8', fontWeight: '600' }}>Custom Blocks</span>
+                <Grid size={20} color="#10b981" />
+              </div>
+              <h2 style={{ fontSize: '28px', fontWeight: '900', color: '#f8fafc', margin: 0 }}>
+                {customBlocks.filter((b) => b.enabled !== false).length}
+              </h2>
+              <span style={{ fontSize: '12px', color: '#10b981', fontWeight: '700', marginTop: '4px', display: 'block' }}>
+                Displayed on Homepage
+              </span>
             </div>
           </div>
 
-          {/* Account Form (Create / Edit) */}
-          <div className="glass-card" style={{ padding: '28px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '20px', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <UserPlus size={22} />
-              <span>{editingAccount ? 'تعديل بيانات الحساب والاشتراك' : 'إضافة حساب / مشترك جديد إلى النظام'}</span>
-            </h2>
+          {/* Quick Actions & Short Cuts */}
+          <div className="glass-card" style={{ padding: '24px', borderRadius: '18px' }}>
+            <h3 style={{ fontSize: '17px', fontWeight: '800', marginBottom: '16px' }}>
+              Quick Management Shortcuts
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+              <button
+                onClick={() => {
+                  setActiveTab('crm');
+                  openNewCrmModal();
+                }}
+                className="action-btn-primary"
+                style={{
+                  padding: '14px',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  fontSize: '13.5px',
+                  fontWeight: '700'
+                }}
+              >
+                <UserPlus size={18} />
+                <span>Register Broadcaster</span>
+              </button>
 
-            <form onSubmit={handleSaveAccount} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
-              <div>
-                <label className="form-label">الاسم الكامل / اسم الوكالة:</label>
-                <input
-                  type="text"
-                  required
-                  className="form-input"
-                  placeholder="مثال: وكالة الفرسان المعتمدة"
-                  value={accountForm.name}
-                  onChange={(e) => setAccountForm({ ...accountForm, name: e.target.value })}
-                />
-              </div>
+              <button
+                onClick={() => {
+                  setActiveTab('sections');
+                  setCoreSectionTab('agency');
+                }}
+                className="action-btn-secondary"
+                style={{
+                  padding: '14px',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  fontSize: '13.5px',
+                  fontWeight: '700'
+                }}
+              >
+                <Layers size={18} />
+                <span>Edit 5 Core Sections</span>
+              </button>
 
-              <div>
-                <label className="form-label">البريد الإلكتروني / الهاتف:</label>
-                <input
-                  type="text"
-                  required
-                  className="form-input"
-                  placeholder="example@bigo.tv أو 0500000000"
-                  value={accountForm.email}
-                  onChange={(e) => setAccountForm({ ...accountForm, email: e.target.value })}
-                />
-              </div>
+              <button
+                onClick={() => {
+                  setActiveTab('articles');
+                  openNewArticleModal();
+                }}
+                className="action-btn-secondary"
+                style={{
+                  padding: '14px',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  fontSize: '13.5px',
+                  fontWeight: '700'
+                }}
+              >
+                <Plus size={18} />
+                <span>Post New Article</span>
+              </button>
 
-              <div>
-                <label className="form-label">آيدي بيجو (Bigo ID):</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="مثال: 908765432"
-                  value={accountForm.bigoId}
-                  onChange={(e) => setAccountForm({ ...accountForm, bigoId: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">صفة الحساب / نوع الاشتراك:</label>
-                <select
-                  className="form-select"
-                  value={accountForm.role}
-                  onChange={(e) => setAccountForm({ ...accountForm, role: e.target.value })}
-                >
-                  <option value="manager">مدير وكالة (Manager)</option>
-                  <option value="streamer">مذيع / صانع محتوى (Streamer)</option>
-                  <option value="supervisor">مشرف مساعد (Supervisor)</option>
-                  <option value="admin">مسؤول نظام (Admin)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="form-label">القلادة / الرتبة الممنوحة:</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="القلادة الذهبية / الفضية / البرونزية"
-                  value={accountForm.badge}
-                  onChange={(e) => setAccountForm({ ...accountForm, badge: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">مجموع الفاصوليا:</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="مثال: 1,450,000"
-                  value={accountForm.beans}
-                  onChange={(e) => setAccountForm({ ...accountForm, beans: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">الراتب / العمولة الشهري:</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="مثال: $11,600 USD"
-                  value={accountForm.monthlySalary}
-                  onChange={(e) => setAccountForm({ ...accountForm, monthlySalary: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label className="form-label">حالة الاشتراك والحساب:</label>
-                <select
-                  className="form-select"
-                  value={accountForm.status}
-                  onChange={(e) => setAccountForm({ ...accountForm, status: e.target.value })}
-                >
-                  <option value="active">نشط ومفعل (Active)</option>
-                  <option value="suspended">معلق / موقوف (Suspended)</option>
-                  <option value="pending">قيد المراجعه (Pending)</option>
-                </select>
-              </div>
-
-              <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '12px', marginTop: '10px' }}>
-                <button type="submit" className="action-btn-primary">
-                  <Save size={18} />
-                  <span>{editingAccount ? 'حفظ التعديلات' : 'إضافة الحساب والاشتراك'}</span>
-                </button>
-                {editingAccount && (
-                  <button
-                    type="button"
-                    className="action-btn-secondary"
-                    onClick={() => {
-                      setEditingAccount(null);
-                      setAccountForm({
-                        name: '',
-                        email: '',
-                        bigoId: '',
-                        role: 'manager',
-                        badge: 'القلادة الذهبية',
-                        beans: '100,000',
-                        monthlySalary: '$800 USD',
-                        status: 'active',
-                        joinDate: 'أغسطس 2026'
-                      });
-                    }}
-                  >
-                    إلغاء التعديل
-                  </button>
-                )}
-              </div>
-            </form>
+              <button
+                onClick={() => {
+                  setActiveTab('blocks');
+                  openNewBlockModal();
+                }}
+                className="action-btn-secondary"
+                style={{
+                  padding: '14px',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  fontSize: '13.5px',
+                  fontWeight: '700'
+                }}
+              >
+                <Grid size={18} />
+                <span>Add Custom Block</span>
+              </button>
+            </div>
           </div>
 
-          {/* Accounts List & Table */}
-          <div className="glass-card" style={{ padding: '28px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
-              <h3 style={{ fontSize: '18px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Users size={20} color="#f59e0b" />
-                <span>قائمة حسابات المشتركين والوكلاء والآدمن ({filteredAccounts.length})</span>
-              </h3>
+          {/* Core Sections Summary Widget */}
+          <div className="glass-card" style={{ padding: '24px', borderRadius: '18px' }}>
+            <h3 style={{ fontSize: '17px', fontWeight: '800', marginBottom: '14px' }}>
+              Active Modules in 5 Primary Categories
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+              <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.2)' }}>
+                <span style={{ fontSize: '12px', color: '#06b6d4', fontWeight: '700' }}>1. Agency Ops</span>
+                <h4 style={{ fontSize: '18px', fontWeight: '900', margin: '6px 0 2px 0' }}>{agencyManagementItems.length} Items</h4>
+                <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0 }}>Registration, Unban, Trend</p>
+              </div>
 
-              {/* Role Filter Tabs */}
-              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                {['all', 'manager', 'streamer', 'supervisor', 'admin'].map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setAccountRoleFilter(r)}
-                    style={{
-                      padding: '6px 12px',
-                      borderRadius: '8px',
-                      fontSize: '12px',
-                      fontWeight: '700',
-                      border: accountRoleFilter === r ? '1px solid #f59e0b' : '1px solid var(--glass-border)',
-                      background: accountRoleFilter === r ? 'rgba(245,158,11,0.2)' : 'transparent',
-                      color: accountRoleFilter === r ? '#f59e0b' : 'var(--text-muted)',
-                      cursor: 'pointer',
-                      fontFamily: 'inherit'
-                    }}
-                  >
-                    {r === 'all' && 'الكل'}
-                    {r === 'manager' && 'المدراء'}
-                    {r === 'streamer' && 'المذيعون'}
-                    {r === 'supervisor' && 'المشرفون'}
-                    {r === 'admin' && 'الآدمن'}
-                  </button>
-                ))}
+              <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}>
+                <span style={{ fontSize: '12px', color: '#f59e0b', fontWeight: '700' }}>2. Points Usage</span>
+                <h4 style={{ fontSize: '18px', fontWeight: '900', margin: '6px 0 2px 0' }}>{pointsUsageItems.length} Items</h4>
+                <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0 }}>PK Support, Gala, Bonus</p>
+              </div>
+
+              <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.2)' }}>
+                <span style={{ fontSize: '12px', color: '#8b5cf6', fontWeight: '700' }}>3. Bean Cashout</span>
+                <h4 style={{ fontSize: '18px', fontWeight: '900', margin: '6px 0 2px 0' }}>{beanWithdrawalItems.length} Methods</h4>
+                <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0 }}>Agent recharge, Wire transfer</p>
+              </div>
+
+              <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }}>
+                <span style={{ fontSize: '12px', color: '#10b981', fontWeight: '700' }}>4. Salary Tiers</span>
+                <h4 style={{ fontSize: '18px', fontWeight: '900', margin: '6px 0 2px 0' }}>{salaryTiers.length} Tiers</h4>
+                <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0 }}>T1 through T5 official scale</p>
+              </div>
+
+              <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(236,72,153,0.08)', border: '1px solid rgba(236,72,153,0.2)' }}>
+                <span style={{ fontSize: '12px', color: '#ec4899', fontWeight: '700' }}>5. Live Quality</span>
+                <h4 style={{ fontSize: '18px', fontWeight: '900', margin: '6px 0 2px 0' }}>{liveQualityItems.length} Pillars</h4>
+                <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0 }}>Lighting, Mic, Camera, Speed</p>
               </div>
             </div>
+          </div>
+        </div>
+      )}
 
-            <div className="table-responsive">
-              <table className="custom-table">
+      {/* ======================================================== */}
+      {/* TAB 2: HOSTS & CLIENTS CRM */}
+      {/* ======================================================== */}
+      {activeTab === 'crm' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* CRM Controls & Filter Header */}
+          <div
+            className="glass-card"
+            style={{
+              padding: '20px',
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '14px'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: '280px' }}>
+              <div style={{ position: 'relative', flex: 1 }}>
+                <Search size={16} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+                <input
+                  type="text"
+                  value={crmSearch}
+                  onChange={(e) => setCrmSearch(e.target.value)}
+                  placeholder="Search by Name, Bigo ID, Phone, or Email..."
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px 10px 36px',
+                    borderRadius: '10px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '13.5px',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <select
+                value={crmRoleFilter}
+                onChange={(e) => setCrmRoleFilter(e.target.value)}
+                style={{
+                  padding: '10px 14px',
+                  borderRadius: '10px',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid var(--glass-border)',
+                  color: '#f8fafc',
+                  fontSize: '13.5px',
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="all">All Roles ({accountsData.length})</option>
+                <option value="host">Broadcasters (Hosts)</option>
+                <option value="vip_host">VIP Stars</option>
+                <option value="client">Clients / Supporters</option>
+                <option value="supervisor">Supervisors</option>
+              </select>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <button
+                onClick={exportCrmCsv}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '10px 16px',
+                  borderRadius: '10px',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  color: '#e2e8f0',
+                  fontSize: '13px',
+                  fontWeight: '700',
+                  cursor: 'pointer'
+                }}
+              >
+                <Download size={15} />
+                <span>Export CSV</span>
+              </button>
+
+              <button
+                onClick={openNewCrmModal}
+                className="action-btn-primary"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '10px 18px',
+                  borderRadius: '10px',
+                  fontSize: '13.5px',
+                  fontWeight: '700'
+                }}
+              >
+                <UserPlus size={16} />
+                <span>Register Broadcaster / Client</span>
+              </button>
+            </div>
+          </div>
+
+          {/* CRM Table */}
+          <div className="glass-card" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
                 <thead>
-                  <tr>
-                    <th>الاسم / الوكالة</th>
-                    <th>البريد / الهاتف</th>
-                    <th>Bigo ID</th>
-                    <th>الصفة والنوع</th>
-                    <th>الرتبة / القلادة</th>
-                    <th>الفاصوليا والعمولة</th>
-                    <th>الحالة</th>
-                    <th>الإجراءات</th>
+                  <tr style={{ background: 'rgba(255,255,255,0.04)', borderBottom: '1px solid var(--glass-border)' }}>
+                    <th style={{ padding: '14px 16px', fontWeight: '800', color: '#94a3b8' }}>Profile & Name</th>
+                    <th style={{ padding: '14px 16px', fontWeight: '800', color: '#94a3b8' }}>Bigo Live ID</th>
+                    <th style={{ padding: '14px 16px', fontWeight: '800', color: '#94a3b8' }}>Role</th>
+                    <th style={{ padding: '14px 16px', fontWeight: '800', color: '#94a3b8' }}>Tier & Target</th>
+                    <th style={{ padding: '14px 16px', fontWeight: '800', color: '#94a3b8' }}>Stream Hours</th>
+                    <th style={{ padding: '14px 16px', fontWeight: '800', color: '#94a3b8' }}>Status</th>
+                    <th style={{ padding: '14px 16px', fontWeight: '800', color: '#94a3b8' }}>Contact</th>
+                    <th style={{ padding: '14px 16px', fontWeight: '800', color: '#94a3b8', textAlign: 'right' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredAccounts.map((acc) => (
-                    <tr key={acc.id}>
-                      <td style={{ fontWeight: '800' }}>{acc.name}</td>
-                      <td>{acc.email}</td>
-                      <td style={{ color: '#06b6d4', fontWeight: '700' }}>{acc.bigoId}</td>
-                      <td>
-                        <span style={{
-                          padding: '4px 10px',
-                          borderRadius: '9999px',
-                          fontSize: '12px',
-                          fontWeight: '700',
-                          background: acc.role === 'manager' ? 'rgba(245,158,11,0.15)' : acc.role === 'admin' ? 'rgba(239,68,68,0.15)' : acc.role === 'streamer' ? 'rgba(6,182,212,0.15)' : 'rgba(139,92,246,0.15)',
-                          color: acc.role === 'manager' ? '#f59e0b' : acc.role === 'admin' ? '#ef4444' : acc.role === 'streamer' ? '#06b6d4' : '#8b5cf6'
-                        }}>
-                          {acc.role === 'manager' ? 'مدير وكالة' : acc.role === 'admin' ? 'مسؤول نظام (Admin)' : acc.role === 'streamer' ? 'مذيع / صانع' : 'مشرف مساعد'}
-                        </span>
-                      </td>
-                      <td>{acc.badge}</td>
-                      <td style={{ fontSize: '13px' }}>
-                        <div>{acc.beans} 💎</div>
-                        <div style={{ color: '#f59e0b', fontWeight: '700' }}>{acc.monthlySalary}</div>
-                      </td>
-                      <td>
-                        <button
-                          type="button"
-                          onClick={() => handleToggleAccountStatus(acc.id)}
-                          style={{
-                            padding: '4px 10px',
-                            borderRadius: '9999px',
-                            border: 'none',
-                            fontSize: '12px',
-                            fontWeight: '700',
-                            cursor: 'pointer',
-                            background: acc.status === 'active' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
-                            color: acc.status === 'active' ? '#10b981' : '#ef4444',
-                            fontFamily: 'inherit'
-                          }}
-                        >
-                          {acc.status === 'active' ? 'مفعل ✓' : 'معلق ✗'}
-                        </button>
-                      </td>
-                      <td>
-                        <div style={{ display: 'flex', gap: '6px' }}>
-                          <button
-                            type="button"
-                            className="action-btn-secondary"
-                            style={{ padding: '6px 10px', fontSize: '12px' }}
-                            onClick={() => handleEditAccountClick(acc)}
-                          >
-                            <Edit3 size={14} />
-                          </button>
-                          <button
-                            type="button"
-                            className="action-btn-secondary"
-                            style={{ padding: '6px 10px', fontSize: '12px', color: '#ef4444', borderColor: 'rgba(239,68,68,0.3)' }}
-                            onClick={() => handleDeleteAccount(acc.id)}
-                          >
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
+                  {filteredAccounts.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} style={{ padding: '36px', textAlign: 'center', color: '#64748b' }}>
+                        No profiles found matching your search.
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    filteredAccounts.map((acc, idx) => (
+                      <tr
+                        key={acc.id || idx}
+                        style={{
+                          borderBottom: '1px solid rgba(255,255,255,0.04)',
+                          background: idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)'
+                        }}
+                      >
+                        {/* Name */}
+                        <td style={{ padding: '14px 16px' }}>
+                          <div style={{ fontWeight: '700', color: '#f8fafc', fontSize: '14px' }}>{acc.name}</div>
+                          {acc.notes && (
+                            <div style={{ fontSize: '11.5px', color: '#94a3b8', marginTop: '2px' }}>{acc.notes}</div>
+                          )}
+                        </td>
+
+                        {/* Bigo ID */}
+                        <td style={{ padding: '14px 16px' }}>
+                          <span
+                            style={{
+                              fontFamily: 'monospace',
+                              fontWeight: '700',
+                              color: '#38bdf8',
+                              background: 'rgba(6,182,212,0.1)',
+                              padding: '2px 8px',
+                              borderRadius: '6px'
+                            }}
+                          >
+                            {acc.bigoId}
+                          </span>
+                        </td>
+
+                        {/* Role */}
+                        <td style={{ padding: '14px 16px' }}>
+                          <span
+                            style={{
+                              fontSize: '11.5px',
+                              fontWeight: '700',
+                              padding: '3px 8px',
+                              borderRadius: '9999px',
+                              background:
+                                acc.role === 'vip_host'
+                                  ? 'rgba(245,158,11,0.15)'
+                                  : acc.role === 'supervisor'
+                                  ? 'rgba(139,92,246,0.15)'
+                                  : 'rgba(6,182,212,0.15)',
+                              color:
+                                acc.role === 'vip_host'
+                                  ? '#fbbf24'
+                                  : acc.role === 'supervisor'
+                                  ? '#a78bfa'
+                                  : '#38bdf8'
+                            }}
+                          >
+                            {acc.role === 'vip_host'
+                              ? 'VIP Host'
+                              : acc.role === 'supervisor'
+                              ? 'Supervisor'
+                              : acc.role === 'client'
+                              ? 'Client'
+                              : 'Broadcaster'}
+                          </span>
+                        </td>
+
+                        {/* Tier & Target */}
+                        <td style={{ padding: '14px 16px' }}>
+                          <div style={{ fontWeight: '700', color: '#f8fafc' }}>{acc.tier || 'T3'}</div>
+                          <div style={{ fontSize: '11.5px', color: '#94a3b8' }}>{acc.targetBeans} beans</div>
+                        </td>
+
+                        {/* Hours */}
+                        <td style={{ padding: '14px 16px' }}>
+                          <span style={{ fontWeight: '700', color: '#e2e8f0' }}>{acc.streamHours || 0} hrs</span>
+                        </td>
+
+                        {/* Status */}
+                        <td style={{ padding: '14px 16px' }}>
+                          <button
+                            onClick={() => toggleCrmStatus(acc.id)}
+                            title="Click to toggle status"
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '6px'
+                            }}
+                          >
+                            <span
+                              style={{
+                                width: '8px',
+                                height: '8px',
+                                borderRadius: '50%',
+                                background: acc.status === 'active' ? '#10b981' : '#ef4444'
+                              }}
+                            />
+                            <span
+                              style={{
+                                fontSize: '12px',
+                                fontWeight: '700',
+                                color: acc.status === 'active' ? '#34d399' : '#f87171'
+                              }}
+                            >
+                              {acc.status === 'active' ? 'Active' : 'Suspended'}
+                            </span>
+                          </button>
+                        </td>
+
+                        {/* Contact */}
+                        <td style={{ padding: '14px 16px' }}>
+                          {acc.phone && <div style={{ fontSize: '12px', color: '#cbd5e1' }}>{acc.phone}</div>}
+                          {acc.email && <div style={{ fontSize: '11.5px', color: '#64748b' }}>{acc.email}</div>}
+                        </td>
+
+                        {/* Actions */}
+                        <td style={{ padding: '14px 16px', textAlign: 'right' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
+                            <button
+                              onClick={() => openEditCrmModal(acc)}
+                              style={{
+                                padding: '6px',
+                                borderRadius: '8px',
+                                background: 'rgba(255,255,255,0.06)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                color: '#38bdf8',
+                                cursor: 'pointer'
+                              }}
+                              title="Edit Profile"
+                            >
+                              <Edit2 size={14} />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteCrm(acc.id, acc.name)}
+                              style={{
+                                padding: '6px',
+                                borderRadius: '8px',
+                                background: 'rgba(239,68,68,0.1)',
+                                border: '1px solid rgba(239,68,68,0.2)',
+                                color: '#f87171',
+                                cursor: 'pointer'
+                              }}
+                              title="Delete Profile"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -1595,30 +1522,2088 @@ export default function AdminDashboard({
         </div>
       )}
 
-      {/* ---------------- TAB 6: RESET & BACKUP ---------------- */}
-      {adminTab === 'system' && (
-        <div className="glass-card" style={{ padding: '32px' }}>
-          <h2 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '16px', color: '#ef4444', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <RotateCcw size={22} />
-            <span>إعادة الضبط وتصدير بيانات الموقع</span>
-          </h2>
-          <p style={{ color: '#94a3b8', fontSize: '14px', marginBottom: '24px' }}>
-            يمكنك استعادة البيانات والخطوط والألوان الأصلية للموقع أو تصدير نسخة احتياطية من التعديلات.
-          </p>
+      {/* ======================================================== */}
+      {/* TAB 3: 5 CORE SECTIONS DYNAMIC MANAGER */}
+      {/* ======================================================== */}
+      {activeTab === 'sections' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Sub-Tabs for the 5 Categories */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '8px',
+              borderBottom: '1px solid var(--glass-border)',
+              paddingBottom: '12px',
+              overflowX: 'auto'
+            }}
+          >
+            {[
+              { id: 'agency', label: `1. Agency Management (${agencyManagementItems.length})`, icon: Users },
+              { id: 'points', label: `2. Points Usage (${pointsUsageItems.length})`, icon: Sparkles },
+              { id: 'beans', label: `3. Bean Cashout (${beanWithdrawalItems.length})`, icon: CreditCard },
+              { id: 'salaries', label: `4. Salary Tiers (${salaryTiers.length})`, icon: DollarSign },
+              { id: 'quality', label: `5. Live Quality (${liveQualityItems.length})`, icon: Tv }
+            ].map((sub) => {
+              const Icon = sub.icon;
+              const isSelected = coreSectionTab === sub.id;
+              return (
+                <button
+                  key={sub.id}
+                  onClick={() => setCoreSectionTab(sub.id)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '8px 16px',
+                    borderRadius: '10px',
+                    background: isSelected ? 'rgba(6,182,212,0.15)' : 'transparent',
+                    border: isSelected ? '1px solid #06b6d4' : '1px solid transparent',
+                    color: isSelected ? '#38bdf8' : '#94a3b8',
+                    fontSize: '13.5px',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  <Icon size={16} />
+                  <span>{sub.label}</span>
+                </button>
+              );
+            })}
+          </div>
 
-          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+          {/* Section Action Bar */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h2 style={{ fontSize: '18px', fontWeight: '900', color: '#f8fafc', margin: 0 }}>
+                {coreSectionTab === 'agency' && 'Agency Management Operations'}
+                {coreSectionTab === 'points' && 'Points Usage & Exchange Methods'}
+                {coreSectionTab === 'beans' && 'Bean Cashout & Withdrawal Channels'}
+                {coreSectionTab === 'salaries' && 'Salary Tiers & Commission Scale'}
+                {coreSectionTab === 'quality' && 'Live Quality Standards & Pillars'}
+              </h2>
+              <p style={{ fontSize: '13px', color: '#94a3b8', margin: '4px 0 0 0' }}>
+                Add, customize, reorder, or delete cards appearing in this primary section.
+              </p>
+            </div>
+
             <button
-              className="action-btn-secondary"
-              style={{ color: '#ef4444', borderColor: '#ef4444' }}
-              onClick={() => {
-                if (confirm('هل أنت تأكد من إعادة ضبط كافة إعدادات ومحتويات الموقع للوضع الافتراضي؟')) {
-                  onResetDefaults();
-                }
+              onClick={openNewSectionItemModal}
+              className="action-btn-primary"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 18px',
+                borderRadius: '10px',
+                fontSize: '13.5px',
+                fontWeight: '700'
               }}
             >
-              <RotateCcw size={18} />
-              <span>إعادة ضبط الموقع بالكامل للوضع الافتراضي</span>
+              <Plus size={16} />
+              <span>Add New Card</span>
             </button>
+          </div>
+
+          {/* Current Section Items Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+            {/* 1. Agency Items */}
+            {coreSectionTab === 'agency' &&
+              agencyManagementItems.map((item) => {
+                const Icon = resolveIcon(item.icon, Users);
+                return (
+                  <div
+                    key={item.id}
+                    className="glass-card"
+                    style={{ padding: '20px', border: `1px solid ${item.color || '#06b6d4'}44`, display: 'flex', flexDirection: 'column' }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                      <div
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '10px',
+                          background: `${item.color || '#06b6d4'}22`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <Icon size={20} color={item.color || '#06b6d4'} />
+                      </div>
+                      <span
+                        style={{
+                          fontSize: '11px',
+                          fontWeight: '800',
+                          padding: '2px 8px',
+                          borderRadius: '9999px',
+                          background: `${item.color || '#06b6d4'}18`,
+                          color: item.color || '#06b6d4'
+                        }}
+                      >
+                        {item.badge || 'Operation'}
+                      </span>
+                    </div>
+                    <h3 style={{ fontSize: '16px', fontWeight: '800', color: '#f8fafc', marginBottom: '6px' }}>{item.title}</h3>
+                    <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.5', flex: 1 }}>{item.shortDesc}</p>
+                    {item.details && item.details.length > 0 && (
+                      <div style={{ fontSize: '12px', color: '#64748b', marginTop: '10px' }}>
+                        ✓ {item.details.length} procedural steps configured
+                      </div>
+                    )}
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
+                      <button
+                        onClick={() => openEditSectionItemModal(item)}
+                        style={{
+                          flex: 1,
+                          padding: '8px',
+                          borderRadius: '8px',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          color: '#38bdf8',
+                          fontSize: '12.5px',
+                          fontWeight: '700',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteSectionItem(item.id)}
+                        style={{
+                          padding: '8px 12px',
+                          borderRadius: '8px',
+                          background: 'rgba(239,68,68,0.1)',
+                          border: '1px solid rgba(239,68,68,0.2)',
+                          color: '#f87171',
+                          fontSize: '12.5px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+
+            {/* 2. Points Items */}
+            {coreSectionTab === 'points' &&
+              pointsUsageItems.map((item) => {
+                const Icon = resolveIcon(item.icon, Sparkles);
+                return (
+                  <div
+                    key={item.id}
+                    className="glass-card"
+                    style={{ padding: '20px', border: `1px solid ${item.color || '#f59e0b'}44`, display: 'flex', flexDirection: 'column' }}
+                  >
+                    <div
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '10px',
+                        background: `${item.color || '#f59e0b'}22`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '12px'
+                      }}
+                    >
+                      <Icon size={20} color={item.color || '#f59e0b'} />
+                    </div>
+                    <h3 style={{ fontSize: '16px', fontWeight: '800', color: '#f8fafc', marginBottom: '6px' }}>{item.title}</h3>
+                    <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.5', flex: 1 }}>{item.desc}</p>
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
+                      <button
+                        onClick={() => openEditSectionItemModal(item)}
+                        style={{
+                          flex: 1,
+                          padding: '8px',
+                          borderRadius: '8px',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          color: '#38bdf8',
+                          fontSize: '12.5px',
+                          fontWeight: '700',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteSectionItem(item.id)}
+                        style={{
+                          padding: '8px 12px',
+                          borderRadius: '8px',
+                          background: 'rgba(239,68,68,0.1)',
+                          border: '1px solid rgba(239,68,68,0.2)',
+                          color: '#f87171',
+                          fontSize: '12.5px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+
+            {/* 3. Beans Items */}
+            {coreSectionTab === 'beans' &&
+              beanWithdrawalItems.map((item) => {
+                const Icon = resolveIcon(item.icon, CreditCard);
+                return (
+                  <div
+                    key={item.id}
+                    className="glass-card"
+                    style={{ padding: '20px', border: `1px solid ${item.color || '#8b5cf6'}44`, display: 'flex', flexDirection: 'column' }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                      <div
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '10px',
+                          background: `${item.color || '#8b5cf6'}22`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <Icon size={20} color={item.color || '#8b5cf6'} />
+                      </div>
+                      <span
+                        style={{
+                          fontSize: '11px',
+                          fontWeight: '800',
+                          padding: '2px 8px',
+                          borderRadius: '9999px',
+                          background: `${item.color || '#8b5cf6'}18`,
+                          color: item.color || '#8b5cf6'
+                        }}
+                      >
+                        {item.category || 'Option'}
+                      </span>
+                    </div>
+                    <h3 style={{ fontSize: '16px', fontWeight: '800', color: '#f8fafc', marginBottom: '6px' }}>{item.title}</h3>
+                    {item.features && item.features.length > 0 && (
+                      <ul style={{ paddingLeft: '18px', margin: '8px 0 0 0', flex: 1, fontSize: '12.5px', color: '#94a3b8' }}>
+                        {item.features.map((feat, fIdx) => (
+                          <li key={fIdx} style={{ marginBottom: '4px' }}>{feat}</li>
+                        ))}
+                      </ul>
+                    )}
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
+                      <button
+                        onClick={() => openEditSectionItemModal(item)}
+                        style={{
+                          flex: 1,
+                          padding: '8px',
+                          borderRadius: '8px',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          color: '#38bdf8',
+                          fontSize: '12.5px',
+                          fontWeight: '700',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteSectionItem(item.id)}
+                        style={{
+                          padding: '8px 12px',
+                          borderRadius: '8px',
+                          background: 'rgba(239,68,68,0.1)',
+                          border: '1px solid rgba(239,68,68,0.2)',
+                          color: '#f87171',
+                          fontSize: '12.5px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+
+            {/* 4. Salaries Tiers */}
+            {coreSectionTab === 'salaries' &&
+              salaryTiers.map((item) => (
+                <div
+                  key={item.id || item.tier}
+                  className="glass-card"
+                  style={{ padding: '20px', border: `1px solid ${item.color || '#10b981'}44`, display: 'flex', flexDirection: 'column' }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <span
+                      style={{
+                        fontSize: '13px',
+                        fontWeight: '900',
+                        padding: '3px 10px',
+                        borderRadius: '8px',
+                        background: `${item.color || '#10b981'}22`,
+                        color: item.color || '#10b981'
+                      }}
+                    >
+                      {item.tier}
+                    </span>
+                    <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: '700' }}>{item.badge}</span>
+                  </div>
+                  <h3 style={{ fontSize: '17px', fontWeight: '800', color: '#f8fafc', marginBottom: '4px' }}>{item.name}</h3>
+                  <div style={{ fontSize: '13px', color: '#38bdf8', fontWeight: '700', marginBottom: '10px' }}>
+                    Target: {item.targetDisplay}
+                  </div>
+                  <div style={{ fontSize: '12.5px', color: '#94a3b8', display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+                    <div>Base Ratio: <strong>{item.baseRatio}%</strong></div>
+                    <div>Required Hours: <strong>{item.requiredHours}h</strong></div>
+                    <div>Bonus Ratio: <strong>+{item.bonusRatio}%</strong></div>
+                    <div>Total Ratio: <strong>{item.totalRatio || (item.baseRatio + item.bonusRatio)}%</strong></div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
+                    <button
+                      onClick={() => openEditSectionItemModal(item)}
+                      style={{
+                        flex: 1,
+                        padding: '8px',
+                        borderRadius: '8px',
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        color: '#38bdf8',
+                        fontSize: '12.5px',
+                        fontWeight: '700',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Edit Tier
+                    </button>
+                    <button
+                      onClick={() => handleDeleteSectionItem(item.id || item.tier)}
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        background: 'rgba(239,68,68,0.1)',
+                        border: '1px solid rgba(239,68,68,0.2)',
+                        color: '#f87171',
+                        fontSize: '12.5px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+            {/* 5. Live Quality Items */}
+            {coreSectionTab === 'quality' &&
+              liveQualityItems.map((item) => {
+                const Icon = resolveIcon(item.icon, Tv);
+                return (
+                  <div
+                    key={item.id}
+                    className="glass-card"
+                    style={{ padding: '20px', border: `1px solid ${item.color || '#ec4899'}44`, display: 'flex', flexDirection: 'column' }}
+                  >
+                    <div
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '10px',
+                        background: `${item.color || '#ec4899'}22`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '12px'
+                      }}
+                    >
+                      <Icon size={20} color={item.color || '#ec4899'} />
+                    </div>
+                    <h3 style={{ fontSize: '16px', fontWeight: '800', color: '#f8fafc', marginBottom: '6px' }}>{item.title}</h3>
+                    <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.5', flex: 1 }}>{item.desc}</p>
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
+                      <button
+                        onClick={() => openEditSectionItemModal(item)}
+                        style={{
+                          flex: 1,
+                          padding: '8px',
+                          borderRadius: '8px',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          color: '#38bdf8',
+                          fontSize: '12.5px',
+                          fontWeight: '700',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteSectionItem(item.id)}
+                        style={{
+                          padding: '8px 12px',
+                          borderRadius: '8px',
+                          background: 'rgba(239,68,68,0.1)',
+                          border: '1px solid rgba(239,68,68,0.2)',
+                          color: '#f87171',
+                          fontSize: '12.5px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 4: ARTICLES & NEWS MANAGER */}
+      {/* ======================================================== */}
+      {activeTab === 'articles' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h2 style={{ fontSize: '18px', fontWeight: '900', color: '#f8fafc', margin: 0 }}>
+                Articles, Announcements & Policy News
+              </h2>
+              <p style={{ fontSize: '13px', color: '#94a3b8', margin: '4px 0 0 0' }}>
+                Publish new articles, edit existing content, or remove outdated news.
+              </p>
+            </div>
+            <button
+              onClick={openNewArticleModal}
+              className="action-btn-primary"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 18px',
+                borderRadius: '10px',
+                fontSize: '13.5px',
+                fontWeight: '700'
+              }}
+            >
+              <Plus size={16} />
+              <span>Write Article</span>
+            </button>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px' }}>
+            {updatesData.map((art) => (
+              <div
+                key={art.id}
+                className="glass-card"
+                style={{ padding: '22px', borderRadius: '16px', display: 'flex', flexDirection: 'column' }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      fontWeight: '800',
+                      padding: '3px 8px',
+                      borderRadius: '9999px',
+                      background: 'rgba(6,182,212,0.15)',
+                      color: '#38bdf8'
+                    }}
+                  >
+                    {art.category || 'News'}
+                  </span>
+                  <span style={{ fontSize: '12px', color: '#64748b' }}>{art.date}</span>
+                </div>
+                <h3 style={{ fontSize: '16.5px', fontWeight: '800', color: '#f8fafc', marginBottom: '8px', lineHeight: '1.4' }}>
+                  {art.title}
+                </h3>
+                <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.6', flex: 1 }}>{art.summary}</p>
+                <div style={{ display: 'flex', gap: '8px', marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
+                  <button
+                    onClick={() => openEditArticleModal(art)}
+                    style={{
+                      flex: 1,
+                      padding: '8px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      color: '#38bdf8',
+                      fontSize: '12.5px',
+                      fontWeight: '700',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteArticle(art.id, art.title)}
+                    style={{
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(239,68,68,0.1)',
+                      border: '1px solid rgba(239,68,68,0.2)',
+                      color: '#f87171',
+                      fontSize: '12.5px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 5: CUSTOM BLOCKS & CARDS */}
+      {/* ======================================================== */}
+      {activeTab === 'blocks' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h2 style={{ fontSize: '18px', fontWeight: '900', color: '#f8fafc', margin: 0 }}>
+                Homepage Custom Blocks & Boxes
+              </h2>
+              <p style={{ fontSize: '13px', color: '#94a3b8', margin: '4px 0 0 0' }}>
+                Add, toggle, or edit feature boxes, call-to-actions, and promotion blocks.
+              </p>
+            </div>
+            <button
+              onClick={openNewBlockModal}
+              className="action-btn-primary"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 18px',
+                borderRadius: '10px',
+                fontSize: '13.5px',
+                fontWeight: '700'
+              }}
+            >
+              <Plus size={16} />
+              <span>Add Block</span>
+            </button>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
+            {customBlocks.map((block) => {
+              const Icon = resolveIcon(block.icon, Sparkles);
+              const isEnabled = block.enabled !== false;
+              return (
+                <div
+                  key={block.id}
+                  className="glass-card"
+                  style={{
+                    padding: '22px',
+                    borderRadius: '16px',
+                    border: `1px solid ${isEnabled ? (block.color || '#f59e0b') + '44' : 'rgba(255,255,255,0.06)'}`,
+                    opacity: isEnabled ? 1 : 0.6,
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                    <div
+                      style={{
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '10px',
+                        background: `${block.color || '#f59e0b'}22`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <Icon size={22} color={block.color || '#f59e0b'} />
+                    </div>
+                    <span
+                      onClick={() => toggleBlockEnabled(block.id)}
+                      title="Click to toggle enabled/disabled"
+                      style={{
+                        fontSize: '11px',
+                        fontWeight: '800',
+                        padding: '3px 8px',
+                        borderRadius: '9999px',
+                        background: isEnabled ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
+                        color: isEnabled ? '#34d399' : '#f87171',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {isEnabled ? 'Live on Site' : 'Hidden'}
+                    </span>
+                  </div>
+                  <h3 style={{ fontSize: '17px', fontWeight: '800', color: '#f8fafc', marginBottom: '6px' }}>{block.title}</h3>
+                  <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.5', flex: 1 }}>{block.subtitle}</p>
+                  <div style={{ fontSize: '12px', color: '#64748b', marginTop: '8px' }}>
+                    Button: <strong>{block.buttonText || 'Click'}</strong> → {block.buttonLink || '#'}
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '16px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
+                    <button
+                      onClick={() => openEditBlockModal(block)}
+                      style={{
+                        flex: 1,
+                        padding: '8px',
+                        borderRadius: '8px',
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        color: '#38bdf8',
+                        fontSize: '12.5px',
+                        fontWeight: '700',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteBlock(block.id, block.title)}
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        background: 'rgba(239,68,68,0.1)',
+                        border: '1px solid rgba(239,68,68,0.2)',
+                        color: '#f87171',
+                        fontSize: '12.5px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 6: SITE SETTINGS & CONTACTS */}
+      {/* ======================================================== */}
+      {activeTab === 'settings' && (
+        <div className="glass-card" style={{ padding: '28px', borderRadius: '18px', maxWidth: '780px' }}>
+          <h2 style={{ fontSize: '19px', fontWeight: '900', color: '#f8fafc', marginBottom: '8px' }}>
+            General Site Settings & Contact Links
+          </h2>
+          <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '24px' }}>
+            Configure agency name, brand subtitles, support numbers, WhatsApp, and Telegram links.
+          </p>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              showToast('Site settings updated successfully');
+            }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}
+          >
+            <div>
+              <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '6px' }}>
+                Agency Brand Title
+              </label>
+              <input
+                type="text"
+                value={siteInfo.title || ''}
+                onChange={(e) => setSiteInfo({ ...siteInfo, title: e.target.value })}
+                style={{
+                  width: '100%',
+                  padding: '10px 14px',
+                  borderRadius: '10px',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid var(--glass-border)',
+                  color: '#f8fafc',
+                  fontSize: '14px',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '6px' }}>
+                Site Subtitle & Tagline
+              </label>
+              <input
+                type="text"
+                value={siteInfo.subtitle || ''}
+                onChange={(e) => setSiteInfo({ ...siteInfo, subtitle: e.target.value })}
+                style={{
+                  width: '100%',
+                  padding: '10px 14px',
+                  borderRadius: '10px',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid var(--glass-border)',
+                  color: '#f8fafc',
+                  fontSize: '14px',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '6px' }}>
+                Hero Description
+              </label>
+              <textarea
+                rows={3}
+                value={siteInfo.description || ''}
+                onChange={(e) => setSiteInfo({ ...siteInfo, description: e.target.value })}
+                style={{
+                  width: '100%',
+                  padding: '10px 14px',
+                  borderRadius: '10px',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid var(--glass-border)',
+                  color: '#f8fafc',
+                  fontSize: '14px',
+                  boxSizing: 'border-box',
+                  lineHeight: '1.5'
+                }}
+              />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '6px' }}>
+                  WhatsApp Direct URL
+                </label>
+                <input
+                  type="text"
+                  value={siteInfo.contactLinks?.whatsapp || ''}
+                  onChange={(e) =>
+                    setSiteInfo({
+                      ...siteInfo,
+                      contactLinks: { ...siteInfo.contactLinks, whatsapp: e.target.value }
+                    })
+                  }
+                  placeholder="https://wa.me/..."
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '13.5px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '6px' }}>
+                  Telegram Support URL
+                </label>
+                <input
+                  type="text"
+                  value={siteInfo.contactLinks?.telegram || ''}
+                  onChange={(e) =>
+                    setSiteInfo({
+                      ...siteInfo,
+                      contactLinks: { ...siteInfo.contactLinks, telegram: e.target.value }
+                    })
+                  }
+                  placeholder="https://t.me/..."
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '13.5px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '6px' }}>
+                  Agency Official Portal Link
+                </label>
+                <input
+                  type="text"
+                  value={siteInfo.contactLinks?.cibus || ''}
+                  onChange={(e) =>
+                    setSiteInfo({
+                      ...siteInfo,
+                      contactLinks: { ...siteInfo.contactLinks, cibus: e.target.value }
+                    })
+                  }
+                  placeholder="https://www.scoopagency.online/"
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '13.5px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '6px' }}>
+                  Logo Asset Path
+                </label>
+                <input
+                  type="text"
+                  value={siteInfo.logoAsset || ''}
+                  onChange={(e) => setSiteInfo({ ...siteInfo, logoAsset: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '13.5px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="action-btn-primary"
+              style={{
+                alignSelf: 'flex-start',
+                padding: '12px 24px',
+                borderRadius: '10px',
+                fontSize: '14px',
+                fontWeight: '800',
+                marginTop: '8px'
+              }}
+            >
+              Save Settings
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 7: APPEARANCE & THEMES */}
+      {/* ======================================================== */}
+      {activeTab === 'appearance' && (
+        <div className="glass-card" style={{ padding: '28px', borderRadius: '18px', maxWidth: '780px' }}>
+          <h2 style={{ fontSize: '19px', fontWeight: '900', color: '#f8fafc', marginBottom: '8px' }}>
+            Appearance, Typography & Color Accents
+          </h2>
+          <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '24px' }}>
+            Customize system font family, base font sizes, and primary glowing accent colors.
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '8px' }}>
+                Primary Font Family
+              </label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
+                {[
+                  { name: 'Cairo (Default)', val: "'Cairo', sans-serif" },
+                  { name: 'Tajawal', val: "'Tajawal', sans-serif" },
+                  { name: 'IBM Plex Arabic', val: "'IBM Plex Sans Arabic', sans-serif" },
+                  { name: 'Inter (Modern)', val: "'Inter', sans-serif" }
+                ].map((f) => (
+                  <button
+                    key={f.val}
+                    type="button"
+                    onClick={() => setThemeConfig({ ...themeConfig, fontFamily: f.val })}
+                    style={{
+                      padding: '12px',
+                      borderRadius: '10px',
+                      background: themeConfig.fontFamily === f.val ? 'rgba(6,182,212,0.15)' : 'rgba(255,255,255,0.03)',
+                      border: themeConfig.fontFamily === f.val ? '1px solid #06b6d4' : '1px solid var(--glass-border)',
+                      color: themeConfig.fontFamily === f.val ? '#38bdf8' : '#e2e8f0',
+                      fontFamily: f.val,
+                      fontSize: '13.5px',
+                      fontWeight: '700',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {f.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '8px' }}>
+                Primary Theme Accent Color
+              </label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                {['#06b6d4', '#f59e0b', '#8b5cf6', '#10b981', '#ec4899', '#3b82f6'].map((col) => (
+                  <button
+                    key={col}
+                    type="button"
+                    onClick={() => setThemeConfig({ ...themeConfig, primaryColor: col, glowColor: `${col}44` })}
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '10px',
+                      background: col,
+                      border: themeConfig.primaryColor === col ? '3px solid #ffffff' : 'none',
+                      cursor: 'pointer',
+                      boxShadow: themeConfig.primaryColor === col ? `0 0 16px ${col}` : 'none'
+                    }}
+                  />
+                ))}
+                <input
+                  type="color"
+                  value={themeConfig.primaryColor || '#06b6d4'}
+                  onChange={(e) => setThemeConfig({ ...themeConfig, primaryColor: e.target.value, glowColor: `${e.target.value}44` })}
+                  style={{ width: '40px', height: '40px', borderRadius: '8px', border: 'none', cursor: 'pointer', background: 'none' }}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '8px' }}>
+                  Base Text Size: {themeConfig.baseFontSize || 14}px
+                </label>
+                <input
+                  type="range"
+                  min="11"
+                  max="18"
+                  value={themeConfig.baseFontSize || 14}
+                  onChange={(e) => setThemeConfig({ ...themeConfig, baseFontSize: Number(e.target.value) })}
+                  style={{ width: '100%', cursor: 'pointer' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '8px' }}>
+                  Heading Text Size: {themeConfig.headingFontSize || 20}px
+                </label>
+                <input
+                  type="range"
+                  min="16"
+                  max="28"
+                  value={themeConfig.headingFontSize || 20}
+                  onChange={(e) => setThemeConfig({ ...themeConfig, headingFontSize: Number(e.target.value) })}
+                  style={{ width: '100%', cursor: 'pointer' }}
+                />
+              </div>
+            </div>
+
+            <div style={{ padding: '16px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', marginTop: '8px' }}>
+              <div style={{ fontSize: '12px', color: '#64748b', fontWeight: '800', textTransform: 'uppercase', marginBottom: '6px' }}>
+                Live Typography Preview
+              </div>
+              <h3 style={{ fontSize: `${themeConfig.headingFontSize || 20}px`, fontWeight: '900', color: themeConfig.primaryColor, margin: '0 0 6px 0' }}>
+                وكالة Scope الرسمية لإدارة المذيعين
+              </h3>
+              <p style={{ fontSize: `${themeConfig.baseFontSize || 14}px`, color: '#94a3b8', margin: 0, lineHeight: '1.6' }}>
+                تجربة بصرية متميزة مع دعم كامل للخطوط المعتمدة وتناسق الأحجام عبر كافة الأجهزة.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 8: BADGES & HONORS */}
+      {/* ======================================================== */}
+      {activeTab === 'badges' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div>
+            <h2 style={{ fontSize: '18px', fontWeight: '900', color: '#f8fafc', margin: 0 }}>
+              Official Agency Badges & Accreditation Honors
+            </h2>
+            <p style={{ fontSize: '13px', color: '#94a3b8', margin: '4px 0 0 0' }}>
+              Manage Gold, Silver, and Celebrity Badges awarded to agency members.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px' }}>
+            {badgesData.map((b) => (
+              <div
+                key={b.id}
+                className="glass-card"
+                style={{ padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column' }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <Award size={26} color={b.color === 'gold' ? '#f59e0b' : b.color === 'silver' ? '#94a3b8' : '#cd7f32'} />
+                  <span
+                    style={{
+                      fontSize: '11.5px',
+                      fontWeight: '800',
+                      padding: '3px 10px',
+                      borderRadius: '9999px',
+                      background: 'rgba(255,255,255,0.06)',
+                      color: '#e2e8f0'
+                    }}
+                  >
+                    {b.badgeType}
+                  </span>
+                </div>
+                <h3 style={{ fontSize: '17px', fontWeight: '800', color: '#f8fafc', marginBottom: '8px' }}>{b.title}</h3>
+                <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: '1.6', flex: 1 }}>{b.description}</p>
+                {b.features && (
+                  <ul style={{ paddingLeft: '18px', margin: '12px 0 0 0', fontSize: '12.5px', color: '#cbd5e1' }}>
+                    {b.features.map((feat, fIdx) => (
+                      <li key={fIdx} style={{ marginBottom: '4px' }}>{feat}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 9: BACKUP & RESTORE */}
+      {/* ======================================================== */}
+      {activeTab === 'backup' && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+          <div className="glass-card" style={{ padding: '28px', borderRadius: '18px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+              <Download size={22} color="#06b6d4" />
+              <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#f8fafc', margin: 0 }}>
+                Export Complete Platform Backup
+              </h3>
+            </div>
+            <p style={{ fontSize: '13.5px', color: '#94a3b8', lineHeight: '1.6', marginBottom: '20px' }}>
+              Download a complete JSON snapshot containing all broadcaster profiles, 5 section cards, articles, custom blocks, and site configurations.
+            </p>
+            <button
+              onClick={exportFullBackup}
+              className="action-btn-primary"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '12px 20px',
+                borderRadius: '10px',
+                fontSize: '13.5px',
+                fontWeight: '700'
+              }}
+            >
+              <Download size={16} />
+              <span>Download JSON Backup</span>
+            </button>
+          </div>
+
+          <div className="glass-card" style={{ padding: '28px', borderRadius: '18px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+              <Upload size={22} color="#10b981" />
+              <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#f8fafc', margin: 0 }}>
+                Restore from JSON Backup
+              </h3>
+            </div>
+            <p style={{ fontSize: '13.5px', color: '#94a3b8', lineHeight: '1.6', marginBottom: '20px' }}>
+              Upload a previously exported Scope Agency JSON backup file to instantly restore all data.
+            </p>
+            <label
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '12px 20px',
+                borderRadius: '10px',
+                background: 'rgba(16,185,129,0.15)',
+                border: '1px solid rgba(16,185,129,0.3)',
+                color: '#34d399',
+                fontSize: '13.5px',
+                fontWeight: '700',
+                cursor: 'pointer'
+              }}
+            >
+              <Upload size={16} />
+              <span>Select Backup File (.json)</span>
+              <input type="file" accept=".json" onChange={handleImportBackupFile} style={{ display: 'none' }} />
+            </label>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL 1: CRM HOST / CLIENT REGISTRATION & EDIT */}
+      {/* ======================================================== */}
+      {crmModalOpen && (
+        <div
+          dir="ltr"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            background: 'rgba(0,0,0,0.75)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            backdropFilter: 'blur(6px)'
+          }}
+        >
+          <div
+            className="glass-card"
+            style={{
+              width: '100%',
+              maxWidth: '560px',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              padding: '28px',
+              borderRadius: '20px',
+              border: '1px solid rgba(6,182,212,0.4)',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.7)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <UserPlus size={22} color="#06b6d4" />
+                <h3 style={{ fontSize: '18px', fontWeight: '900', color: '#f8fafc', margin: 0 }}>
+                  {editingCrmItem ? 'Edit Broadcaster / Client Profile' : 'Register New Broadcaster / Client'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setCrmModalOpen(false)}
+                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveCrm} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={crmFormData.name}
+                    onChange={(e) => setCrmFormData({ ...crmFormData, name: e.target.value })}
+                    placeholder="e.g. Sara Al-Mansoor (Sara Live)"
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Bigo Live ID *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={crmFormData.bigoId}
+                    onChange={(e) => setCrmFormData({ ...crmFormData, bigoId: e.target.value })}
+                    placeholder="e.g. sara_vip_99"
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Role
+                  </label>
+                  <select
+                    value={crmFormData.role}
+                    onChange={(e) => setCrmFormData({ ...crmFormData, role: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  >
+                    <option value="host">Broadcaster (Host)</option>
+                    <option value="vip_host">VIP Star Host</option>
+                    <option value="client">Client / VIP Supporter</option>
+                    <option value="supervisor">Sub-Agent / Supervisor</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Account Status
+                  </label>
+                  <select
+                    value={crmFormData.status}
+                    onChange={(e) => setCrmFormData({ ...crmFormData, status: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  >
+                    <option value="active">Active (Contract Valid)</option>
+                    <option value="pending">Pending Approval</option>
+                    <option value="suspended">Suspended / Paused</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Assigned Salary Tier
+                  </label>
+                  <input
+                    type="text"
+                    value={crmFormData.tier}
+                    onChange={(e) => setCrmFormData({ ...crmFormData, tier: e.target.value })}
+                    placeholder="e.g. T1, T2, T3"
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Monthly Target Beans
+                  </label>
+                  <input
+                    type="text"
+                    value={crmFormData.targetBeans}
+                    onChange={(e) => setCrmFormData({ ...crmFormData, targetBeans: e.target.value })}
+                    placeholder="e.g. 1,000,000"
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Phone / WhatsApp
+                  </label>
+                  <input
+                    type="text"
+                    value={crmFormData.phone}
+                    onChange={(e) => setCrmFormData({ ...crmFormData, phone: e.target.value })}
+                    placeholder="+966 50 000 0000"
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    value={crmFormData.email}
+                    onChange={(e) => setCrmFormData({ ...crmFormData, email: e.target.value })}
+                    placeholder="host@scoopagency.online"
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                  Performance Notes & Remarks
+                </label>
+                <textarea
+                  rows={2}
+                  value={crmFormData.notes}
+                  onChange={(e) => setCrmFormData({ ...crmFormData, notes: e.target.value })}
+                  placeholder="Special achievements, PK battle rankings, contract details..."
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '13px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                <button
+                  type="submit"
+                  className="action-btn-primary"
+                  style={{ flex: 1, padding: '12px', borderRadius: '10px', fontWeight: '800' }}
+                >
+                  Save Profile
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCrmModalOpen(false)}
+                  style={{
+                    padding: '12px 18px',
+                    borderRadius: '10px',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: '#94a3b8',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL 2: 5 CORE SECTIONS ITEM ADD / EDIT */}
+      {/* ======================================================== */}
+      {sectionModalOpen && (
+        <div
+          dir="ltr"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            background: 'rgba(0,0,0,0.75)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            backdropFilter: 'blur(6px)'
+          }}
+        >
+          <div
+            className="glass-card"
+            style={{
+              width: '100%',
+              maxWidth: '560px',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              padding: '28px',
+              borderRadius: '20px',
+              border: '1px solid rgba(6,182,212,0.4)',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.7)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Layers size={22} color="#06b6d4" />
+                <h3 style={{ fontSize: '18px', fontWeight: '900', color: '#f8fafc', margin: 0 }}>
+                  {editingSectionItem ? 'Edit Section Item' : 'Add New Section Item'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setSectionModalOpen(false)}
+                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveSectionItem} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                  Item Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={sectionFormData.title}
+                  onChange={(e) => setSectionFormData({ ...sectionFormData, title: e.target.value })}
+                  placeholder="e.g. تسجيل مذيعين or Fast Cashout Service"
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '13px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              {/* Icon & Color Selector */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Select Icon
+                  </label>
+                  <select
+                    value={sectionFormData.icon}
+                    onChange={(e) => setSectionFormData({ ...sectionFormData, icon: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  >
+                    {AVAILABLE_ICON_NAMES.map((ic) => (
+                      <option key={ic} value={ic}>{ic}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Accent Color
+                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <input
+                      type="color"
+                      value={sectionFormData.color}
+                      onChange={(e) => setSectionFormData({ ...sectionFormData, color: e.target.value })}
+                      style={{ width: '36px', height: '36px', borderRadius: '6px', border: 'none', cursor: 'pointer', background: 'none' }}
+                    />
+                    <input
+                      type="text"
+                      value={sectionFormData.color}
+                      onChange={(e) => setSectionFormData({ ...sectionFormData, color: e.target.value })}
+                      style={{
+                        flex: 1,
+                        padding: '8px 10px',
+                        borderRadius: '6px',
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid var(--glass-border)',
+                        color: '#f8fafc',
+                        fontSize: '12px'
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Specific fields for Salaries */}
+              {coreSectionTab === 'salaries' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '14px', borderRadius: '10px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '11.5px', fontWeight: '700', color: '#10b981', marginBottom: '4px' }}>
+                        Tier Code (e.g. T1)
+                      </label>
+                      <input
+                        type="text"
+                        value={sectionFormData.tier}
+                        onChange={(e) => setSectionFormData({ ...sectionFormData, tier: e.target.value })}
+                        style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', color: '#f8fafc', fontSize: '12px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '11.5px', fontWeight: '700', color: '#10b981', marginBottom: '4px' }}>
+                        Target Display Text
+                      </label>
+                      <input
+                        type="text"
+                        value={sectionFormData.targetDisplay}
+                        onChange={(e) => setSectionFormData({ ...sectionFormData, targetDisplay: e.target.value })}
+                        placeholder="e.g. 100,000 - 999,999"
+                        style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', color: '#f8fafc', fontSize: '12px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '10px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '11.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                        Min Beans
+                      </label>
+                      <input
+                        type="number"
+                        value={sectionFormData.minBeans}
+                        onChange={(e) => setSectionFormData({ ...sectionFormData, minBeans: Number(e.target.value) })}
+                        style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', color: '#f8fafc', fontSize: '12px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '11.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                        Max Beans
+                      </label>
+                      <input
+                        type="number"
+                        value={sectionFormData.maxBeans}
+                        onChange={(e) => setSectionFormData({ ...sectionFormData, maxBeans: Number(e.target.value) })}
+                        style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', color: '#f8fafc', fontSize: '12px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '11.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                        Base Ratio (%)
+                      </label>
+                      <input
+                        type="number"
+                        value={sectionFormData.baseRatio}
+                        onChange={(e) => setSectionFormData({ ...sectionFormData, baseRatio: Number(e.target.value) })}
+                        style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', color: '#f8fafc', fontSize: '12px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '11.5px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                        Bonus (%)
+                      </label>
+                      <input
+                        type="number"
+                        value={sectionFormData.bonusRatio}
+                        onChange={(e) => setSectionFormData({ ...sectionFormData, bonusRatio: Number(e.target.value) })}
+                        style={{ width: '100%', padding: '8px', borderRadius: '6px', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', color: '#f8fafc', fontSize: '12px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Description */}
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                  Description / Subtitle
+                </label>
+                <textarea
+                  rows={2}
+                  value={sectionFormData.desc || sectionFormData.shortDesc}
+                  onChange={(e) =>
+                    setSectionFormData({ ...sectionFormData, desc: e.target.value, shortDesc: e.target.value })
+                  }
+                  placeholder="Short description for this card..."
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '13px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              {/* Details / Features bullet lines */}
+              {(coreSectionTab === 'agency' || coreSectionTab === 'beans') && (
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Bullet Points / Features (One per line)
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={coreSectionTab === 'agency' ? sectionFormData.detailsText : sectionFormData.featuresText}
+                    onChange={(e) =>
+                      setSectionFormData({
+                        ...sectionFormData,
+                        detailsText: e.target.value,
+                        featuresText: e.target.value
+                      })
+                    }
+                    placeholder="Step 1 or Feature point&#10;Step 2 or Feature point&#10;Step 3..."
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box',
+                      lineHeight: '1.5'
+                    }}
+                  />
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                <button
+                  type="submit"
+                  className="action-btn-primary"
+                  style={{ flex: 1, padding: '12px', borderRadius: '10px', fontWeight: '800' }}
+                >
+                  Save Item
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSectionModalOpen(false)}
+                  style={{
+                    padding: '12px 18px',
+                    borderRadius: '10px',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: '#94a3b8',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL 3: ARTICLE ADD / EDIT */}
+      {/* ======================================================== */}
+      {articleModalOpen && (
+        <div
+          dir="ltr"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            background: 'rgba(0,0,0,0.75)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            backdropFilter: 'blur(6px)'
+          }}
+        >
+          <div
+            className="glass-card"
+            style={{
+              width: '100%',
+              maxWidth: '540px',
+              padding: '28px',
+              borderRadius: '20px',
+              border: '1px solid rgba(6,182,212,0.4)',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.7)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <FileText size={22} color="#06b6d4" />
+                <h3 style={{ fontSize: '18px', fontWeight: '900', color: '#f8fafc', margin: 0 }}>
+                  {editingArticle ? 'Edit Article' : 'Compose New Article'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setArticleModalOpen(false)}
+                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveArticle} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                  Article Headline *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={articleFormData.title}
+                  onChange={(e) => setArticleFormData({ ...articleFormData, title: e.target.value })}
+                  placeholder="e.g. Bigo Live Official Commission Update for September"
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '13px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Category Tag
+                  </label>
+                  <input
+                    type="text"
+                    value={articleFormData.category}
+                    onChange={(e) => setArticleFormData({ ...articleFormData, category: e.target.value })}
+                    placeholder="e.g. Policy Update, Event, Announcement"
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Publish Date
+                  </label>
+                  <input
+                    type="text"
+                    value={articleFormData.date}
+                    onChange={(e) => setArticleFormData({ ...articleFormData, date: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                  Article Content / Summary *
+                </label>
+                <textarea
+                  rows={4}
+                  required
+                  value={articleFormData.summary}
+                  onChange={(e) => setArticleFormData({ ...articleFormData, summary: e.target.value })}
+                  placeholder="Full text summary or instructions for broadcasters..."
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '13px',
+                    boxSizing: 'border-box',
+                    lineHeight: '1.5'
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                  Action / Source Link (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={articleFormData.link}
+                  onChange={(e) => setArticleFormData({ ...articleFormData, link: e.target.value })}
+                  placeholder="# or https://..."
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '13px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                <button
+                  type="submit"
+                  className="action-btn-primary"
+                  style={{ flex: 1, padding: '12px', borderRadius: '10px', fontWeight: '800' }}
+                >
+                  Publish Article
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setArticleModalOpen(false)}
+                  style={{
+                    padding: '12px 18px',
+                    borderRadius: '10px',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: '#94a3b8',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL 4: CUSTOM BLOCK ADD / EDIT */}
+      {/* ======================================================== */}
+      {blockModalOpen && (
+        <div
+          dir="ltr"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            background: 'rgba(0,0,0,0.75)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            backdropFilter: 'blur(6px)'
+          }}
+        >
+          <div
+            className="glass-card"
+            style={{
+              width: '100%',
+              maxWidth: '540px',
+              padding: '28px',
+              borderRadius: '20px',
+              border: '1px solid rgba(6,182,212,0.4)',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.7)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Grid size={22} color="#06b6d4" />
+                <h3 style={{ fontSize: '18px', fontWeight: '900', color: '#f8fafc', margin: 0 }}>
+                  {editingBlock ? 'Edit Custom Block' : 'Add Custom Block'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setBlockModalOpen(false)}
+                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveBlock} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                  Block Headline *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={blockFormData.title}
+                  onChange={(e) => setBlockFormData({ ...blockFormData, title: e.target.value })}
+                  placeholder="e.g. VIP Support Channel"
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '13px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                  Subtitle / Description
+                </label>
+                <input
+                  type="text"
+                  value={blockFormData.subtitle}
+                  onChange={(e) => setBlockFormData({ ...blockFormData, subtitle: e.target.value })}
+                  placeholder="Direct assistance and agency onboarding..."
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--glass-border)',
+                    color: '#f8fafc',
+                    fontSize: '13px',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Select Icon
+                  </label>
+                  <select
+                    value={blockFormData.icon}
+                    onChange={(e) => setBlockFormData({ ...blockFormData, icon: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  >
+                    {AVAILABLE_ICON_NAMES.map((ic) => (
+                      <option key={ic} value={ic}>{ic}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Color Accent
+                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <input
+                      type="color"
+                      value={blockFormData.color}
+                      onChange={(e) => setBlockFormData({ ...blockFormData, color: e.target.value })}
+                      style={{ width: '36px', height: '36px', borderRadius: '6px', border: 'none', cursor: 'pointer', background: 'none' }}
+                    />
+                    <input
+                      type="text"
+                      value={blockFormData.color}
+                      onChange={(e) => setBlockFormData({ ...blockFormData, color: e.target.value })}
+                      style={{
+                        flex: 1,
+                        padding: '8px 10px',
+                        borderRadius: '6px',
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid var(--glass-border)',
+                        color: '#f8fafc',
+                        fontSize: '12px'
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Button Label
+                  </label>
+                  <input
+                    type="text"
+                    value={blockFormData.buttonText}
+                    onChange={(e) => setBlockFormData({ ...blockFormData, buttonText: e.target.value })}
+                    placeholder="e.g. Contact Now"
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#94a3b8', marginBottom: '4px' }}>
+                    Button Link / URL
+                  </label>
+                  <input
+                    type="text"
+                    value={blockFormData.buttonLink}
+                    onChange={(e) => setBlockFormData({ ...blockFormData, buttonLink: e.target.value })}
+                    placeholder="e.g. https://wa.me/..."
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid var(--glass-border)',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                <button
+                  type="submit"
+                  className="action-btn-primary"
+                  style={{ flex: 1, padding: '12px', borderRadius: '10px', fontWeight: '800' }}
+                >
+                  Save Block
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setBlockModalOpen(false)}
+                  style={{
+                    padding: '12px 18px',
+                    borderRadius: '10px',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: '#94a3b8',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

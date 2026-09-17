@@ -9,44 +9,12 @@ import {
   CheckCircle2,
   FileCheck
 } from 'lucide-react';
+import { defaultAgencyManagementItems } from '../data/siteData';
+import { resolveIcon } from '../utils/iconHelper';
 
-export default function AgencyManagementSection({ onBackToHome, setActiveTab }) {
-  const [activeSubOption, setActiveSubOption] = useState('register-hosts'); // 'register-hosts', 'unban', 'trend', 'supervisors'
-
-  const managementOptions = [
-    {
-      id: 'register-hosts',
-      title: 'تسجيل مذيعين',
-      badge: 'الأساسي والأهم',
-      icon: UserPlus,
-      color: '#06b6d4',
-      shortDesc: 'خطوات وإجراءات تسجيل المذيعين الجدد وتوقيع العقود الرسمية بالوكالة'
-    },
-    {
-      id: 'unban',
-      title: 'فك حظر الحسابات',
-      badge: 'دعم فني',
-      icon: ShieldAlert,
-      color: '#ef4444',
-      shortDesc: 'آلية تقديم طلبات استئناف فك الحظر ومراجعة المخالفات لدى إدارة المنصة'
-    },
-    {
-      id: 'trend',
-      title: 'طلب ترند للفعاليات',
-      badge: 'تسويق وترويج',
-      icon: Flame,
-      color: '#f59e0b',
-      shortDesc: 'شروط وضوابط ترشيح مذيعي الوكالة للظهور في قوائم الترند والفعاليات الكبرى'
-    },
-    {
-      id: 'supervisors',
-      title: 'إدارة المشرفين والقلادات',
-      badge: 'هيكل الوكالة',
-      icon: Award,
-      color: '#8b5cf6',
-      shortDesc: 'صلاحيات المشرف المساعد والقلادة الفضية وتنظيم فريق العمل الداخلي'
-    }
-  ];
+export default function AgencyManagementSection({ onBackToHome, setActiveTab, items = defaultAgencyManagementItems }) {
+  const currentItems = items && items.length > 0 ? items : defaultAgencyManagementItems;
+  const [activeSubOption, setActiveSubOption] = useState(currentItems[0]?.id || 'register-hosts');
 
   return (
     <section style={{ maxWidth: '1080px', margin: '0 auto' }}>
@@ -133,8 +101,8 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab }) 
           marginBottom: '28px'
         }}
       >
-        {managementOptions.map((opt) => {
-          const Icon = opt.icon;
+        {currentItems.map((opt) => {
+          const Icon = resolveIcon(opt.icon);
           const isSelected = activeSubOption === opt.id;
           return (
             <button
@@ -516,6 +484,77 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab }) 
             </div>
           </div>
         </div>
+      )}
+
+      {/* Dynamic view for custom or edited items */}
+      {!['register-hosts', 'unban', 'trend', 'supervisors'].includes(activeSubOption) && (
+        (() => {
+          const activeItem = currentItems.find((it) => it.id === activeSubOption);
+          if (!activeItem) return null;
+          const ActiveIcon = resolveIcon(activeItem.icon);
+          return (
+            <div className="glass-card" style={{ padding: '32px', border: `1px solid ${activeItem.color || '#06b6d4'}44` }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                <div
+                  style={{
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '12px',
+                    background: `${activeItem.color || '#06b6d4'}22`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <ActiveIcon size={24} color={activeItem.color || '#06b6d4'} />
+                </div>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <h2 style={{ fontSize: '22px', fontWeight: '900' }}>{activeItem.title}</h2>
+                    {activeItem.badge && (
+                      <span
+                        style={{
+                          fontSize: '11px',
+                          padding: '3px 8px',
+                          borderRadius: '9999px',
+                          background: `${activeItem.color || '#06b6d4'}22`,
+                          color: activeItem.color || '#06b6d4',
+                          fontWeight: '800'
+                        }}
+                      >
+                        {activeItem.badge}
+                      </span>
+                    )}
+                  </div>
+                  <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>
+                    {activeItem.shortDesc}
+                  </p>
+                </div>
+              </div>
+
+              {activeItem.details && activeItem.details.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '20px' }}>
+                  {activeItem.details.map((point, pIdx) => (
+                    <div
+                      key={pIdx}
+                      className="glass-card"
+                      style={{
+                        padding: '16px 20px',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '12px',
+                        border: `1px solid ${activeItem.color || '#06b6d4'}22`
+                      }}
+                    >
+                      <CheckCircle2 size={18} color={activeItem.color || '#06b6d4'} style={{ flexShrink: 0, marginTop: '2px' }} />
+                      <span style={{ fontSize: '14px', lineHeight: '1.6' }}>{point}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })()
       )}
     </section>
   );

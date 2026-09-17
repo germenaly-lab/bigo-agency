@@ -24,7 +24,12 @@ import {
   updatesData as defaultUpdatesData,
   defaultCustomBlocks,
   defaultThemeConfig,
-  defaultAccountsData
+  defaultAccountsData,
+  defaultAgencyManagementItems,
+  defaultPointsUsageItems,
+  defaultBeanWithdrawalItems,
+  defaultSalaryTiers,
+  defaultLiveQualityItems
 } from './data/siteData';
 
 export default function App() {
@@ -101,6 +106,32 @@ export default function App() {
     return saved ? JSON.parse(saved) : defaultAccountsData;
   });
 
+  // 5 Core Sections State Management
+  const [agencyManagementItems, setAgencyManagementItems] = useState(() => {
+    const saved = localStorage.getItem('scope_agencyManagementItems');
+    return saved ? JSON.parse(saved) : defaultAgencyManagementItems;
+  });
+
+  const [pointsUsageItems, setPointsUsageItems] = useState(() => {
+    const saved = localStorage.getItem('scope_pointsUsageItems');
+    return saved ? JSON.parse(saved) : defaultPointsUsageItems;
+  });
+
+  const [beanWithdrawalItems, setBeanWithdrawalItems] = useState(() => {
+    const saved = localStorage.getItem('scope_beanWithdrawalItems');
+    return saved ? JSON.parse(saved) : defaultBeanWithdrawalItems;
+  });
+
+  const [salaryTiers, setSalaryTiers] = useState(() => {
+    const saved = localStorage.getItem('scope_salaryTiers');
+    return saved ? JSON.parse(saved) : defaultSalaryTiers;
+  });
+
+  const [liveQualityItems, setLiveQualityItems] = useState(() => {
+    const saved = localStorage.getItem('scope_liveQualityItems');
+    return saved ? JSON.parse(saved) : defaultLiveQualityItems;
+  });
+
   // URL listener for #admin or /admin
   useEffect(() => {
     const handleUrlChange = () => {
@@ -145,6 +176,26 @@ export default function App() {
     localStorage.setItem('scope_accountsData', JSON.stringify(accountsData));
   }, [accountsData]);
 
+  useEffect(() => {
+    localStorage.setItem('scope_agencyManagementItems', JSON.stringify(agencyManagementItems));
+  }, [agencyManagementItems]);
+
+  useEffect(() => {
+    localStorage.setItem('scope_pointsUsageItems', JSON.stringify(pointsUsageItems));
+  }, [pointsUsageItems]);
+
+  useEffect(() => {
+    localStorage.setItem('scope_beanWithdrawalItems', JSON.stringify(beanWithdrawalItems));
+  }, [beanWithdrawalItems]);
+
+  useEffect(() => {
+    localStorage.setItem('scope_salaryTiers', JSON.stringify(salaryTiers));
+  }, [salaryTiers]);
+
+  useEffect(() => {
+    localStorage.setItem('scope_liveQualityItems', JSON.stringify(liveQualityItems));
+  }, [liveQualityItems]);
+
   const [themeMode, setThemeMode] = useState(() => {
     return localStorage.getItem('scope_themeMode') || localStorage.getItem('bigo_themeMode') || 'dark';
   });
@@ -188,6 +239,11 @@ export default function App() {
     localStorage.removeItem('scope_customBlocks');
     localStorage.removeItem('scope_accountsData');
     localStorage.removeItem('scope_themeMode');
+    localStorage.removeItem('scope_agencyManagementItems');
+    localStorage.removeItem('scope_pointsUsageItems');
+    localStorage.removeItem('scope_beanWithdrawalItems');
+    localStorage.removeItem('scope_salaryTiers');
+    localStorage.removeItem('scope_liveQualityItems');
 
     setSiteInfo(defaultSiteInfo);
     setThemeConfig(defaultThemeConfig);
@@ -195,6 +251,11 @@ export default function App() {
     setBadgesData(defaultBadgesData);
     setCustomBlocks(defaultCustomBlocks);
     setAccountsData(defaultAccountsData);
+    setAgencyManagementItems(defaultAgencyManagementItems);
+    setPointsUsageItems(defaultPointsUsageItems);
+    setBeanWithdrawalItems(defaultBeanWithdrawalItems);
+    setSalaryTiers(defaultSalaryTiers);
+    setLiveQualityItems(defaultLiveQualityItems);
     setThemeMode('dark');
   };
 
@@ -275,6 +336,16 @@ export default function App() {
               setCustomBlocks={setCustomBlocks}
               accountsData={accountsData}
               setAccountsData={setAccountsData}
+              agencyManagementItems={agencyManagementItems}
+              setAgencyManagementItems={setAgencyManagementItems}
+              pointsUsageItems={pointsUsageItems}
+              setPointsUsageItems={setPointsUsageItems}
+              beanWithdrawalItems={beanWithdrawalItems}
+              setBeanWithdrawalItems={setBeanWithdrawalItems}
+              salaryTiers={salaryTiers}
+              setSalaryTiers={setSalaryTiers}
+              liveQualityItems={liveQualityItems}
+              setLiveQualityItems={setLiveQualityItems}
               onResetDefaults={handleResetDefaults}
               onCloseAdmin={() => {
                 setActiveTab(user ? 'home' : 'login');
@@ -300,6 +371,7 @@ export default function App() {
             <AgencyManagementSection
               onBackToHome={() => setActiveTab('home')}
               setActiveTab={setActiveTab}
+              items={agencyManagementItems}
             />
           )}
 
@@ -308,6 +380,7 @@ export default function App() {
             <PointsUsageSection
               onBackToHome={() => setActiveTab('home')}
               setActiveTab={setActiveTab}
+              items={pointsUsageItems}
             />
           )}
 
@@ -316,6 +389,7 @@ export default function App() {
             <BeanWithdrawalSection
               onBackToHome={() => setActiveTab('home')}
               setActiveTab={setActiveTab}
+              items={beanWithdrawalItems}
             />
           )}
 
@@ -324,6 +398,7 @@ export default function App() {
             <SalarySection
               onBackToHome={() => setActiveTab('home')}
               setActiveTab={setActiveTab}
+              tiers={salaryTiers}
             />
           )}
 
@@ -332,6 +407,7 @@ export default function App() {
             <LiveQualitySection
               onBackToHome={() => setActiveTab('home')}
               setActiveTab={setActiveTab}
+              pillars={liveQualityItems}
             />
           )}
 

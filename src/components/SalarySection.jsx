@@ -94,7 +94,8 @@ export const officialSalaryTiers = [
   }
 ];
 
-export default function SalarySection({ onBackToHome }) {
+export default function SalarySection({ onBackToHome, tiers = officialSalaryTiers }) {
+  const currentTiers = tiers && tiers.length > 0 ? tiers : officialSalaryTiers;
   const [inputBeans, setInputBeans] = useState('100000');
   const [hoursCompleted, setHoursCompleted] = useState(true);
   const [showImageModal, setShowImageModal] = useState(false);
@@ -103,7 +104,7 @@ export default function SalarySection({ onBackToHome }) {
   const numericBeans = parseFloat(inputBeans) || 0;
 
   // Find matching tier
-  const matchedTier = officialSalaryTiers.find(
+  const matchedTier = currentTiers.find(
     (t) => numericBeans >= t.minBeans && numericBeans <= t.maxBeans
   );
 
@@ -343,7 +344,7 @@ export default function SalarySection({ onBackToHome }) {
               </tr>
             </thead>
             <tbody>
-              {officialSalaryTiers.map((tier, idx) => (
+              {currentTiers.map((tier, idx) => (
                 <tr
                   key={tier.tier}
                   style={{

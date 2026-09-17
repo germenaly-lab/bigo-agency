@@ -9,34 +9,11 @@ import {
   TrendingUp,
   Clock
 } from 'lucide-react';
+import { defaultPointsUsageItems } from '../data/siteData';
+import { resolveIcon } from '../utils/iconHelper';
 
-export default function PointsUsageSection({ onBackToHome, setActiveTab }) {
-  const usageMethods = [
-    {
-      title: 'دعم المذيعين في الباتلات والتحديات (PK)',
-      icon: Trophy,
-      color: '#f59e0b',
-      desc: 'استخدام نقاط الوكالة لدعم مذيعيك البارزين في مسابقات الـ PK الرسمية لرفع تصنيفهم وجذب كبار الداعمين.'
-    },
-    {
-      title: 'استبدال النقاط بجوائز وبونص إضافي',
-      icon: Gift,
-      color: '#ec4899',
-      desc: 'تحويل النقاط المتراكمة إلى مكافآت مادية وبونص إضافي يضاف إلى أرباح الوكالة الشهرية بناءً على سلم التحفيز.'
-    },
-    {
-      title: 'ترقية رتبة الوكالة والمشاركة في حفل GALA',
-      icon: Sparkles,
-      color: '#8b5cf6',
-      desc: 'تراكم النقاط يحدد ترتيب الوكالة إقليمياً وعالمياً، مما يؤهلها لحضور الحفل السنوي وتكريم كبار الوكلاء.'
-    },
-    {
-      title: 'تمويل فعاليات ورومات الوكالة الخاصة',
-      icon: Coins,
-      color: '#06b6d4',
-      desc: 'تخصيص رصيد النقاط لتنظيم مسابقات حصرية داخل رومات الوكالة وتوزيع جوائز تحفيزية على المذيعين الجدد.'
-    }
-  ];
+export default function PointsUsageSection({ onBackToHome, setActiveTab, items = defaultPointsUsageItems }) {
+  const currentItems = items && items.length > 0 ? items : defaultPointsUsageItems;
 
   return (
     <section style={{ maxWidth: '1080px', margin: '0 auto' }}>
@@ -159,23 +136,23 @@ export default function PointsUsageSection({ onBackToHome, setActiveTab }) {
           marginBottom: '32px'
         }}
       >
-        {usageMethods.map((m, idx) => {
-          const Icon = m.icon;
+        {currentItems.map((m, idx) => {
+          const Icon = resolveIcon(m.icon, Trophy);
           return (
-            <div key={idx} className="glass-card" style={{ padding: '24px', border: `1px solid ${m.color}33` }}>
+            <div key={m.id || idx} className="glass-card" style={{ padding: '24px', border: `1px solid ${m.color || '#f59e0b'}33` }}>
               <div
                 style={{
                   width: '46px',
                   height: '46px',
                   borderRadius: '12px',
-                  background: `${m.color}22`,
+                  background: `${m.color || '#f59e0b'}22`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginBottom: '16px'
                 }}
               >
-                <Icon size={24} color={m.color} />
+                <Icon size={24} color={m.color || '#f59e0b'} />
               </div>
               <h3 style={{ fontSize: '17px', fontWeight: '800', marginBottom: '8px' }}>{m.title}</h3>
               <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>{m.desc}</p>

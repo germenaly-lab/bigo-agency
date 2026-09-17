@@ -12,46 +12,11 @@ import {
   AlertTriangle,
   HeartHandshake
 } from 'lucide-react';
+import { defaultLiveQualityItems } from '../data/siteData';
+import { resolveIcon } from '../utils/iconHelper';
 
-export default function LiveQualitySection({ onBackToHome, setActiveTab }) {
-  const qualityPillars = [
-    {
-      title: 'الإضاءة الاحترافية وتوزيع النور',
-      icon: Sun,
-      color: '#f59e0b',
-      desc: 'استخدام إضاءة Ring Light أو Softbox أمامية مع توزيع جانبي متوازن لإبراز ملامح المذيع بوضوح ومنع الظلال الداكنة.'
-    },
-    {
-      title: 'جودة ونقاء الصوت (Audio & Mic)',
-      icon: Mic,
-      color: '#06b6d4',
-      desc: 'الاعتماد على ميكروفون احترافي خارجي عازل للضوضاء، والتأكد من هدوء الغرفة وتفادي ارتداد الصدى أثناء الحوار.'
-    },
-    {
-      title: 'ثبات الكاميرا وزاوية التصوير',
-      icon: Video,
-      color: '#8b5cf6',
-      desc: 'تثبيت الهاتف أو الكاميرا على حامل ثابت (Tripod) بمستوى العين وتجنب الاهتزاز وتنظيف عدسة الكاميرا قبل كل بث مباشر.'
-    },
-    {
-      title: 'استقرار وسرعة الاتصال بالإنترنت',
-      icon: Wifi,
-      color: '#10b981',
-      desc: 'سرعة رفع (Upload) لا تقل عن 10 Mbps لضمان بث متواصل بدقة 1080p عالية دون تقطيع أو انخفاض في معدل الإطارات (FPS).'
-    },
-    {
-      title: 'ديكور وخلفية الاستوديو',
-      icon: Tv,
-      color: '#ec4899',
-      desc: 'ترتيب الخلفية بأناقة وبساطة، وإضافة لمسات إضاءة جمالية ناعمة لتعزيز الهوية البصرية وجذب المشاهدين للبقاء بالروم.'
-    },
-    {
-      title: 'فن التفاعل وجذب الداعمين',
-      icon: HeartHandshake,
-      color: '#3b82f6',
-      desc: 'الترحيب بالداخلين بالاسم، التواصل البصري المستمر، التفاعل الذكي مع التعليقات والهدايا، وبناء مجتمع متابعين وفيّ.'
-    }
-  ];
+export default function LiveQualitySection({ onBackToHome, setActiveTab, pillars = defaultLiveQualityItems }) {
+  const currentPillars = pillars && pillars.length > 0 ? pillars : defaultLiveQualityItems;
 
   return (
     <section style={{ maxWidth: '1080px', margin: '0 auto' }}>
@@ -142,23 +107,23 @@ export default function LiveQualitySection({ onBackToHome, setActiveTab }) {
           marginBottom: '32px'
         }}
       >
-        {qualityPillars.map((p, idx) => {
-          const Icon = p.icon;
+        {currentPillars.map((p, idx) => {
+          const Icon = resolveIcon(p.icon, Tv);
           return (
-            <div key={idx} className="glass-card" style={{ padding: '24px', border: `1px solid ${p.color}33` }}>
+            <div key={p.id || idx} className="glass-card" style={{ padding: '24px', border: `1px solid ${p.color || '#ec4899'}33` }}>
               <div
                 style={{
                   width: '46px',
                   height: '46px',
                   borderRadius: '12px',
-                  background: `${p.color}22`,
+                  background: `${p.color || '#ec4899'}22`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginBottom: '16px'
                 }}
               >
-                <Icon size={24} color={p.color} />
+                <Icon size={24} color={p.color || '#ec4899'} />
               </div>
               <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '8px' }}>{p.title}</h3>
               <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>{p.desc}</p>
