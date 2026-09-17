@@ -200,7 +200,10 @@ export default function App() {
   );
 
   return (
-    <div className="app-container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div
+      className={`app-container ${!user && activeTab !== 'admin' ? 'login-page-active' : ''}`}
+      style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
+    >
       {/* Top Navbar: Rendered ONLY when user is authenticated or in Admin mode */}
       {(user || activeTab === 'admin') && (
         <Navbar

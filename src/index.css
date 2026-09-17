@@ -1028,3 +1028,69 @@ body {
   }
 }
 
+/* ============================================================
+   Executive Non-Scrollable Login View (Fits 100vh on Desktop)
+   ============================================================ */
+.app-container.login-page-active {
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.login-screen-wrapper {
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 16px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.login-card-compact {
+  width: 100%;
+  max-width: 410px;
+  padding: 24px 26px;
+  border-radius: 22px;
+  border: 1px solid rgba(233, 30, 99, 0.28);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.55), 0 0 30px rgba(233, 30, 99, 0.12);
+  backdrop-filter: blur(20px);
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+/* On mobile devices or viewports with constrained height, allow natural smooth scrolling */
+@media (max-width: 640px), (max-height: 620px) {
+  .app-container.login-page-active {
+    height: auto !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+  }
+
+  .login-screen-wrapper {
+    height: auto !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    padding: 56px 14px 24px 14px !important;
+    justify-content: flex-start !important;
+  }
+
+  .login-card-compact {
+    padding: 20px 16px !important;
+    border-radius: 18px !important;
+    max-width: 100% !important;
+    margin-top: 10px !important;
+  }
+}
+
