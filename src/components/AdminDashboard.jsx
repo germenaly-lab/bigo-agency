@@ -498,6 +498,28 @@ export default function AdminDashboard({
 
             <button
               type="button"
+              onClick={() => {
+                setAdminUsername('admin');
+                setAdminPassword('admin');
+              }}
+              style={{
+                width: '100%',
+                marginTop: '4px',
+                padding: '8px',
+                background: 'rgba(245, 158, 11, 0.1)',
+                border: '1px dashed rgba(245, 158, 11, 0.4)',
+                color: '#f59e0b',
+                borderRadius: '10px',
+                fontSize: '12px',
+                cursor: 'pointer',
+                fontWeight: 700
+              }}
+            >
+              ⚡ كتابة البيانات تلقائياً (admin / admin)
+            </button>
+
+            <button
+              type="button"
               className="action-btn-secondary"
               onClick={onCloseAdmin}
               style={{ width: '100%', marginTop: '6px' }}
