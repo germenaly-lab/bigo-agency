@@ -105,19 +105,6 @@ export default function HomeCategories({ onSelectCategory }) {
           <span>الأقسام التشغيلية الخمسة المعتمدة</span>
         </div>
 
-        <h2
-          style={{
-            fontSize: '24px',
-            fontWeight: '900',
-            marginBottom: '8px',
-            letterSpacing: '-0.02em',
-            background: 'linear-gradient(135deg, var(--text-main) 60%, var(--primary-gold) 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
-          }}
-        >
-          أقسام منظومة وكالة سكوب
-        </h2>
         <p style={{ fontSize: '13px', color: 'var(--text-muted)', maxWidth: '640px', margin: '0 auto', lineHeight: '1.6' }}>
           اختر أي قسم من الأقسام الخمسة للاطلاع على الأدلة العملية، الآليات الإجرائية، والجداول الرسمية المعتمدة
         </p>

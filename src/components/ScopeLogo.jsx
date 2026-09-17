@@ -30,7 +30,7 @@ export default function ScopeLogo({ size = 'md', showText = true, layout = 'row'
         transition: 'transform 0.2s ease',
       }}
     >
-      {/* Official Scoop Logo Image */}
+      {/* Official Scoop Logo Graphic */}
       {!imgError ? (
         <img
           src={scoopLogoImg || '/assets/scope-logo.png'}
@@ -58,63 +58,6 @@ export default function ScopeLogo({ size = 'md', showText = true, layout = 'row'
           >
             SCOOP
           </span>
-        </div>
-      )}
-
-      {/* Subtitle / Department Branding */}
-      {showText && (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: layout === 'column' ? 'center' : 'flex-start',
-            lineHeight: 1.2
-          }}
-        >
-          {layout === 'row' && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-            >
-              <div
-                style={{
-                  width: '1px',
-                  height: `${Math.max(18, dimensions.height * 0.55)}px`,
-                  background: 'linear-gradient(to bottom, transparent, rgba(233,30,99,0.5), transparent)',
-                  margin: '0 2px'
-                }}
-              />
-              <span
-                style={{
-                  fontSize: dimensions.fontSize,
-                  color: 'var(--text-muted)',
-                  fontWeight: 700,
-                  letterSpacing: '0.03em',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                منظومة إدارة الوكالات
-              </span>
-            </div>
-          )}
-
-          {layout === 'column' && (
-            <span
-              style={{
-                fontSize: dimensions.fontSize,
-                color: 'var(--text-muted)',
-                fontWeight: 700,
-                letterSpacing: '0.04em',
-                textAlign: 'center'
-              }}
-            >
-              منظومة إدارة الوكالات المعتمدة
-            </span>
-          )}
         </div>
       )}
     </div>

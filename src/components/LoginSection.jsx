@@ -228,7 +228,7 @@ export default function LoginSection({
             }}
           >
             <ShieldCheck size={12} />
-            <span>المنظومة الرسمية المعتمدة | BIGO LIVE</span>
+            <span>المنصة الرسمية المعتمدة | BIGO LIVE</span>
           </div>
 
           {/* Official Scoop Logo */}
@@ -511,7 +511,7 @@ export default function LoginSection({
             ) : (
               <>
                 <LogIn size={16} />
-                <span>دخول المنظومة</span>
+                <span>تسجيل الدخول</span>
               </>
             )}
           </button>
@@ -584,7 +584,7 @@ export default function LoginSection({
           zIndex: 1
         }}
       >
-        © 2026 Scoop Agency. جميع الحقوق محفوظة لمنظومة إدارة وتطوير الوكالات.
+        © 2026 Scoop Agency. جميع الحقوق محفوظة.
       </div>
 
       {/* Help / Password Reset Modal */}

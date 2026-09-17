@@ -3,7 +3,7 @@
 export const siteInfo = {
   title: "Scoop",
   subtitle: "المنصة المتكاملة لإدارة وتطوير وكالات البث المباشر",
-  description: "منظومة Scoop المتقدمة لإدارة المذيعين، احتساب الرواتب، متابعة النقاط، وسحب الأرباح بأعلى معايير الاحترافية.",
+  description: "منصة Scoop المتقدمة لإدارة المذيعين، احتساب الرواتب، متابعة النقاط، وسحب الأرباح بأعلى معايير الاحترافية.",
   heroBanner: "/images/image_1.png",
   logoAsset: "/assets/scope-logo.png",
   contactLinks: {
@@ -109,7 +109,7 @@ export const updatesData = [
 export const targetTiers = [];
 
 export const newAgenciesGuide = {
-  title: "دليل منظومة Scope لتشغيل الوكالات",
+  title: "دليل تشغيل الوكالات",
   subtitle: "خارطة الطريق لإدارة وكالة بث مباشر ناجحة",
   sections: [
     {

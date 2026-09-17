@@ -7,7 +7,7 @@ export default function Footer({ setActiveTab, user }) {
       <footer className="main-footer" style={{ marginTop: 'auto', padding: '20px 0' }}>
         <div className="footer-content" style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '11.5px', color: 'var(--text-dim)' }}>
-            © 2026 Scoop Agency. جميع الحقوق محفوظة لمنظومة إدارة وتطوير الوكالات.
+            © 2026 Scoop Agency. جميع الحقوق محفوظة.
           </div>
         </div>
       </footer>
@@ -18,11 +18,11 @@ export default function Footer({ setActiveTab, user }) {
     <footer className="main-footer" style={{ padding: '32px 20px', marginTop: '48px' }}>
       <div className="footer-content">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '6px' }}>
-          <ScopeLogo size="sm" showText={true} />
+          <ScopeLogo size="sm" />
         </div>
 
         <p style={{ maxWidth: '580px', lineHeight: '1.6', fontSize: '12px', color: 'var(--text-muted)', margin: '0 auto 14px auto', textAlign: 'center' }}>
-          المنظومة الاحترافية لإدارة وتطوير وكالات البث المباشر، متابعة المذيعين، احتساب الرواتب، وسحب الفاصوليا.
+          المنصة الاحترافية لتطوير وكالات البث المباشر، متابعة المذيعين، احتساب الرواتب، وسحب الفاصوليا.
         </p>
 
         <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center', fontSize: '12.5px', marginBottom: '14px' }}>
@@ -36,7 +36,7 @@ export default function Footer({ setActiveTab, user }) {
         </div>
 
         <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid var(--glass-border)', width: '100%', fontSize: '11px', color: 'var(--text-dim)', textAlign: 'center' }}>
-          © 2026 Scoop Agency. جميع الحقوق محفوظة لمنظومة إدارة وتطوير الوكالات.
+          © 2026 Scoop Agency. جميع الحقوق محفوظة.
         </div>
       </div>
     </footer>

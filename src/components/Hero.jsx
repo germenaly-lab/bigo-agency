@@ -78,12 +78,12 @@ export default function Hero({ setActiveTab, siteInfo: propSiteInfo }) {
             }}
           >
             <ShieldCheck size={13} />
-            <span>منظومة وكالة سكوب SCOOP الرسمية | BIGO LIVE 2026</span>
+            <span>وكالة سكوب SCOOP الرسمية | BIGO LIVE 2026</span>
           </div>
 
           {/* Agency Logo Row */}
           <div style={{ marginBottom: '14px' }}>
-            <ScopeLogo size="md" showText={true} layout="row" />
+            <ScopeLogo size="md" layout="row" />
           </div>
 
           {/* Main Hero Headline */}
@@ -115,7 +115,7 @@ export default function Hero({ setActiveTab, siteInfo: propSiteInfo }) {
             }}
           >
             {currentSiteInfo.description ||
-              'المنظومة الرقمية الرائدة لإدارة المذيعين، رصد ساعات وأيام البث المعتمدة، احتساب العمولات والرواتب بدقة متناهية، ومتابعة سحب الفاصوليا بأعلى معايير الشفافية.'}
+              'المنصة الرقمية الرائدة لإدارة المذيعين، رصد ساعات وأيام البث المعتمدة، احتساب العمولات والرواتب بدقة متناهية، ومتابعة سحب الفاصوليا بأعلى معايير الشفافية.'}
           </p>
 
           {/* Interactive Action Buttons */}

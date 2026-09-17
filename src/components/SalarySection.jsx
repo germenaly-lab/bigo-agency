@@ -30,7 +30,7 @@ export const officialSalaryTiers = [
     color: '#f59e0b',
     glow: 'rgba(245, 158, 11, 0.25)',
     badge: 'الماسة الملكية',
-    desc: 'أعلى شريحة ربحية في منظومة البيجو'
+    desc: 'أعلى شريحة ربحية في البيجو'
   },
   {
     tier: 'T2',
