@@ -715,8 +715,8 @@ export default function AdminDashboard({
                   <label className="form-label">حجم خط المحتوى ({themeConfig.baseFontSize}px):</label>
                   <input
                     type="range"
-                    min="13"
-                    max="22"
+                    min="11"
+                    max="20"
                     value={themeConfig.baseFontSize}
                     onChange={(e) => setThemeConfig({ ...themeConfig, baseFontSize: Number(e.target.value) })}
                     style={{ width: '100%', accentColor: '#f59e0b' }}
@@ -727,8 +727,8 @@ export default function AdminDashboard({
                   <label className="form-label">حجم خط العناوين ({themeConfig.headingFontSize}px):</label>
                   <input
                     type="range"
-                    min="18"
-                    max="36"
+                    min="16"
+                    max="30"
                     value={themeConfig.headingFontSize}
                     onChange={(e) => setThemeConfig({ ...themeConfig, headingFontSize: Number(e.target.value) })}
                     style={{ width: '100%', accentColor: '#f59e0b' }}

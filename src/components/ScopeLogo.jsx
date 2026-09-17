@@ -8,14 +8,14 @@ import scoopLogoImg from '../assets/scope-logo.png';
 export default function ScopeLogo({ size = 'md', showText = true, layout = 'row', className = '' }) {
   const [imgError, setImgError] = useState(false);
 
-  // Dimension mapping for responsive professional presentation
+  // Dimension mapping for refined, sleek professional presentation
   const dimensions = {
-    xs: { height: 24, fontSize: '12px' },
-    sm: { height: 32, fontSize: '13px' },
-    md: { height: 42, fontSize: '14px' },
-    lg: { height: 58, fontSize: '15px' },
-    xl: { height: 78, fontSize: '16px' }
-  }[size] || { height: 42, fontSize: '14px' };
+    xs: { height: 18, fontSize: '10.5px' },
+    sm: { height: 26, fontSize: '11.5px' },
+    md: { height: 34, fontSize: '12px' },
+    lg: { height: 44, fontSize: '13px' },
+    xl: { height: 56, fontSize: '14px' }
+  }[size] || { height: 34, fontSize: '12px' };
 
   return (
     <div

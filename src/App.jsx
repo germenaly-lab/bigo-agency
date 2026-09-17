@@ -64,7 +64,21 @@ export default function App() {
 
   const [themeConfig, setThemeConfig] = useState(() => {
     const saved = localStorage.getItem('scope_themeConfig') || localStorage.getItem('bigo_themeConfig') || localStorage.getItem('gogo_themeConfig');
-    return saved ? JSON.parse(saved) : defaultThemeConfig;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.baseFontSize && parsed.baseFontSize >= 16) {
+          parsed.baseFontSize = 14;
+        }
+        if (parsed.headingFontSize && parsed.headingFontSize >= 24) {
+          parsed.headingFontSize = 20;
+        }
+        return parsed;
+      } catch {
+        return defaultThemeConfig;
+      }
+    }
+    return defaultThemeConfig;
   });
 
   const [updatesData, setUpdatesData] = useState(() => {

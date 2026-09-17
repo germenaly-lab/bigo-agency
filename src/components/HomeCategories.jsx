@@ -90,26 +90,26 @@ export default function HomeCategories({ onSelectCategory }) {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '8px',
-            padding: '6px 16px',
+            gap: '6px',
+            padding: '4px 12px',
             borderRadius: '9999px',
             background: 'rgba(233, 30, 99, 0.12)',
             border: '1px solid rgba(233, 30, 99, 0.3)',
             color: '#e91e63',
-            fontSize: '13px',
+            fontSize: '11.5px',
             fontWeight: '800',
-            marginBottom: '12px'
+            marginBottom: '10px'
           }}
         >
-          <Sparkles size={14} />
+          <Sparkles size={12} />
           <span>الأقسام التشغيلية الخمسة المعتمدة</span>
         </div>
 
         <h2
           style={{
-            fontSize: '32px',
+            fontSize: '24px',
             fontWeight: '900',
-            marginBottom: '10px',
+            marginBottom: '8px',
             letterSpacing: '-0.02em',
             background: 'linear-gradient(135deg, var(--text-main) 60%, var(--primary-gold) 100%)',
             WebkitBackgroundClip: 'text',
@@ -118,7 +118,7 @@ export default function HomeCategories({ onSelectCategory }) {
         >
           أقسام منظومة وكالة سكوب
         </h2>
-        <p style={{ fontSize: '15px', color: 'var(--text-muted)', maxWidth: '680px', margin: '0 auto', lineHeight: '1.6' }}>
+        <p style={{ fontSize: '13px', color: 'var(--text-muted)', maxWidth: '640px', margin: '0 auto', lineHeight: '1.6' }}>
           اختر أي قسم من الأقسام الخمسة للاطلاع على الأدلة العملية، الآليات الإجرائية، والجداول الرسمية المعتمدة
         </p>
       </div>
@@ -138,8 +138,8 @@ export default function HomeCategories({ onSelectCategory }) {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                padding: '18px',
-                borderRadius: '22px',
+                padding: '14px',
+                borderRadius: '18px',
                 border: `1px solid rgba(255, 255, 255, 0.08)`,
                 position: 'relative',
                 overflow: 'hidden',
@@ -164,10 +164,10 @@ export default function HomeCategories({ onSelectCategory }) {
               <div
                 style={{
                   position: 'absolute',
-                  top: '-40px',
-                  right: '-40px',
-                  width: '120px',
-                  height: '120px',
+                  top: '-30px',
+                  right: '-30px',
+                  width: '100px',
+                  height: '100px',
                   background: `radial-gradient(circle, ${cat.glowColor} 0%, transparent 70%)`,
                   pointerEvents: 'none',
                   opacity: 0.6
@@ -179,10 +179,10 @@ export default function HomeCategories({ onSelectCategory }) {
                 <div
                   style={{
                     position: 'relative',
-                    height: '130px',
-                    borderRadius: '16px',
+                    height: '110px',
+                    borderRadius: '14px',
                     overflow: 'hidden',
-                    marginBottom: '16px',
+                    marginBottom: '12px',
                     border: '1px solid rgba(255, 255, 255, 0.06)'
                   }}
                 >
@@ -210,9 +210,9 @@ export default function HomeCategories({ onSelectCategory }) {
                   <div
                     style={{
                       position: 'absolute',
-                      top: '10px',
-                      right: '10px',
-                      left: '10px',
+                      top: '8px',
+                      right: '8px',
+                      left: '8px',
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
@@ -221,12 +221,12 @@ export default function HomeCategories({ onSelectCategory }) {
                   >
                     <span
                       style={{
-                        fontSize: '11px',
+                        fontSize: '10px',
                         fontWeight: '800',
                         color: '#ffffff',
                         background: 'rgba(0, 0, 0, 0.65)',
                         backdropFilter: 'blur(8px)',
-                        padding: '3px 10px',
+                        padding: '2px 8px',
                         borderRadius: '9999px',
                         border: `1px solid ${cat.color}66`
                       }}
@@ -236,13 +236,13 @@ export default function HomeCategories({ onSelectCategory }) {
 
                     <span
                       style={{
-                        fontSize: '11px',
+                        fontSize: '10px',
                         fontWeight: '900',
                         color: cat.color,
                         background: 'rgba(0, 0, 0, 0.7)',
                         backdropFilter: 'blur(8px)',
-                        padding: '3px 8px',
-                        borderRadius: '8px',
+                        padding: '2px 6px',
+                        borderRadius: '6px',
                         border: `1px solid ${cat.color}88`
                       }}
                     >
@@ -254,32 +254,32 @@ export default function HomeCategories({ onSelectCategory }) {
                   <div
                     style={{
                       position: 'absolute',
-                      bottom: '10px',
-                      right: '12px',
-                      width: '42px',
-                      height: '42px',
-                      borderRadius: '12px',
+                      bottom: '8px',
+                      right: '10px',
+                      width: '34px',
+                      height: '34px',
+                      borderRadius: '10px',
                       background: `linear-gradient(135deg, ${cat.color} 0%, rgba(15,23,42,0.9) 100%)`,
                       border: `1px solid ${cat.color}`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      boxShadow: `0 8px 16px ${cat.glowColor}`,
+                      boxShadow: `0 6px 14px ${cat.glowColor}`,
                       zIndex: 2
                     }}
                   >
-                    <Icon size={22} color="#ffffff" />
+                    <Icon size={16} color="#ffffff" />
                   </div>
                 </div>
 
                 {/* Card Title & English Subtitle */}
-                <div style={{ marginBottom: '10px' }}>
+                <div style={{ marginBottom: '8px' }}>
                   <h3
                     style={{
-                      fontSize: '19px',
+                      fontSize: '16px',
                       fontWeight: '900',
                       color: 'var(--text-main)',
-                      marginBottom: '4px',
+                      marginBottom: '3px',
                       letterSpacing: '-0.01em',
                       display: 'flex',
                       alignItems: 'center',
@@ -291,7 +291,7 @@ export default function HomeCategories({ onSelectCategory }) {
 
                   <span
                     style={{
-                      fontSize: '11px',
+                      fontSize: '10px',
                       color: cat.color,
                       fontWeight: '700',
                       letterSpacing: '0.04em',
@@ -306,11 +306,11 @@ export default function HomeCategories({ onSelectCategory }) {
                 {/* Card Description */}
                 <p
                   style={{
-                    fontSize: '13px',
+                    fontSize: '11.5px',
                     color: 'var(--text-muted)',
-                    lineHeight: '1.6',
-                    marginBottom: '14px',
-                    minHeight: '42px'
+                    lineHeight: '1.5',
+                    marginBottom: '10px',
+                    minHeight: '36px'
                   }}
                 >
                   {cat.desc}
@@ -321,25 +321,25 @@ export default function HomeCategories({ onSelectCategory }) {
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '6px',
-                    marginBottom: '16px'
+                    gap: '5px',
+                    marginBottom: '12px'
                   }}
                 >
                   {cat.highlights.map((h, i) => (
                     <div
                       key={i}
                       style={{
-                        fontSize: '11.5px',
-                        padding: '4px 8px',
-                        borderRadius: '8px',
+                        fontSize: '10.5px',
+                        padding: '3px 6px',
+                        borderRadius: '6px',
                         background: 'rgba(255, 255, 255, 0.04)',
                         color: 'var(--text-dim)',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '6px'
+                        gap: '5px'
                       }}
                     >
-                      <CheckCircle2 size={12} color={cat.color} style={{ flexShrink: 0 }} />
+                      <CheckCircle2 size={10} color={cat.color} style={{ flexShrink: 0 }} />
                       <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{h}</span>
                     </div>
                   ))}
@@ -352,14 +352,14 @@ export default function HomeCategories({ onSelectCategory }) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  paddingTop: '12px',
+                  paddingTop: '10px',
                   borderTop: '1px solid rgba(255, 255, 255, 0.08)',
                   marginTop: 'auto'
                 }}
               >
                 <span
                   style={{
-                    fontSize: '13px',
+                    fontSize: '11.5px',
                     fontWeight: '800',
                     color: cat.color
                   }}
@@ -369,8 +369,8 @@ export default function HomeCategories({ onSelectCategory }) {
 
                 <div
                   style={{
-                    width: '32px',
-                    height: '32px',
+                    width: '28px',
+                    height: '28px',
                     borderRadius: '50%',
                     background: `${cat.color}18`,
                     border: `1px solid ${cat.color}44`,
@@ -382,7 +382,7 @@ export default function HomeCategories({ onSelectCategory }) {
                   }}
                   className="category-arrow-btn"
                 >
-                  <ChevronLeft size={18} />
+                  <ChevronLeft size={15} />
                 </div>
               </div>
             </div>

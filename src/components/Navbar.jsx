@@ -71,8 +71,8 @@ export default function Navbar({
                       }
                     }}
                   >
-                    <Icon size={16} />
-                    <span>{item.label}</span>
+                    <Icon size={14} />
+                    <span style={{ fontSize: '12.5px' }}>{item.label}</span>
                   </button>
                 </li>
               );
@@ -93,34 +93,35 @@ export default function Navbar({
                       : 'rgba(245,158,11,0.08)',
                   borderColor: '#f59e0b',
                   color: '#f59e0b',
-                  fontWeight: '800'
+                  fontWeight: '800',
+                  padding: '6px 12px'
                 }}
               >
-                <Sliders size={16} color="#f59e0b" />
-                <span>لوحة التحكم</span>
+                <Sliders size={14} color="#f59e0b" />
+                <span style={{ fontSize: '12.5px' }}>لوحة التحكم</span>
               </button>
             </li>
           </ul>
         )}
 
         {/* Controls: Theme toggle, Search, and Account Button */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <button
             type="button"
             className="action-btn-secondary"
             onClick={onToggleThemeMode}
-            style={{ padding: '8px 12px', borderRadius: '9999px' }}
+            style={{ padding: '6px 10px', borderRadius: '9999px' }}
             title={themeMode === 'light' ? 'الوضع الليلي' : 'الوضع الساطع'}
           >
-            {themeMode === 'light' ? <Moon size={18} color="#8b5cf6" /> : <Sun size={18} color="#f59e0b" />}
+            {themeMode === 'light' ? <Moon size={15} color="#8b5cf6" /> : <Sun size={15} color="#f59e0b" />}
           </button>
 
           {user && (
             <>
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <Search
-                  size={16}
-                  style={{ position: 'absolute', right: '12px', color: '#94a3b8', pointerEvents: 'none' }}
+                  size={14}
+                  style={{ position: 'absolute', right: '10px', color: '#94a3b8', pointerEvents: 'none' }}
                 />
                 <input
                   type="text"
@@ -128,14 +129,14 @@ export default function Navbar({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   style={{
-                    padding: '8px 36px 8px 14px',
+                    padding: '6px 30px 6px 12px',
                     borderRadius: '9999px',
                     border: '1px solid rgba(255,255,255,0.1)',
                     background: 'rgba(15,23,42,0.6)',
                     color: '#fff',
-                    fontSize: '13px',
+                    fontSize: '12px',
                     outline: 'none',
-                    width: '140px',
+                    width: '130px',
                     fontFamily: 'inherit'
                   }}
                 />
@@ -145,28 +146,28 @@ export default function Navbar({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  padding: '6px 14px',
+                  gap: '6px',
+                  padding: '5px 12px',
                   borderRadius: '9999px',
                   background: 'rgba(6,182,212,0.1)',
                   border: '1px solid rgba(6,182,212,0.3)',
                   color: '#06b6d4',
-                  fontSize: '13px',
+                  fontSize: '12px',
                   fontWeight: '700'
                 }}
               >
-                <User size={15} />
+                <User size={13} />
                 <span>{user.name.split(' ')[0]}</span>
               </div>
 
               <button
                 className="action-btn-secondary"
                 onClick={onLogout}
-                style={{ color: '#ef4444', borderColor: 'rgba(239,68,68,0.3)', padding: '8px 14px' }}
+                style={{ color: '#ef4444', borderColor: 'rgba(239,68,68,0.3)', padding: '6px 12px' }}
                 title="تسجيل الخروج"
               >
-                <LogOut size={16} />
-                <span style={{ fontSize: '13px' }}>خروج</span>
+                <LogOut size={14} />
+                <span style={{ fontSize: '12px' }}>خروج</span>
               </button>
             </>
           )}

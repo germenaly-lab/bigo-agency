@@ -41,7 +41,7 @@ export default function PointsUsageSection({ onBackToHome, setActiveTab }) {
   return (
     <section style={{ maxWidth: '1080px', margin: '0 auto' }}>
       {/* Breadcrumb Navigation */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px', fontSize: '14px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '20px', fontSize: '12.5px' }}>
         <button
           onClick={onBackToHome}
           style={{
@@ -66,38 +66,39 @@ export default function PointsUsageSection({ onBackToHome, setActiveTab }) {
       <div
         className="glass-card"
         style={{
-          padding: '32px',
-          marginBottom: '28px',
+          padding: '24px 28px',
+          marginBottom: '24px',
           background: 'linear-gradient(135deg, rgba(245,158,11,0.12), rgba(22,30,49,0.85))',
           border: '1px solid rgba(245,158,11,0.3)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
-          gap: '20px'
+          gap: '16px',
+          borderRadius: '20px'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div
             style={{
-              width: '64px',
-              height: '64px',
-              borderRadius: '16px',
+              width: '52px',
+              height: '52px',
+              borderRadius: '15px',
               background: 'linear-gradient(135deg, #f59e0b, #d97706)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 8px 24px rgba(245,158,11,0.35)',
+              boxShadow: '0 8px 20px rgba(245,158,11,0.35)',
               flexShrink: 0
             }}
           >
-            <Sparkles size={32} color="#0b0f19" />
+            <Sparkles size={24} color="#0b0f19" />
           </div>
           <div>
-            <h1 style={{ fontSize: '26px', fontWeight: '900', marginBottom: '4px' }}>
+            <h1 style={{ fontSize: '21px', fontWeight: '900', marginBottom: '3px' }}>
               استخدام النقاط (Points Usage)
             </h1>
-            <p style={{ fontSize: '15px', color: 'var(--text-muted)' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
               دليل إدارة رصيد النقاط، آليات الاستبدال، برامج التحفيز، وطلبات الصرف المعتمدة
             </p>
           </div>
@@ -106,16 +107,16 @@ export default function PointsUsageSection({ onBackToHome, setActiveTab }) {
         <button
           onClick={onBackToHome}
           className="action-btn-secondary"
-          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+          style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', borderRadius: '10px', fontSize: '12.5px' }}
         >
-          <ArrowRight size={16} />
+          <ArrowRight size={14} />
           <span>الرجوع للأقسام</span>
         </button>
       </div>
 
       {/* Main Points Intro Card */}
-      <div className="glass-card" style={{ padding: '32px', marginBottom: '28px' }}>
-        <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#f59e0b', marginBottom: '12px' }}>
+      <div className="glass-card" style={{ padding: '24px 26px', marginBottom: '24px', borderRadius: '18px' }}>
+        <h2 style={{ fontSize: '17px', fontWeight: '800', color: '#f59e0b', marginBottom: '10px' }}>
           ما هي نقاط الوكالة وكيف يتم اكتسابها؟
         </h2>
         <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '20px' }}>

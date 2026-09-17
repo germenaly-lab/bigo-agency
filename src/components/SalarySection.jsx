@@ -115,9 +115,9 @@ export default function SalarySection({ onBackToHome }) {
   const estimatedPayoutUsd = matchedTier ? (baseUsd * (appliedRatio / 100)) : 0;
 
   return (
-    <section style={{ maxWidth: '1200px', margin: '0 auto', paddingBottom: '40px' }}>
+    <section style={{ maxWidth: '1200px', margin: '0 auto', paddingBottom: '36px' }}>
       {/* Breadcrumb Navigation */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px', fontSize: '14px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '20px', fontSize: '12.5px' }}>
         <button
           onClick={onBackToHome}
           style={{
@@ -142,63 +142,63 @@ export default function SalarySection({ onBackToHome }) {
       <div
         className="glass-card"
         style={{
-          padding: '32px',
-          marginBottom: '28px',
+          padding: '24px 28px',
+          marginBottom: '24px',
           background: 'linear-gradient(135deg, rgba(16,185,129,0.12), rgba(22,30,49,0.85))',
           border: '1px solid rgba(16,185,129,0.3)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
-          gap: '20px',
-          borderRadius: '24px'
+          gap: '16px',
+          borderRadius: '20px'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div
             style={{
-              width: '64px',
-              height: '64px',
-              borderRadius: '18px',
+              width: '52px',
+              height: '52px',
+              borderRadius: '15px',
               background: 'linear-gradient(135deg, #10b981, #059669)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 8px 24px rgba(16,185,129,0.35)',
+              boxShadow: '0 8px 20px rgba(16,185,129,0.35)',
               flexShrink: 0
             }}
           >
-            <DollarSign size={32} color="#ffffff" />
+            <DollarSign size={24} color="#ffffff" />
           </div>
           <div>
             <div
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
-                padding: '4px 12px',
+                gap: '5px',
+                padding: '3px 10px',
                 borderRadius: '9999px',
                 background: 'rgba(16,185,129,0.15)',
                 border: '1px solid rgba(16,185,129,0.35)',
                 color: '#10b981',
-                fontSize: '12px',
+                fontSize: '11px',
                 fontWeight: '800',
-                marginBottom: '8px'
+                marginBottom: '6px'
               }}
             >
-              <Zap size={14} />
+              <Zap size={12} />
               <span>سيستم المرتبات الشهري الرسمي المعتمد 2026</span>
             </div>
-            <h1 style={{ fontSize: '26px', fontWeight: '900', marginBottom: '4px' }}>
+            <h1 style={{ fontSize: '21px', fontWeight: '900', marginBottom: '3px' }}>
               سيستم مرتبات البيجو الشهري (Bigo Live Salary System)
             </h1>
-            <p style={{ fontSize: '14.5px', color: 'var(--text-muted)' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
               جدول شرائح نسب أرباح المذيعين، تارجت الفاصوليا، الساعات المطلوبة، وحاسبة العوائد التقديرية
             </p>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
           <button
             onClick={() => setShowImageModal(true)}
             className="action-btn-secondary"
@@ -208,21 +208,22 @@ export default function SalarySection({ onBackToHome }) {
               gap: '6px',
               borderColor: 'rgba(245, 158, 11, 0.4)',
               color: '#f59e0b',
-              padding: '10px 16px',
-              borderRadius: '12px',
+              padding: '8px 14px',
+              borderRadius: '10px',
+              fontSize: '12.5px',
               fontWeight: '700'
             }}
           >
-            <ImageIcon size={16} />
+            <ImageIcon size={14} />
             <span>عرض صورة الجدول الأصلية</span>
           </button>
 
           <button
             onClick={onBackToHome}
             className="action-btn-secondary"
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', borderRadius: '12px' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', borderRadius: '10px', fontSize: '12.5px' }}
           >
-            <ArrowRight size={16} />
+            <ArrowRight size={14} />
             <span>الرجوع للأقسام</span>
           </button>
         </div>
@@ -232,61 +233,61 @@ export default function SalarySection({ onBackToHome }) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: '18px',
-          marginBottom: '32px'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gap: '14px',
+          marginBottom: '26px'
         }}
       >
-        <div className="glass-card" style={{ padding: '22px', borderRadius: '18px', border: '1px solid rgba(245,158,11,0.25)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-            <Award size={22} color="#f59e0b" />
-            <h3 style={{ fontSize: '16px', fontWeight: '800' }}>نسب المذيعين ($)</h3>
+        <div className="glass-card" style={{ padding: '18px', borderRadius: '15px', border: '1px solid rgba(245,158,11,0.25)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <Award size={18} color="#f59e0b" />
+            <h3 style={{ fontSize: '14.5px', fontWeight: '800' }}>نسب المذيعين ($)</h3>
           </div>
-          <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
             تبدأ النسبة الأساسية من <strong>113%</strong> وتصل حتى <strong>125%</strong> حسب الشريحة وتارجت الفاصوليا المحققة.
           </p>
         </div>
 
-        <div className="glass-card" style={{ padding: '22px', borderRadius: '18px', border: '1px solid rgba(6,182,212,0.25)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-            <Clock size={22} color="#06b6d4" />
-            <h3 style={{ fontSize: '16px', fontWeight: '800' }}>الساعات المطلوبة شهرياً</h3>
+        <div className="glass-card" style={{ padding: '18px', borderRadius: '15px', border: '1px solid rgba(6,182,212,0.25)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <Clock size={18} color="#06b6d4" />
+            <h3 style={{ fontSize: '14.5px', fontWeight: '800' }}>الساعات المطلوبة شهرياً</h3>
           </div>
-          <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
             الحد الأدنى المطلوب لجميع الفئات هو <strong>20 ساعة بث</strong> معتمدة شهرياً لاستحقاق النسبة الإضافية.
           </p>
         </div>
 
-        <div className="glass-card" style={{ padding: '22px', borderRadius: '18px', border: '1px solid rgba(16,185,129,0.25)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-            <Sparkles size={22} color="#10b981" />
-            <h3 style={{ fontSize: '16px', fontWeight: '800' }}>بونص إضافي (+5%)</h3>
+        <div className="glass-card" style={{ padding: '18px', borderRadius: '15px', border: '1px solid rgba(16,185,129,0.25)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <Sparkles size={18} color="#10b981" />
+            <h3 style={{ fontSize: '14.5px', fontWeight: '800' }}>بونص إضافي (+5%)</h3>
           </div>
-          <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
             يحصل المذيع على <strong>5% إضافية</strong> فور إتمام الساعات المطلوبة، لتصل أقصى نسبة استحقاق إلى <strong>130%</strong>!
           </p>
         </div>
       </div>
 
       {/* Main Official Salary Table */}
-      <div className="glass-card" style={{ padding: '32px', marginBottom: '36px', borderRadius: '24px' }}>
+      <div className="glass-card" style={{ padding: '24px 26px', marginBottom: '28px', borderRadius: '18px' }}>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: '14px',
-            marginBottom: '24px'
+            gap: '12px',
+            marginBottom: '20px'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <TableProperties size={26} color="#10b981" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <TableProperties size={21} color="#10b981" />
             <div>
-              <h2 style={{ fontSize: '22px', fontWeight: '900' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: '900' }}>
                 جدول سيستم مرتبات البيجو الشهري الرسمي
               </h2>
-              <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                 البيانات الرسمية المعتمدة وفقاً للجدول الصادر
               </span>
             </div>
@@ -294,8 +295,8 @@ export default function SalarySection({ onBackToHome }) {
 
           <span
             style={{
-              fontSize: '12px',
-              padding: '6px 14px',
+              fontSize: '11px',
+              padding: '4px 12px',
               borderRadius: '9999px',
               background: 'rgba(16,185,129,0.15)',
               color: '#10b981',
@@ -315,28 +316,28 @@ export default function SalarySection({ onBackToHome }) {
               width: '100%',
               borderCollapse: 'separate',
               borderSpacing: '0',
-              borderRadius: '16px',
+              borderRadius: '14px',
               overflow: 'hidden'
             }}
           >
             <thead>
               <tr style={{ background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.85) 0%, rgba(217, 119, 6, 0.85) 100%)', color: '#ffffff' }}>
-                <th style={{ padding: '16px 18px', textAlign: 'center', fontSize: '14px', fontWeight: '800' }}>
+                <th style={{ padding: '12px 14px', textAlign: 'center', fontSize: '12.5px', fontWeight: '800' }}>
                   المستوى (الفئة)
                 </th>
-                <th style={{ padding: '16px 18px', textAlign: 'center', fontSize: '14px', fontWeight: '800' }}>
+                <th style={{ padding: '12px 14px', textAlign: 'center', fontSize: '12.5px', fontWeight: '800' }}>
                   تارجت الفاصوليا المحققة
                 </th>
-                <th style={{ padding: '16px 18px', textAlign: 'center', fontSize: '14px', fontWeight: '800' }}>
+                <th style={{ padding: '12px 14px', textAlign: 'center', fontSize: '12.5px', fontWeight: '800' }}>
                   نسبة المذيع الأساسية ($)
                 </th>
-                <th style={{ padding: '16px 18px', textAlign: 'center', fontSize: '14px', fontWeight: '800' }}>
+                <th style={{ padding: '12px 14px', textAlign: 'center', fontSize: '12.5px', fontWeight: '800' }}>
                   عدد الساعات المطلوبة شهرياً
                 </th>
-                <th style={{ padding: '16px 18px', textAlign: 'center', fontSize: '14px', fontWeight: '800' }}>
+                <th style={{ padding: '12px 14px', textAlign: 'center', fontSize: '12.5px', fontWeight: '800' }}>
                   نسبة المذيع الإضافية (عند تحقيق الساعات)
                 </th>
-                <th style={{ padding: '16px 18px', textAlign: 'center', fontSize: '14px', fontWeight: '800' }}>
+                <th style={{ padding: '12px 14px', textAlign: 'center', fontSize: '12.5px', fontWeight: '800' }}>
                   إجمالي النسبة المستحقة
                 </th>
               </tr>
@@ -358,19 +359,19 @@ export default function SalarySection({ onBackToHome }) {
                   }}
                 >
                   {/* المستوى الفئة */}
-                  <td style={{ padding: '18px', textAlign: 'center' }}>
+                  <td style={{ padding: '13px 14px', textAlign: 'center' }}>
                     <span
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        padding: '6px 16px',
+                        padding: '4px 12px',
                         borderRadius: '9999px',
                         background: `${tier.color}22`,
                         border: `1px solid ${tier.color}`,
                         color: tier.color,
                         fontWeight: '900',
-                        fontSize: '15px'
+                        fontSize: '13px'
                       }}
                     >
                       {tier.tier}
@@ -378,40 +379,40 @@ export default function SalarySection({ onBackToHome }) {
                   </td>
 
                   {/* تارجت الفاصوليا */}
-                  <td style={{ padding: '18px', textAlign: 'center', fontWeight: '800', fontSize: '15px', color: 'var(--text-main)' }}>
+                  <td style={{ padding: '13px 14px', textAlign: 'center', fontWeight: '800', fontSize: '13px', color: 'var(--text-main)' }}>
                     {tier.targetDisplay}
                   </td>
 
                   {/* نسبة المذيع الأساسية */}
-                  <td style={{ padding: '18px', textAlign: 'center', fontSize: '16px', fontWeight: '900', color: '#10b981' }}>
+                  <td style={{ padding: '13px 14px', textAlign: 'center', fontSize: '13.5px', fontWeight: '900', color: '#10b981' }}>
                     {tier.baseRatio}%
                   </td>
 
                   {/* عدد الساعات */}
-                  <td style={{ padding: '18px', textAlign: 'center', fontSize: '14px', color: 'var(--text-main)', fontWeight: '700' }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                      <Clock size={15} color="#06b6d4" />
+                  <td style={{ padding: '13px 14px', textAlign: 'center', fontSize: '12px', color: 'var(--text-main)', fontWeight: '700' }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                      <Clock size={13} color="#06b6d4" />
                       <span>{tier.requiredHours} ساعة</span>
                     </span>
                   </td>
 
                   {/* النسبة الإضافية */}
-                  <td style={{ padding: '18px', textAlign: 'center', fontSize: '15px', fontWeight: '800', color: '#f59e0b' }}>
+                  <td style={{ padding: '13px 14px', textAlign: 'center', fontSize: '13px', fontWeight: '800', color: '#f59e0b' }}>
                     +{tier.bonusRatio}%
                   </td>
 
                   {/* إجمالي النسبة */}
-                  <td style={{ padding: '18px', textAlign: 'center' }}>
+                  <td style={{ padding: '13px 14px', textAlign: 'center' }}>
                     <span
                       style={{
                         display: 'inline-block',
-                        padding: '4px 14px',
-                        borderRadius: '8px',
+                        padding: '3px 11px',
+                        borderRadius: '7px',
                         background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2))',
                         border: '1px solid #10b981',
                         color: '#6ee7b7',
                         fontWeight: '900',
-                        fontSize: '16px'
+                        fontSize: '13.5px'
                       }}
                     >
                       {tier.totalRatio}%
@@ -428,19 +429,19 @@ export default function SalarySection({ onBackToHome }) {
       <div
         className="glass-card"
         style={{
-          padding: '36px',
-          borderRadius: '24px',
+          padding: '26px 28px',
+          borderRadius: '20px',
           border: '1px solid rgba(16, 185, 129, 0.35)',
           background: 'linear-gradient(135deg, rgba(22, 30, 49, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%)',
-          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.4)'
+          boxShadow: '0 16px 40px rgba(0, 0, 0, 0.35)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
           <div
             style={{
-              width: '44px',
-              height: '44px',
-              borderRadius: '12px',
+              width: '38px',
+              height: '38px',
+              borderRadius: '10px',
               background: 'rgba(16,185,129,0.15)',
               display: 'flex',
               alignItems: 'center',
@@ -448,21 +449,21 @@ export default function SalarySection({ onBackToHome }) {
               border: '1px solid #10b981'
             }}
           >
-            <Calculator size={24} color="#10b981" />
+            <Calculator size={19} color="#10b981" />
           </div>
           <div>
-            <h3 style={{ fontSize: '22px', fontWeight: '900' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '900' }}>
               الحاسبة التفاعلية لمرتبات البيجو
             </h3>
-            <p style={{ fontSize: '13.5px', color: 'var(--text-muted)' }}>
+            <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
               أدخل كمية الفاصوليا لمعرفة المستوى المستحق ونسبة الأرباح والقيمة التقديرية بالدولار
             </p>
           </div>
         </div>
 
         {/* Preset Buttons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', margin: '18px 0' }}>
-          <span style={{ fontSize: '13px', color: 'var(--text-dim)', fontWeight: '700' }}>أمثلة سريعة:</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', margin: '14px 0' }}>
+          <span style={{ fontSize: '11.5px', color: 'var(--text-dim)', fontWeight: '700' }}>أمثلة سريعة:</span>
           {[
             { label: '5,000 (T5)', val: '5000' },
             { label: '50,000 (T4)', val: '50000' },
@@ -475,12 +476,12 @@ export default function SalarySection({ onBackToHome }) {
               type="button"
               onClick={() => setInputBeans(preset.val)}
               style={{
-                padding: '6px 12px',
-                borderRadius: '8px',
+                padding: '4px 10px',
+                borderRadius: '7px',
                 border: inputBeans === preset.val ? '1px solid #10b981' : '1px solid var(--glass-border)',
                 background: inputBeans === preset.val ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.04)',
                 color: inputBeans === preset.val ? '#10b981' : 'var(--text-muted)',
-                fontSize: '12px',
+                fontSize: '11px',
                 fontWeight: '700',
                 cursor: 'pointer'
               }}
@@ -494,20 +495,20 @@ export default function SalarySection({ onBackToHome }) {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '24px',
-            marginTop: '16px'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: '20px',
+            marginTop: '14px'
           }}
         >
           {/* Controls Column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div>
               <label
                 style={{
                   display: 'block',
                   fontWeight: '700',
-                  fontSize: '13.5px',
-                  marginBottom: '8px',
+                  fontSize: '12px',
+                  marginBottom: '6px',
                   color: 'var(--text-main)'
                 }}
               >
@@ -521,9 +522,9 @@ export default function SalarySection({ onBackToHome }) {
                 onChange={(e) => setInputBeans(e.target.value)}
                 style={{
                   width: '100%',
-                  height: '46px',
-                  borderRadius: '12px',
-                  fontSize: '15px',
+                  height: '40px',
+                  borderRadius: '10px',
+                  fontSize: '13.5px',
                   fontWeight: '700'
                 }}
               />
@@ -532,8 +533,8 @@ export default function SalarySection({ onBackToHome }) {
             {/* Hours Toggle */}
             <div
               style={{
-                padding: '14px 18px',
-                borderRadius: '14px',
+                padding: '10px 14px',
+                borderRadius: '12px',
                 background: 'rgba(255, 255, 255, 0.04)',
                 border: '1px solid var(--glass-border)',
                 display: 'flex',
@@ -541,13 +542,13 @@ export default function SalarySection({ onBackToHome }) {
                 justifyContent: 'space-between'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Clock size={20} color="#06b6d4" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Clock size={17} color="#06b6d4" />
                 <div>
-                  <div style={{ fontSize: '13.5px', fontWeight: '800' }}>
+                  <div style={{ fontSize: '12.5px', fontWeight: '800' }}>
                     تحقيق 20 ساعة بث هذا الشهر
                   </div>
-                  <div style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>
+                  <div style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>
                     يمنحك +5% بونص إضافي على الراتب
                   </div>
                 </div>
@@ -558,8 +559,8 @@ export default function SalarySection({ onBackToHome }) {
                 checked={hoursCompleted}
                 onChange={(e) => setHoursCompleted(e.target.checked)}
                 style={{
-                  width: '20px',
-                  height: '20px',
+                  width: '17px',
+                  height: '17px',
                   accentColor: '#10b981',
                   cursor: 'pointer'
                 }}
@@ -571,8 +572,8 @@ export default function SalarySection({ onBackToHome }) {
           <div
             className="glass-card"
             style={{
-              padding: '24px',
-              borderRadius: '18px',
+              padding: '18px',
+              borderRadius: '15px',
               background: matchedTier
                 ? `linear-gradient(135deg, ${matchedTier.color}15, rgba(15,23,42,0.85))`
                 : 'rgba(255,255,255,0.03)',
@@ -580,27 +581,27 @@ export default function SalarySection({ onBackToHome }) {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              gap: '16px'
+              gap: '14px'
             }}
           >
             {matchedTier ? (
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>المستوى المحقق</span>
-                    <h4 style={{ fontSize: '20px', fontWeight: '900', color: matchedTier.color }}>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>المستوى المحقق</span>
+                    <h4 style={{ fontSize: '17px', fontWeight: '900', color: matchedTier.color }}>
                       {matchedTier.name}
                     </h4>
                   </div>
 
                   <span
                     style={{
-                      padding: '4px 12px',
+                      padding: '3px 10px',
                       borderRadius: '9999px',
                       background: `${matchedTier.color}22`,
                       border: `1px solid ${matchedTier.color}`,
                       color: matchedTier.color,
-                      fontSize: '12px',
+                      fontSize: '11px',
                       fontWeight: '800'
                     }}
                   >
@@ -612,28 +613,28 @@ export default function SalarySection({ onBackToHome }) {
                   style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(3, 1fr)',
-                    gap: '10px',
-                    padding: '12px',
-                    borderRadius: '12px',
+                    gap: '8px',
+                    padding: '10px',
+                    borderRadius: '10px',
                     background: 'rgba(0, 0, 0, 0.3)',
                     textAlign: 'center'
                   }}
                 >
                   <div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>النسبة الأساسية</div>
-                    <div style={{ fontSize: '15px', fontWeight: '900', color: '#10b981' }}>
+                    <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>النسبة الأساسية</div>
+                    <div style={{ fontSize: '13.5px', fontWeight: '900', color: '#10b981' }}>
                       {matchedTier.baseRatio}%
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>بونص الساعات</div>
-                    <div style={{ fontSize: '15px', fontWeight: '900', color: hoursCompleted ? '#f59e0b' : '#64748b' }}>
+                    <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>بونص الساعات</div>
+                    <div style={{ fontSize: '13.5px', fontWeight: '900', color: hoursCompleted ? '#f59e0b' : '#64748b' }}>
                       {hoursCompleted ? `+${matchedTier.bonusRatio}%` : '0%'}
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>النسبة الإجمالية</div>
-                    <div style={{ fontSize: '16px', fontWeight: '900', color: '#6ee7b7' }}>
+                    <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>النسبة الإجمالية</div>
+                    <div style={{ fontSize: '14px', fontWeight: '900', color: '#6ee7b7' }}>
                       {appliedRatio}%
                     </div>
                   </div>
@@ -641,31 +642,31 @@ export default function SalarySection({ onBackToHome }) {
 
                 <div
                   style={{
-                    padding: '14px',
-                    borderRadius: '12px',
+                    padding: '12px',
+                    borderRadius: '10px',
                     background: 'linear-gradient(135deg, rgba(16,185,129,0.2), rgba(6,182,212,0.15))',
                     border: '1px solid #10b981',
                     textAlign: 'center'
                   }}
                 >
-                  <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>
                     القيمة التقديرية للأرباح بالدولار ($):
                   </span>
-                  <div style={{ fontSize: '24px', fontWeight: '900', color: '#ffffff' }}>
+                  <div style={{ fontSize: '20px', fontWeight: '900', color: '#ffffff' }}>
                     ${estimatedPayoutUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
                   </div>
-                  <span style={{ fontSize: '11px', color: '#6ee7b7', marginTop: '4px', display: 'block' }}>
+                  <span style={{ fontSize: '10.5px', color: '#6ee7b7', marginTop: '3px', display: 'block' }}>
                     (بناءً على {numericBeans.toLocaleString()} فاصوليا ÷ 210 × {appliedRatio}%)
                   </span>
                 </div>
               </>
             ) : (
-              <div style={{ textAlign: 'center', padding: '24px 0' }}>
-                <Info size={32} color="#f59e0b" style={{ margin: '0 auto 10px auto' }} />
-                <h4 style={{ fontSize: '16px', fontWeight: '800', marginBottom: '4px' }}>
+              <div style={{ textAlign: 'center', padding: '18px 0' }}>
+                <Info size={26} color="#f59e0b" style={{ margin: '0 auto 8px auto' }} />
+                <h4 style={{ fontSize: '14.5px', fontWeight: '800', marginBottom: '3px' }}>
                   {numericBeans < 2000 ? 'أقل من الحد الأدنى للرواتب' : 'أدخل رقم الفاصوليا'}
                 </h4>
-                <p style={{ fontSize: '12.5px', color: 'var(--text-muted)' }}>
+                <p style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>
                   الحد الأدنى للبدء في شرائح الرواتب هو <strong>2,000 فاصوليا</strong> (شريحة T5).
                 </p>
               </div>
@@ -686,24 +687,24 @@ export default function SalarySection({ onBackToHome }) {
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 9999,
-            padding: '20px'
+            padding: '18px'
           }}
           onClick={() => setShowImageModal(false)}
         >
           <div
             className="glass-card"
             style={{
-              maxWidth: '900px',
+              maxWidth: '850px',
               width: '100%',
-              padding: '24px',
-              borderRadius: '24px',
+              padding: '20px',
+              borderRadius: '20px',
               border: '1px solid rgba(245, 158, 11, 0.4)',
               position: 'relative'
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h3 style={{ fontSize: '18px', fontWeight: '900', color: '#f59e0b' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: '900', color: '#f59e0b' }}>
                 الصورة الأصلية لسيستم مرتبات البيجو الشهري
               </h3>
               <button
@@ -716,7 +717,7 @@ export default function SalarySection({ onBackToHome }) {
                   cursor: 'pointer'
                 }}
               >
-                <X size={24} />
+                <X size={20} />
               </button>
             </div>
 
@@ -727,17 +728,17 @@ export default function SalarySection({ onBackToHome }) {
                 width: '100%',
                 maxHeight: '75vh',
                 objectFit: 'contain',
-                borderRadius: '12px',
+                borderRadius: '10px',
                 border: '1px solid var(--glass-border)'
               }}
             />
 
-            <div style={{ textAlign: 'center', marginTop: '16px' }}>
+            <div style={{ textAlign: 'center', marginTop: '14px' }}>
               <button
                 type="button"
                 onClick={() => setShowImageModal(false)}
                 className="action-btn-secondary"
-                style={{ padding: '10px 24px', borderRadius: '10px', fontWeight: '700' }}
+                style={{ padding: '8px 20px', borderRadius: '8px', fontWeight: '700', fontSize: '12.5px' }}
               >
                 إغلاق
               </button>

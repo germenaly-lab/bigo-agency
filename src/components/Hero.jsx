@@ -66,34 +66,34 @@ export default function Hero({ setActiveTab, siteInfo: propSiteInfo }) {
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '8px',
-              padding: '6px 16px',
+              gap: '6px',
+              padding: '4px 12px',
               borderRadius: '9999px',
               background: 'rgba(245, 158, 11, 0.12)',
               border: '1px solid rgba(245, 158, 11, 0.4)',
               color: '#f59e0b',
-              fontSize: '13px',
+              fontSize: '11.5px',
               fontWeight: '800',
-              marginBottom: '18px'
+              marginBottom: '14px'
             }}
           >
-            <ShieldCheck size={16} />
+            <ShieldCheck size={13} />
             <span>منظومة وكالة سكوب SCOOP الرسمية | BIGO LIVE 2026</span>
           </div>
 
           {/* Agency Logo Row */}
-          <div style={{ marginBottom: '18px' }}>
-            <ScopeLogo size="lg" showText={true} layout="row" />
+          <div style={{ marginBottom: '14px' }}>
+            <ScopeLogo size="md" showText={true} layout="row" />
           </div>
 
           {/* Main Hero Headline */}
           <h1
             className="hero-title"
             style={{
-              fontSize: '34px',
+              fontSize: '26px',
               fontWeight: '900',
               lineHeight: '1.3',
-              marginBottom: '14px',
+              marginBottom: '10px',
               letterSpacing: '-0.02em',
               background: 'linear-gradient(135deg, #ffffff 40%, #f59e0b 80%, #e91e63 100%)',
               WebkitBackgroundClip: 'text',
@@ -107,11 +107,11 @@ export default function Hero({ setActiveTab, siteInfo: propSiteInfo }) {
           <p
             className="hero-desc"
             style={{
-              fontSize: '15.5px',
-              lineHeight: '1.8',
+              fontSize: '13.5px',
+              lineHeight: '1.7',
               color: 'var(--text-muted)',
-              marginBottom: '26px',
-              maxWidth: '620px'
+              marginBottom: '20px',
+              maxWidth: '600px'
             }}
           >
             {currentSiteInfo.description ||
@@ -124,8 +124,8 @@ export default function Hero({ setActiveTab, siteInfo: propSiteInfo }) {
             style={{
               display: 'flex',
               flexWrap: 'wrap',
-              gap: '12px',
-              marginBottom: '32px'
+              gap: '10px',
+              marginBottom: '24px'
             }}
           >
             <button
@@ -134,18 +134,18 @@ export default function Hero({ setActiveTab, siteInfo: propSiteInfo }) {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
-                padding: '12px 22px',
-                borderRadius: '14px',
-                fontSize: '14.5px',
+                gap: '6px',
+                padding: '10px 18px',
+                borderRadius: '12px',
+                fontSize: '13px',
                 fontWeight: '800',
                 background: 'linear-gradient(135deg, #e91e63 0%, #d81b60 60%, #f59e0b 100%)',
-                boxShadow: '0 8px 24px rgba(233, 30, 99, 0.35)'
+                boxShadow: '0 6px 20px rgba(233, 30, 99, 0.35)'
               }}
             >
-              <Users size={18} />
+              <Users size={15} />
               <span>إدارة الوكالة والمذيعين</span>
-              <ArrowLeft size={16} />
+              <ArrowLeft size={14} />
             </button>
 
             <button
@@ -154,16 +154,16 @@ export default function Hero({ setActiveTab, siteInfo: propSiteInfo }) {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
-                padding: '12px 18px',
-                borderRadius: '14px',
-                fontSize: '14px',
+                gap: '6px',
+                padding: '10px 15px',
+                borderRadius: '12px',
+                fontSize: '12.5px',
                 fontWeight: '700',
                 borderColor: 'rgba(16, 185, 129, 0.4)',
                 color: '#10b981'
               }}
             >
-              <DollarSign size={18} />
+              <DollarSign size={15} />
               <span>الرواتب والأرباح</span>
             </button>
 
@@ -173,16 +173,16 @@ export default function Hero({ setActiveTab, siteInfo: propSiteInfo }) {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
-                padding: '12px 18px',
-                borderRadius: '14px',
-                fontSize: '14px',
+                gap: '6px',
+                padding: '10px 15px',
+                borderRadius: '12px',
+                fontSize: '12.5px',
                 fontWeight: '700',
                 borderColor: 'rgba(139, 92, 246, 0.4)',
                 color: '#a78bfa'
               }}
             >
-              <CreditCard size={18} />
+              <CreditCard size={15} />
               <span>سحب الفاصوليا</span>
             </button>
 
@@ -192,16 +192,16 @@ export default function Hero({ setActiveTab, siteInfo: propSiteInfo }) {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
-                padding: '12px 18px',
-                borderRadius: '14px',
-                fontSize: '14px',
+                gap: '6px',
+                padding: '10px 15px',
+                borderRadius: '12px',
+                fontSize: '12.5px',
                 fontWeight: '700',
                 borderColor: 'rgba(245, 158, 11, 0.4)',
                 color: '#f59e0b'
               }}
             >
-              <Sparkles size={18} />
+              <Sparkles size={15} />
               <span>استخدام النقاط</span>
             </button>
           </div>
@@ -210,50 +210,50 @@ export default function Hero({ setActiveTab, siteInfo: propSiteInfo }) {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
-              gap: '14px',
-              padding: '16px 20px',
-              borderRadius: '18px',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(115px, 1fr))',
+              gap: '10px',
+              padding: '12px 16px',
+              borderRadius: '16px',
               background: 'rgba(255, 255, 255, 0.03)',
               border: '1px solid rgba(255, 255, 255, 0.08)'
             }}
           >
             <div>
-              <div style={{ fontSize: '20px', fontWeight: '900', color: '#06b6d4', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Users size={16} />
+              <div style={{ fontSize: '17px', fontWeight: '900', color: '#06b6d4', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <Users size={14} />
                 <span>+500</span>
               </div>
-              <div style={{ fontSize: '11.5px', color: 'var(--text-dim)', marginTop: '2px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginTop: '2px' }}>
                 مذيع ومذيعة معتمدين
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '20px', fontWeight: '900', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Sparkles size={16} />
+              <div style={{ fontSize: '17px', fontWeight: '900', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <Sparkles size={14} />
                 <span>+25M</span>
               </div>
-              <div style={{ fontSize: '11.5px', color: 'var(--text-dim)', marginTop: '2px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginTop: '2px' }}>
                 فاصوليا محولة شهرياً
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '20px', fontWeight: '900', color: '#10b981', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Zap size={16} />
+              <div style={{ fontSize: '17px', fontWeight: '900', color: '#10b981', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <Zap size={14} />
                 <span>24/7</span>
               </div>
-              <div style={{ fontSize: '11.5px', color: 'var(--text-dim)', marginTop: '2px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginTop: '2px' }}>
                 سحب فوري ودعم مباشر
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '20px', fontWeight: '900', color: '#ec4899', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Award size={16} />
+              <div style={{ fontSize: '17px', fontWeight: '900', color: '#ec4899', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <Award size={14} />
                 <span>Top 1%</span>
               </div>
-              <div style={{ fontSize: '11.5px', color: 'var(--text-dim)', marginTop: '2px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginTop: '2px' }}>
                 معايير الجودة والشفافية
               </div>
             </div>

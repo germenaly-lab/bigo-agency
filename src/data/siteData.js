@@ -241,8 +241,8 @@ export const defaultCustomBlocks = [
 
 export const defaultThemeConfig = {
   fontFamily: "'Cairo', sans-serif",
-  baseFontSize: 16,
-  headingFontSize: 24,
+  baseFontSize: 14,
+  headingFontSize: 20,
   primaryColor: "#f59e0b",
   glowColor: "rgba(245, 158, 11, 0.3)"
 };
