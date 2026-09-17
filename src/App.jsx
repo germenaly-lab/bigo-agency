@@ -28,6 +28,11 @@ import {
 } from './data/siteData';
 
 export default function App() {
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('scope_user');
+    return saved ? JSON.parse(saved) : null;
+  });
+
   const [activeTab, setActiveTab] = useState(() => {
     if (
       window.location.hash === '#admin' ||
@@ -36,11 +41,20 @@ export default function App() {
     ) {
       return 'admin';
     }
-    return 'login';
+    const savedUser = localStorage.getItem('scope_user');
+    return savedUser ? 'home' : 'login';
   });
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [user, setUser] = useState(null);
+
+  // Persist user session in localStorage
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('scope_user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('scope_user');
+    }
+  }, [user]);
 
   // Dynamic Site State with localStorage persistence
   const [siteInfo, setSiteInfo] = useState(() => {
@@ -160,13 +174,6 @@ export default function App() {
     localStorage.removeItem('scope_customBlocks');
     localStorage.removeItem('scope_accountsData');
     localStorage.removeItem('scope_themeMode');
-    localStorage.removeItem('bigo_siteInfo');
-    localStorage.removeItem('bigo_themeConfig');
-    localStorage.removeItem('bigo_updatesData');
-    localStorage.removeItem('bigo_badgesData');
-    localStorage.removeItem('bigo_customBlocks');
-    localStorage.removeItem('bigo_accountsData');
-    localStorage.removeItem('bigo_themeMode');
 
     setSiteInfo(defaultSiteInfo);
     setThemeConfig(defaultThemeConfig);
@@ -193,7 +200,7 @@ export default function App() {
   );
 
   return (
-    <div className="app-container">
+    <div className="app-container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar
         navItems={navItems}
         activeTab={activeTab}
@@ -206,111 +213,126 @@ export default function App() {
         onToggleThemeMode={handleToggleThemeMode}
       />
 
-      <main className="main-content">
-        {/* Search Results Alert if user typed in search bar */}
-        {searchQuery.trim() !== '' && activeTab !== 'admin' && (
-          <div className="glass-card" style={{ padding: '20px', marginBottom: '24px', border: '1px solid #f59e0b' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#f59e0b', marginBottom: '8px' }}>
-              نتائج البحث عن: "{searchQuery}"
-            </h3>
-            <p style={{ fontSize: '14px', color: '#94a3b8' }}>
-              تم تصفية المحتوى بناءً على كلمة البحث الخاصة بك.
-            </p>
-          </div>
-        )}
-
-        {/* Tab: ADMIN DASHBOARD */}
-        {activeTab === 'admin' && (
-          <AdminDashboard
-            siteInfo={siteInfo}
-            setSiteInfo={setSiteInfo}
-            themeConfig={themeConfig}
-            setThemeConfig={setThemeConfig}
-            updatesData={updatesData}
-            setUpdatesData={setUpdatesData}
-            badgesData={badgesData}
-            setBadgesData={setBadgesData}
-            customBlocks={customBlocks}
-            setCustomBlocks={setCustomBlocks}
-            accountsData={accountsData}
-            setAccountsData={setAccountsData}
-            onResetDefaults={handleResetDefaults}
-            onCloseAdmin={() => {
-              setActiveTab('home');
-              if (window.location.hash === '#admin') {
-                window.history.pushState(null, '', window.location.pathname);
-              }
-            }}
-          />
-        )}
-
-        {/* Tab: LOGIN SECTION (Login Only) */}
-        {activeTab === 'login' && (
+      {/* DEDICATED LOGIN GATE: If not logged in and not admin, show dedicated Login view only */}
+      {!user && activeTab !== 'admin' ? (
+        <main
+          className="main-content"
+          style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '24px 16px'
+          }}
+        >
           <LoginSection
             user={user}
-            setUser={setUser}
+            setUser={(newUser) => {
+              setUser(newUser);
+              setActiveTab('home');
+            }}
             setActiveTab={setActiveTab}
           />
-        )}
+        </main>
+      ) : (
+        /* AUTHENTICATED ACCESS / ADMIN: Full Platform Available */
+        <main className="main-content" style={{ flex: 1 }}>
+          {/* Search Results Alert if user typed in search bar */}
+          {searchQuery.trim() !== '' && activeTab !== 'admin' && (
+            <div className="glass-card" style={{ padding: '20px', marginBottom: '24px', border: '1px solid #f59e0b' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#f59e0b', marginBottom: '8px' }}>
+                نتائج البحث عن: "{searchQuery}"
+              </h3>
+              <p style={{ fontSize: '14px', color: '#94a3b8' }}>
+                تم تصفية المحتوى بناءً على كلمة البحث الخاصة بك.
+              </p>
+            </div>
+          )}
 
-        {/* Tab 1: HOME - Shows Scope Hero, the 5 Primary Categories, Custom Blocks, and Updates */}
-        {activeTab === 'home' && (
-          <>
-            <Hero setActiveTab={setActiveTab} siteInfo={siteInfo} />
-            <HomeCategories onSelectCategory={(catId) => setActiveTab(catId)} />
-            <CustomBlocksSection customBlocks={customBlocks} setActiveTab={setActiveTab} />
-            <UpdatesSection updatesData={filteredUpdates} />
-          </>
-        )}
+          {/* Tab: ADMIN DASHBOARD */}
+          {activeTab === 'admin' && (
+            <AdminDashboard
+              siteInfo={siteInfo}
+              setSiteInfo={setSiteInfo}
+              themeConfig={themeConfig}
+              setThemeConfig={setThemeConfig}
+              updatesData={updatesData}
+              setUpdatesData={setUpdatesData}
+              badgesData={badgesData}
+              setBadgesData={setBadgesData}
+              customBlocks={customBlocks}
+              setCustomBlocks={setCustomBlocks}
+              accountsData={accountsData}
+              setAccountsData={setAccountsData}
+              onResetDefaults={handleResetDefaults}
+              onCloseAdmin={() => {
+                setActiveTab(user ? 'home' : 'login');
+                if (window.location.hash === '#admin') {
+                  window.history.pushState(null, '', window.location.pathname);
+                }
+              }}
+            />
+          )}
 
-        {/* Category 1: إدارة الوكالة (Agency Management) */}
-        {activeTab === 'agency-management' && (
-          <AgencyManagementSection
-            onBackToHome={() => setActiveTab('home')}
-            setActiveTab={setActiveTab}
-          />
-        )}
+          {/* Tab 1: HOME - Shows Scope Hero, the 5 Primary Categories, Custom Blocks, and Updates */}
+          {activeTab === 'home' && (
+            <>
+              <Hero setActiveTab={setActiveTab} siteInfo={siteInfo} />
+              <HomeCategories onSelectCategory={(catId) => setActiveTab(catId)} />
+              <CustomBlocksSection customBlocks={customBlocks} setActiveTab={setActiveTab} />
+              <UpdatesSection updatesData={filteredUpdates} />
+            </>
+          )}
 
-        {/* Category 2: استخدام النقاط (Points Usage) */}
-        {activeTab === 'points-usage' && (
-          <PointsUsageSection
-            onBackToHome={() => setActiveTab('home')}
-            setActiveTab={setActiveTab}
-          />
-        )}
+          {/* Category 1: إدارة الوكالة (Agency Management) */}
+          {activeTab === 'agency-management' && (
+            <AgencyManagementSection
+              onBackToHome={() => setActiveTab('home')}
+              setActiveTab={setActiveTab}
+            />
+          )}
 
-        {/* Category 3: سحب الفاصوليا (Bean Withdrawal) */}
-        {activeTab === 'bean-withdrawal' && (
-          <BeanWithdrawalSection
-            onBackToHome={() => setActiveTab('home')}
-            setActiveTab={setActiveTab}
-          />
-        )}
+          {/* Category 2: استخدام النقاط (Points Usage) */}
+          {activeTab === 'points-usage' && (
+            <PointsUsageSection
+              onBackToHome={() => setActiveTab('home')}
+              setActiveTab={setActiveTab}
+            />
+          )}
 
-        {/* Category 4: الرواتب (Salaries) */}
-        {activeTab === 'salaries' && (
-          <SalarySection
-            onBackToHome={() => setActiveTab('home')}
-            setActiveTab={setActiveTab}
-          />
-        )}
+          {/* Category 3: سحب الفاصوليا (Bean Withdrawal) */}
+          {activeTab === 'bean-withdrawal' && (
+            <BeanWithdrawalSection
+              onBackToHome={() => setActiveTab('home')}
+              setActiveTab={setActiveTab}
+            />
+          )}
 
-        {/* Category 5: كواليتي اللايف (Live Quality) */}
-        {activeTab === 'live-quality' && (
-          <LiveQualitySection
-            onBackToHome={() => setActiveTab('home')}
-            setActiveTab={setActiveTab}
-          />
-        )}
+          {/* Category 4: الرواتب (Salaries) */}
+          {activeTab === 'salaries' && (
+            <SalarySection
+              onBackToHome={() => setActiveTab('home')}
+              setActiveTab={setActiveTab}
+            />
+          )}
 
-        {/* Additional Reference Sections (Accessible via Admin / Links) */}
-        {activeTab === 'badges' && <BadgesSection badgesData={filteredBadges} />}
-        {activeTab === 'updates' && <UpdatesSection updatesData={filteredUpdates} />}
-        {activeTab === 'gala' && <GalaSection />}
-        {activeTab === 'english' && <EnglishGuide />}
-      </main>
+          {/* Category 5: كواليتي اللايف (Live Quality) */}
+          {activeTab === 'live-quality' && (
+            <LiveQualitySection
+              onBackToHome={() => setActiveTab('home')}
+              setActiveTab={setActiveTab}
+            />
+          )}
 
-      <Footer setActiveTab={setActiveTab} />
+          {/* Additional Reference Sections */}
+          {activeTab === 'badges' && <BadgesSection badgesData={filteredBadges} />}
+          {activeTab === 'updates' && <UpdatesSection updatesData={filteredUpdates} />}
+          {activeTab === 'gala' && <GalaSection />}
+          {activeTab === 'english' && <EnglishGuide />}
+        </main>
+      )}
+
+      <Footer setActiveTab={setActiveTab} user={user} />
       <Analytics />
     </div>
   );

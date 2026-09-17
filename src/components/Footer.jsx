@@ -1,7 +1,19 @@
 import React from 'react';
 import ScopeLogo from './ScopeLogo';
 
-export default function Footer({ setActiveTab }) {
+export default function Footer({ setActiveTab, user }) {
+  if (!user) {
+    return (
+      <footer className="main-footer" style={{ marginTop: 'auto', padding: '24px 0' }}>
+        <div className="footer-content" style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '13px', color: 'var(--text-dim)' }}>
+            © 2026 Scope. جميع الحقوق محفوظة لمنظومة إدارة وتطوير الوكالات.
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <footer className="main-footer">
       <div className="footer-content">
