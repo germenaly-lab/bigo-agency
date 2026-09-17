@@ -975,7 +975,10 @@ export default function AdminDashboard({
           </button>
 
           <button
-            onClick={handleAdminLogout}
+            onClick={() => {
+              handleAdminLogout();
+              if (onCloseAdmin) onCloseAdmin();
+            }}
             style={{
               display: 'flex',
               alignItems: 'center',

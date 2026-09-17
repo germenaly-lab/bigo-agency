@@ -9,7 +9,6 @@ import {
   Search,
   User,
   LogOut,
-  Sliders,
   Sun,
   Moon
 } from 'lucide-react';
@@ -77,30 +76,6 @@ export default function Navbar({
                 </li>
               );
             })}
-
-            {/* Admin Dashboard Tab */}
-            <li>
-              <button
-                className={`nav-tab ${activeTab === 'admin' ? 'active' : ''}`}
-                onClick={() => {
-                  setActiveTab('admin');
-                  window.location.hash = '#admin';
-                }}
-                style={{
-                  background:
-                    activeTab === 'admin'
-                      ? 'linear-gradient(135deg, rgba(245,158,11,0.3), rgba(236,72,153,0.3))'
-                      : 'rgba(245,158,11,0.08)',
-                  borderColor: '#f59e0b',
-                  color: '#f59e0b',
-                  fontWeight: '800',
-                  padding: '6px 12px'
-                }}
-              >
-                <Sliders size={14} color="#f59e0b" />
-                <span style={{ fontSize: '12.5px' }}>لوحة التحكم</span>
-              </button>
-            </li>
           </ul>
         )}
 

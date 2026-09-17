@@ -11,7 +11,6 @@ import {
   Zap,
   Sun,
   Moon,
-  KeyRound,
   HelpCircle,
   X
 } from 'lucide-react';
@@ -133,56 +132,15 @@ export default function LoginSection({
       />
 
       {/* Top Floating Controls */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '14px',
-          left: '20px',
-          right: '20px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          zIndex: 10
-        }}
-      >
-        <button
-          type="button"
-          onClick={() => {
-            if (setActiveTab) {
-              setActiveTab('admin');
-              window.location.hash = '#admin';
-            }
-          }}
+      {onToggleThemeMode && (
+        <div
           style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            background: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid var(--glass-border)',
-            padding: '6px 12px',
-            borderRadius: '9999px',
-            color: 'var(--text-muted)',
-            fontSize: '11.5px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            backdropFilter: 'blur(10px)',
-            transition: 'all 0.2s ease'
+            position: 'absolute',
+            top: '14px',
+            left: '20px',
+            zIndex: 10
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = '#f59e0b';
-            e.currentTarget.style.color = '#f59e0b';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--glass-border)';
-            e.currentTarget.style.color = 'var(--text-muted)';
-          }}
-          title="الدخول المباشر إلى لوحة التحكم الإدارية"
         >
-          <KeyRound size={13} />
-          <span>لوحة التحكم (Admin)</span>
-        </button>
-
-        {onToggleThemeMode && (
           <button
             type="button"
             onClick={onToggleThemeMode}
@@ -204,8 +162,8 @@ export default function LoginSection({
           >
             {themeMode === 'dark' ? <Sun size={16} color="#f59e0b" /> : <Moon size={16} color="#8b5cf6" />}
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Main Ultra-Compact Login Card (Fits 100vh on desktop without scrolling) */}
       <div className="glass-card login-card-compact">

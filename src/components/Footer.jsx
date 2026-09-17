@@ -32,7 +32,6 @@ export default function Footer({ setActiveTab, user }) {
           <button onClick={() => setActiveTab('bean-withdrawal')} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'inherit' }}>سحب الفاصوليا</button>
           <button onClick={() => setActiveTab('salaries')} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'inherit' }}>الرواتب</button>
           <button onClick={() => setActiveTab('live-quality')} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'inherit' }}>كواليتي اللايف</button>
-          <button onClick={() => { setActiveTab('admin'); window.location.hash = '#admin'; }} style={{ background: 'none', border: 'none', color: '#f59e0b', cursor: 'pointer', fontFamily: 'inherit', fontWeight: '700' }}>لوحة التحكم (Admin)</button>
         </div>
 
         <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid var(--glass-border)', width: '100%', fontSize: '11px', color: 'var(--text-dim)', textAlign: 'center' }}>

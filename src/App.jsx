@@ -279,8 +279,8 @@ export default function App() {
       className={`app-container ${!user && activeTab !== 'admin' ? 'login-page-active' : ''}`}
       style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
     >
-      {/* Top Navbar: Rendered ONLY when user is authenticated or in Admin mode */}
-      {(user || activeTab === 'admin') && (
+      {/* Top Navbar: Rendered ONLY when user is authenticated on public site */}
+      {(user && activeTab !== 'admin') && (
         <Navbar
           navItems={navItems}
           activeTab={activeTab}
@@ -349,8 +349,8 @@ export default function App() {
               onResetDefaults={handleResetDefaults}
               onCloseAdmin={() => {
                 setActiveTab(user ? 'home' : 'login');
-                if (window.location.hash === '#admin') {
-                  window.history.pushState(null, '', window.location.pathname);
+                if (window.location.hash === '#admin' || window.location.pathname.includes('admin')) {
+                  window.history.pushState(null, '', '/');
                 }
               }}
             />
@@ -419,7 +419,7 @@ export default function App() {
         </main>
       )}
 
-      {(user || activeTab === 'admin') && (
+      {(user && activeTab !== 'admin') && (
         <Footer setActiveTab={setActiveTab} user={user} />
       )}
       <Analytics />
