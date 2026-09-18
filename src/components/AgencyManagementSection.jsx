@@ -21,7 +21,10 @@ import {
   Flame,
   Trophy,
   Send,
-  FileText
+  FileText,
+  ZoomIn,
+  X,
+  Eye
 } from 'lucide-react';
 import { defaultAgencyManagementItems } from '../data/siteData';
 import { resolveIcon } from '../utils/iconHelper';
@@ -29,6 +32,81 @@ import { resolveIcon } from '../utils/iconHelper';
 export default function AgencyManagementSection({ onBackToHome, setActiveTab, items = defaultAgencyManagementItems }) {
   const currentItems = items && items.length > 0 ? items : defaultAgencyManagementItems;
   const [activeSubOption, setActiveSubOption] = useState(currentItems[0]?.id || 'register-hosts');
+  const [modalImage, setModalImage] = useState(null);
+
+  const registrationSteps = [
+    {
+      id: 1,
+      badge: 'الخطوة 1',
+      title: 'مركز صناع المحتوى',
+      text: '1- الضغط على خيار: مركز صناع المحتوى',
+      desc: 'الدخول إلى الصفحة الشخصية في تطبيق بيجو لايف ثم النقر على "مركز صناع المحتوى".',
+      image: '/images/steps/step1.png',
+      alt: 'صورة توضيحية - مركز صناع المحتوى',
+      icon: Users
+    },
+    {
+      id: 2,
+      badge: 'الخطوة 2',
+      title: 'توظيف صناع المحتوى',
+      text: '2- الضغط على خيار: توظيف صناع المحتوى.',
+      desc: 'من قائمة مركز صناع المحتوى، الضغط على خيار "توظيف صناع المحتوى".',
+      image: '/images/steps/step2.png',
+      alt: 'صورة توضيحية - توظيف صناع المحتوى',
+      icon: UserPlus
+    },
+    {
+      id: 3,
+      badge: 'الخطوة 3',
+      title: 'قدم بدعوة صناع المحتوى',
+      text: '3- الضغط على خيار: قدم بدعوة صناع المحتوى.',
+      desc: 'الضغط على زر "قدم بدعوة صناع محتوى" لفتح خيارات إرسال الدعوات.',
+      image: '/images/steps/step3.png',
+      alt: 'صورة توضيحية - قدم بدعوة صناع المحتوى',
+      icon: Send
+    },
+    {
+      id: 4,
+      badge: 'الخطوة 4',
+      title: 'اختيار طريقة الدعوة',
+      text: '4- وأخيراً بإمكانك إختيار الطريقة المناسبة لك لدعوة صناع المحتوى.',
+      desc: 'بإمكانك إرسال الدعوة عبر 3 طرق: الاقتراحات التلقائية، أو من قائمة الأصدقاء، أو نسخ رمز ورابط الدعوة المباشر للمذيع.',
+      image: '/images/steps/step4.png',
+      alt: 'صورة توضيحية - طرق دعوة صناع المحتوى (اقتراحات، الأصدقاء، أو دعوة مباشرة)',
+      isWide: true,
+      icon: Sliders
+    },
+    {
+      id: 5,
+      badge: 'الخطوة 5',
+      title: 'قبول الدعوة',
+      text: '5- عند قيام صانع المحتوى بقبول الدعوة يتم إرسال رسالة للوكيل بأن صانع المحتوى قد قبل الدعوة.',
+      desc: 'يقوم صانع المحتوى بقبول الدعوة من خلال إشعارات التطبيق، ويصل إشعار تأكيد للوكيل مباشرة.',
+      image: '/images/steps/step5.png',
+      alt: 'صورة توضيحية - قبول صانع المحتوى للدعوة',
+      icon: Inbox
+    },
+    {
+      id: 6,
+      badge: 'الخطوة 6',
+      title: 'استكمال المعلومات والمقابلة',
+      text: '6- وبذلك يقوم الوكيل بالضغط على الرسالة والسحب لليسار لتظهر كلمة "استكمال المعلومات" ليحدد الوكيل معلومات العقد المناسبة للطرفين، وإرفاق فيديو مقابلة المذيع.',
+      desc: 'يقوم الوكيل بالسحب لليسار على الرسالة والضغط على "استكمال المعلومات" لتسجيل بنود العقد وإرفاق فيديو المقابلة.',
+      image: '/images/steps/step6.png',
+      alt: 'صورة توضيحية - استكمال المعلومات وتوثيق العقد',
+      icon: FileText
+    },
+    {
+      id: 7,
+      badge: 'الخطوة 7',
+      title: 'رسالة تسجيل ناجح',
+      text: '7- عند استكمال الخطوات السابقة، تظهر رسالة "تسجيل ناجح" وبذلك يكون الحساب قد تم تسجيله بشكل أكيد.',
+      desc: 'ظهور رسالة "تسجيل ناجح" تؤكد اكتمال التوثيق وانضمام صانع المحتوى رسمياً للوكالة.',
+      image: '/images/steps/step7.png',
+      alt: 'صورة توضيحية - تسجيل ناجح',
+      icon: CheckCircle2
+    }
+  ];
 
   return (
     <section style={{ maxWidth: '1080px', margin: '0 auto' }}>
@@ -179,11 +257,12 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
       {/* ======================================================== */}
       {activeSubOption === 'register-hosts' && (
         <div className="glass-card" style={{ padding: '32px', border: '1px solid rgba(6,182,212,0.35)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '22px' }}>
             <div
               style={{
-                width: '44px',
-                height: '44px',
+                width: '46px',
+                height: '46px',
                 borderRadius: '12px',
                 background: 'rgba(6,182,212,0.18)',
                 display: 'flex',
@@ -195,7 +274,7 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <h2 style={{ fontSize: '22px', fontWeight: '900' }}>
+                <h2 style={{ fontSize: '22px', fontWeight: '900', margin: 0 }}>
                   تسجيل صناع المحتوى
                 </h2>
                 <span
@@ -211,100 +290,244 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
                   الأساسي والأهم
                 </span>
               </div>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
-                يمكنك تسجيل صناع المحتوى من خلال النظام باستخدام الخطوات التالية:
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+                يمكنك تسجيل صناع المحتوى من خلال النظام باتباع الخطوات الموضحة بالصور من داخل التطبيق:
               </p>
             </div>
           </div>
 
-          <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '24px' }}>
-            يمكنك تسجيل صناع المحتوى من خلال النظام باستخدام الخطوات التالية:
-          </p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px', marginBottom: '24px' }}>
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <Users size={20} color="#06b6d4" />
-                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
-                  1 - مركز صناع المحتوى
-                </h4>
+          {/* Workflow Quick Banner */}
+          <div
+            className="glass-card"
+            style={{
+              padding: '18px 22px',
+              marginBottom: '26px',
+              border: '1px solid rgba(6,182,212,0.25)',
+              background: 'linear-gradient(135deg, rgba(6,182,212,0.08) 0%, rgba(15,23,42,0.6) 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '14px'
+            }}
+          >
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: '800',
+                    padding: '2px 8px',
+                    borderRadius: '9999px',
+                    background: 'rgba(6,182,212,0.2)',
+                    color: '#22d3ee'
+                  }}
+                >
+                  مخطط التوظيف الرسمي
+                </span>
+                <h3 style={{ fontSize: '16px', fontWeight: '800', margin: 0 }}>
+                  طريقة توظيف صناع المحتوى خطوة بخطوة
+                </h3>
               </div>
-              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                1- الضغط على خيار: مركز صناع المحتوى
+              <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', margin: 0, lineHeight: '1.5' }}>
+                دورة التوظيف: دعوة صناع المحتوى ⟵ قبول الدعوة ⟵ إكمال معلومات التوظيف ⟵ توظيف بنجاح
               </p>
             </div>
 
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <UserPlus size={20} color="#06b6d4" />
-                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
-                  2 - توظيف صناع المحتوى
-                </h4>
-              </div>
-              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                2- الضغط على خيار: توظيف صناع المحتوى.
-              </p>
-            </div>
+            <button
+              type="button"
+              onClick={() =>
+                setModalImage({
+                  src: '/images/steps/step_workflow.png',
+                  title: 'المخطط الرسمي لتوظيف صناع المحتوى',
+                  desc: 'طريقة توظيف صناع المحتوى المعتمدة من بيجو لايف'
+                })
+              }
+              className="btn-primary"
+              style={{
+                padding: '9px 16px',
+                fontSize: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                cursor: 'pointer',
+                borderRadius: '8px'
+              }}
+            >
+              <Eye size={15} />
+              <span>عرض مخطط التوظيف الكامل</span>
+            </button>
+          </div>
 
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <Send size={20} color="#06b6d4" />
-                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
-                  3 - دعوة صناع المحتوى
-                </h4>
-              </div>
-              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                3- الضغط على خيار: قدم بدعوة صناع المحتوى.
-              </p>
-            </div>
+          {/* 7 Steps List */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+            {registrationSteps.map((st) => {
+              const IconComp = st.icon;
+              return (
+                <div
+                  key={st.id}
+                  className="glass-card"
+                  style={{
+                    padding: '22px',
+                    border: '1px solid rgba(6,182,212,0.22)',
+                    background: 'rgba(15,23,42,0.45)',
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                    gap: '22px',
+                    alignItems: 'center',
+                    borderRadius: '16px'
+                  }}
+                >
+                  {/* Text Details Side */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span
+                        style={{
+                          fontSize: '11px',
+                          fontWeight: '800',
+                          padding: '3px 10px',
+                          borderRadius: '9999px',
+                          background: 'rgba(6,182,212,0.15)',
+                          color: '#22d3ee',
+                          border: '1px solid rgba(6,182,212,0.3)'
+                        }}
+                      >
+                        {st.badge}
+                      </span>
+                      <div
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          borderRadius: '8px',
+                          background: 'rgba(6,182,212,0.15)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        <IconComp size={18} color="#06b6d4" />
+                      </div>
+                      <h4 style={{ fontSize: '17px', fontWeight: '800', margin: 0, color: '#f8fafc' }}>
+                        {st.title}
+                      </h4>
+                    </div>
 
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <Sliders size={20} color="#06b6d4" />
-                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
-                  4 - اختيار طريقة الدعوة
-                </h4>
-              </div>
-              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                4- وأخيراً بإمكانك إختيار الطريقة المناسبة لك لدعوة صناع المحتوى.
-              </p>
-            </div>
+                    <div
+                      style={{
+                        background: 'rgba(6,182,212,0.07)',
+                        borderRight: '3px solid #06b6d4',
+                        padding: '12px 14px',
+                        borderRadius: '0 8px 8px 0',
+                        fontSize: '14.5px',
+                        fontWeight: '700',
+                        color: '#f1f5f9',
+                        lineHeight: '1.6'
+                      }}
+                    >
+                      {st.text}
+                    </div>
 
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <Inbox size={20} color="#06b6d4" />
-                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
-                  5 - قبول الدعوة
-                </h4>
-              </div>
-              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                5- عند قيام صانع المحتوى بقبول الدعوة يتم إرسال رسالة للوكيل بأن صانع المحتوى قد قبل الدعوة.
-              </p>
-            </div>
+                    <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', lineHeight: '1.6', margin: 0 }}>
+                      {st.desc}
+                    </p>
 
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <FileText size={20} color="#06b6d4" />
-                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
-                  6 - استكمال المعلومات والمقابلة
-                </h4>
-              </div>
-              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                6- وبذلك يقوم الوكيل بالضغط على الرسالة والسحب لليسار لتظهر كلمة "استكمال المعلومات" ليحدد الوكيل معلومات العقد المناسبة للطرفين، وإرفاق فيديو مقابلة المذيع.
-              </p>
-            </div>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setModalImage({
+                          src: st.image,
+                          title: st.title,
+                          desc: st.text
+                        })
+                      }
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#22d3ee',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        fontSize: '12px',
+                        fontWeight: '700',
+                        padding: '4px 0',
+                        fontFamily: 'inherit'
+                      }}
+                    >
+                      <ZoomIn size={14} />
+                      <span>تكبير الصورة ومعاينتها بالتفصيل</span>
+                    </button>
+                  </div>
 
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <CheckCircle2 size={20} color="#06b6d4" />
-                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
-                  7 - رسالة تسجيل ناجح
-                </h4>
-              </div>
-              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                7- عند استكمال الخطوات السابقة، تظهر رسالة "تسجيل ناجح" وبذلك يكون الحساب قد تم تسجيله بشكل أكيد.
-              </p>
-            </div>
+                  {/* Image Preview Side */}
+                  <div
+                    onClick={() =>
+                      setModalImage({
+                        src: st.image,
+                        title: st.title,
+                        desc: st.text
+                      })
+                    }
+                    style={{
+                      cursor: 'pointer',
+                      borderRadius: '14px',
+                      overflow: 'hidden',
+                      border: '1px solid rgba(6,182,212,0.28)',
+                      background: 'rgba(11,18,34,0.7)',
+                      position: 'relative',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: st.isWide ? '10px' : '14px',
+                      boxShadow: '0 8px 24px -4px rgba(0,0,0,0.5)',
+                      transition: 'all 0.25s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = '#22d3ee';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = 'rgba(6,182,212,0.28)';
+                      e.currentTarget.style.transform = 'none';
+                    }}
+                  >
+                    <img
+                      src={st.image}
+                      alt={st.alt}
+                      loading="lazy"
+                      style={{
+                        maxHeight: st.isWide ? '260px' : '340px',
+                        width: 'auto',
+                        maxWidth: '100%',
+                        objectFit: 'contain',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: '10px',
+                        left: '10px',
+                        background: 'rgba(2,6,23,0.82)',
+                        backdropFilter: 'blur(6px)',
+                        border: '1px solid rgba(6,182,212,0.3)',
+                        borderRadius: '6px',
+                        padding: '3px 8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        fontSize: '11px',
+                        color: '#22d3ee',
+                        fontWeight: '700'
+                      }}
+                    >
+                      <ZoomIn size={12} />
+                      <span>تكبير</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -648,6 +871,93 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
             </div>
           );
         })()
+      )}
+
+      {/* ======================================================== */}
+      {/* Lightbox Modal for Full-Resolution Image Preview */}
+      {/* ======================================================== */}
+      {modalImage && (
+        <div
+          onClick={() => setModalImage(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(3, 7, 18, 0.88)',
+            backdropFilter: 'blur(10px)',
+            zIndex: 99999,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            cursor: 'zoom-out'
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              maxWidth: '92vw',
+              maxHeight: '90vh',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              background: 'rgba(15, 23, 42, 0.95)',
+              border: '1px solid rgba(6, 182, 212, 0.4)',
+              borderRadius: '20px',
+              padding: '18px',
+              boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)',
+              cursor: 'default'
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setModalImage(null)}
+              style={{
+                position: 'absolute',
+                top: '12px',
+                left: '12px',
+                background: 'rgba(239, 68, 68, 0.18)',
+                border: '1px solid rgba(239, 68, 68, 0.35)',
+                color: '#f87171',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 10
+              }}
+              title="إغلاق"
+            >
+              <X size={20} />
+            </button>
+
+            <div style={{ textAlign: 'center', marginBottom: '14px', padding: '0 45px' }}>
+              <h4 style={{ margin: 0, fontSize: '18px', color: '#22d3ee', fontWeight: '800' }}>
+                {modalImage.title}
+              </h4>
+              {modalImage.desc && (
+                <p style={{ margin: '4px 0 0', fontSize: '13px', color: 'var(--text-muted)' }}>
+                  {modalImage.desc}
+                </p>
+              )}
+            </div>
+
+            <img
+              src={modalImage.src}
+              alt={modalImage.title}
+              style={{
+                maxHeight: '72vh',
+                maxWidth: '86vw',
+                objectFit: 'contain',
+                borderRadius: '12px',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
+              }}
+            />
+          </div>
+        </div>
       )}
     </section>
   );
