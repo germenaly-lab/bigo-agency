@@ -12,7 +12,10 @@ import {
   ShieldCheck,
   TrendingUp,
   Sparkles,
-  Zap
+  Zap,
+  Lock,
+  Sliders,
+  Ban
 } from 'lucide-react';
 import { defaultAgencyManagementItems } from '../data/siteData';
 import { resolveIcon } from '../utils/iconHelper';
@@ -393,7 +396,7 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <h2 style={{ fontSize: '22px', fontWeight: '900' }}>
-                  مميزات وإمكانيات تطبيق Bigo Live
+                  مميزات الابلكيشن بقا الي بنقدمو ليك 💸📱
                 </h2>
                 <span
                   style={{
@@ -409,25 +412,25 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
                 </span>
               </div>
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
-                أبرز مميزات وفرص منصة Bigo Live العالمية لصناع المحتوى والبث المباشر
+                أبرز المميزات والفرص الحقيقية اللي بيوفرها لك تطبيق البث المباشر
               </p>
             </div>
           </div>
 
           <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '24px' }}>
-            تعتبر منصة بيجو لايف رائدة البث المباشر عالمياً، حيث توفر للمبدعين والمذيعين بيئة احترافية متكاملة لتحقيق الشهرة والانتشار وبناء قاعدة جماهيرية واسعة مع أعلى عوائد أرباح في سوق البث الترفيهي.
+            تطبيق Bigo Live بيوفرلك تجربة لايف استريم متكاملة واحترافية؛ بنقدملك كل المميزات والفرص الحقيقية اللي تساعدك تبدأ وتكبر أرباحك وتتحكم في كل تفاصيل شغلك بكل سهولة وأمان.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px', marginBottom: '24px' }}>
             <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(139,92,246,0.22)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <Globe size={20} color="#8b5cf6" />
+                <CheckCircle2 size={20} color="#8b5cf6" />
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#c084fc' }}>
-                  جمهور عالمي وكبار داعمين
+                  1 - موثوق ومضمون 100% 💯
                 </h4>
               </div>
               <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                وصول مباشر لأكثر من 400 مليون مستخدم نشط في أكثر من 150 دولة، مع تواجد أكبر مجتمع للداعمين وكبار الشخصيات في الشرق الأوسط والعالم.
+                ابلكيشن من أقدم برامج اللايف استريم، يعني موثوق ومضمون 100%.
               </p>
             </div>
 
@@ -435,23 +438,35 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                 <Coins size={20} color="#8b5cf6" />
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#c084fc' }}>
-                  أعلى عوائد وأرباح فورية
+                  2 - استفادة مضاعفة من الدعم 💸
                 </h4>
               </div>
               <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                تحويل فوري ومباشر للفاصوليا والهدايا إلى أرباح نقدية بالدولار عبر خيارات سحب متنوعة وبأعلى نسبة عائد مقارنة بجميع منصات البث المنافسة.
+                أي دعم بينزلك بتستفيد منه مرتين؛ مرة سحب فوري، ومرة نسبة عالتارجت شهري أو أسبوعي.
               </p>
             </div>
 
             <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(139,92,246,0.22)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <Zap size={20} color="#8b5cf6" />
+                <Lock size={20} color="#8b5cf6" />
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#c084fc' }}>
-                  تحديات الباتل (PK Battles)
+                  3 - خصوصية تامة وأمان مالي 💰
                 </h4>
               </div>
               <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                نظام تنافسي تفاعلي يسمح للمذيعين بخوض جولات تحدي لايف فردية وجماعية تضاعف التفاعل ومعدل الهدايا والدعم من الجماهير في دقائق معدودة.
+                خصوصية تامة ع الأبلكيشن لو مش حابب حد يعرف بتعمل فلوس منين.
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(139,92,246,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Users size={20} color="#8b5cf6" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#c084fc' }}>
+                  4 - شبكة مذيعين وصداقات واسعة 🥰
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                الابلكيشن عليه مذيعين من جميع أنحاء الشرق الأوسط، يعني تقدر تزود دايرة صحابك.
               </p>
             </div>
 
@@ -459,35 +474,35 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                 <Sparkles size={20} color="#8b5cf6" />
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#c084fc' }}>
-                  بث عالي الدقة 1080p وفلاتر تفاعلية
+                  5 - فلاتر ذكية وكواليتي لايف عالي 💫
                 </h4>
               </div>
               <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                سيرفرات بث فائقة السرعة تضمن عدم التقطيع بدقة Full HD، مع فلاتر تجميلية ذكية ومؤثرات صوتية ومقاعد صوتية وغرف عائلية متعددة.
+                الابلكيشن فيه فلاتر لذيذة بتساعدك إن كواليتي اللايف يبقى أعلى.
               </p>
             </div>
 
             <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(139,92,246,0.22)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <Award size={20} color="#8b5cf6" />
+                <Sliders size={20} color="#8b5cf6" />
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#c084fc' }}>
-                  جوائز وفعاليات GALA الكبرى
+                  6 - تحكم كامل وحرية تامة ✌🏻
                 </h4>
               </div>
               <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                دعوات سنوية لحضور حفل Bigo GALA العالمي، وتكريم أفضل المذيعين والوكالات على مسارح دولية مع جوائز مالية وكؤوس تقديرية.
+                الإعدادات بتاعت البرنامج بتخليك تقدر تتحكم في كل حاجة، يعني مفيش أي حاجة مفروضة عليك.
               </p>
             </div>
 
             <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(139,92,246,0.22)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <ShieldCheck size={20} color="#8b5cf6" />
+                <Ban size={20} color="#8b5cf6" />
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#c084fc' }}>
-                  حماية متقدمة وأمان الحسابات
+                  7 - بيئة محترمة وسياسات واضحة ❌
                 </h4>
               </div>
               <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                حماية أمنية مشددة للمحافظ الشخصية، ربط بيومتري برقم الهاتف والبريد، وأنظمة ذكاء اصطناعي تراقب المحتوى وتحمي المذيع من الإساءات.
+                من سياسات التطبيق ممنوع الكلام في السياسة & وفالدين & والجنس.
               </p>
             </div>
           </div>

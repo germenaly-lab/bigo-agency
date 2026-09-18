@@ -114,6 +114,10 @@ export default function App() {
         const parsed = JSON.parse(saved);
         const hasOld = parsed.some((it) => it.id === 'unban' || it.id === 'trend' || it.id === 'supervisors');
         if (hasOld) return defaultAgencyManagementItems;
+        const appFeat = parsed.find((it) => it.id === 'app-features');
+        if (appFeat && (!appFeat.shortDesc?.includes('الي بنقدمو') || appFeat.details?.length !== 7)) {
+          return defaultAgencyManagementItems;
+        }
         return parsed;
       } catch {
         return defaultAgencyManagementItems;
