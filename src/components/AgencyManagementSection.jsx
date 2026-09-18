@@ -15,7 +15,11 @@ import {
   Zap,
   Lock,
   Sliders,
-  Ban
+  Ban,
+  UserCheck,
+  Inbox,
+  Flame,
+  Trophy
 } from 'lucide-react';
 import { defaultAgencyManagementItems } from '../data/siteData';
 import { resolveIcon } from '../utils/iconHelper';
@@ -531,7 +535,7 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <h2 style={{ fontSize: '22px', fontWeight: '900' }}>
-                  مميزات وخدمات الدعم الحصرية من وكالة Scope
+                  الوكاله بتساعدك كتير و من مميزتها ✨
                 </h2>
                 <span
                   style={{
@@ -553,43 +557,31 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
           </div>
 
           <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '24px' }}>
-            الانضمام لوكالة سكوب الرسمية يمنحك ميزة تنافسية لا تتوفر للمذيع المستقل؛ فنحن نوفر لك مظلة حماية متكاملة، ودعم إداري ولوجستي مباشر من إدارة Bigo Live لضمان نجاحك واستمرار تصاعد أرباحك.
+            الانضمام لوكالة سكوب بيوفرلك دعم حقيقي ومستمر؛ فريقنا موجود خطوة بخطوة عشان يساعدك تكبر حسابك وتزود مشاهداتك وتضاعف أرباحك بأعلى احترافية.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px', marginBottom: '24px' }}>
             <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.22)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <FileCheck size={20} color="#f59e0b" />
+                <UserCheck size={20} color="#f59e0b" />
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
-                  عقود رسمية وبونص شهري
+                  1 - مسئول متابعة يومي معاك 🙋🏻‍♂️
                 </h4>
               </div>
               <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                عقد قانوني رسمي يضمن راتبك الشهري وأرباحك كاملة دون أي اقتطاعات مجحفة، مع مكافآت وبونص إضافي يصرف دورياً للمذيعين الملتزمين بالتارجت.
+                مسئول متابعه معاك بشكل يومي بيساعدك في اي حاجه تخص لايفك.
               </p>
             </div>
 
             <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.22)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <ShieldCheck size={20} color="#f59e0b" />
+                <Inbox size={20} color="#f59e0b" />
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
-                  دعم فني وحل مشكلات 24/7
+                  2 - جروب مخصص للتحديثات 📥
                 </h4>
               </div>
               <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                خط ساخن مع مديري الحسابات في إدارة Bigo لفك القيود، متابعة الحظر المؤقت، وتوثيق الحسابات بالعلامة الرسمية وحمايتها من البلاغات الكيدية.
-              </p>
-            </div>
-
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.22)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <TrendingUp size={20} color="#f59e0b" />
-                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
-                  تصعيد للترند وبانرات الواجهة
-                </h4>
-              </div>
-              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                أولوية ترشيح مذيعي الوكالة للظهور في واجهة التطبيق وقوائم الإكسبلور والترند للفعاليات، مما يجلب آلاف المشاهدين الجدد لبثك.
+                جروب مخصص ليك انتا بيتبعتلك عليه كل التحديثات.
               </p>
             </div>
 
@@ -597,11 +589,35 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                 <Coins size={20} color="#f59e0b" />
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
-                  صرف فوري للفاصوليا بأفضل سعر
+                  3 - سحب فاصوليا بأعلى سعر 💸💰
                 </h4>
               </div>
               <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                خدمة شحن وسحب فورية بدون تأخير عبر الوكلاء المعتمدين والمحافظ الإلكترونية والتحويلات البنكية بأعلى سعر صرف متوفر في السوق.
+                سحب الفاصوليا بأعلي سعر موجود فالسوق ( علي حسب سعر الدولار يوم السحب ).
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Globe size={20} color="#f59e0b" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
+                  4 - ترند شرق أوسط مرتين شهرياً 🥳
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                الوكاله بتطلعك ترند شرق اوسط مرتين في الشهر عشان تساعدك تتشاف اكتر.
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Flame size={20} color="#f59e0b" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
+                  5 - تريند شعلة لزيادة المشاهدات 🔥
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                وتريند شعله يزودلك مشاهدات اللايف كل مره تفتح فيها.
               </p>
             </div>
 
@@ -609,23 +625,23 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                 <Users size={20} color="#f59e0b" />
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
-                  تدريب وتوجيه صناع المحتوى
+                  6 - شبكة معارف وتحديات لايف 👥
                 </h4>
               </div>
               <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                إشراف مدربين خبراء لمساعدتك في ضبط تجهيزات البث، تحسين الصوت والإضاءة، واختيار أفكار بث جذابة تضمن جذب كبار الداعمين وثباتهم.
+                بنعرفك علي المذيعين الي معانا ونطلعك تحديات معاهم عشان يبقي ليك معارف وصحاب عالابلكيشن.
               </p>
             </div>
 
             <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.22)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <Zap size={20} color="#f59e0b" />
+                <Trophy size={20} color="#f59e0b" />
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
-                  دعم نقاط الوكالة في الباتلات
+                  7 - مسابقات شهرية لزيادة الأرباح 🎉
                 </h4>
               </div>
               <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                مشاركة الوكالة بنقاط دعم في التحديات والباتلات الكبرى والنهائيات الرسمية لمساندة مذيعي الفريق وحسم الجولات لصالحهم.
+                مسابقات علي مدار الشهر بتساعدك تزود ارباحك اكثر واكثر.
               </p>
             </div>
           </div>

@@ -118,6 +118,10 @@ export default function App() {
         if (appFeat && (!appFeat.shortDesc?.includes('الي بنقدمو') || appFeat.details?.length !== 7)) {
           return defaultAgencyManagementItems;
         }
+        const agencyFeat = parsed.find((it) => it.id === 'agency-features');
+        if (agencyFeat && (!agencyFeat.shortDesc?.includes('الوكاله بتساعدك') || agencyFeat.details?.length !== 7)) {
+          return defaultAgencyManagementItems;
+        }
         return parsed;
       } catch {
         return defaultAgencyManagementItems;
