@@ -2,12 +2,17 @@ import React, { useState } from 'react';
 import {
   Users,
   UserPlus,
-  ShieldAlert,
-  Flame,
   Award,
   ArrowRight,
   CheckCircle2,
-  FileCheck
+  FileCheck,
+  Smartphone,
+  Coins,
+  Globe,
+  ShieldCheck,
+  TrendingUp,
+  Sparkles,
+  Zap
 } from 'lucide-react';
 import { defaultAgencyManagementItems } from '../data/siteData';
 import { resolveIcon } from '../utils/iconHelper';
@@ -367,119 +372,245 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
       )}
 
       {/* ======================================================== */}
-      {/* SUB-SECTION 2: فك حظر الحسابات */}
+      {/* SUB-SECTION 2: مميزات الابلكيشن */}
       {/* ======================================================== */}
-      {activeSubOption === 'unban' && (
-        <div className="glass-card" style={{ padding: '32px', border: '1px solid rgba(239,68,68,0.35)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-            <ShieldAlert size={28} color="#ef4444" />
-            <h2 style={{ fontSize: '22px', fontWeight: '900' }}>
-              إجراءات واستئناف فك حظر الحسابات
-            </h2>
-          </div>
-
-          <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '24px' }}>
-            في حال تعرض أحد مذيعي الوكالة لحظر مؤقت أو تعليق بسبب سوء فهم للسياسات أو تقارير كيدية، تتيح المنصة لوكلاء Scope رفع طلبات استئناف رسمية لإعادة تفعيل الحسابات.
-          </p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: '24px' }}>
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(239,68,68,0.2)' }}>
-              <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#ef4444', marginBottom: '8px' }}>
-                1. تحديد نوع وسبب الحظر
-              </h4>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                التحقق من رسالة النظام التي ظهرت للمذيع، وتحديد رمز المخالفة (سلوك، حقوق ملكية، بث أثناء قيادة، بلاغ وهمي).
-              </p>
-            </div>
-
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(239,68,68,0.2)' }}>
-              <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#ef4444', marginBottom: '8px' }}>
-                2. تجهيز الوثائق والإثباتات
-              </h4>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                التقاط لقطة شاشة لرسالة الحظر، وتدوين Bigo ID وتاريخ وتوقيت المخالفة، وتقديم إيضاح موجز يؤكد عدم تعمد المخالفة.
-              </p>
-            </div>
-
-            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(239,68,68,0.2)' }}>
-              <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#ef4444', marginBottom: '8px' }}>
-                3. رفع التذكرة لمدير الحسابات
-              </h4>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                إرسال الطلب عبر القناة الرسمية المخصصة للوكالات المعتمدة. تتم المراجعة والرد خلال 24 إلى 48 ساعة كحد أقصى.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ======================================================== */}
-      {/* SUB-SECTION 3: طلب ترند للفعاليات */}
-      {/* ======================================================== */}
-      {activeSubOption === 'trend' && (
-        <div className="glass-card" style={{ padding: '32px', border: '1px solid rgba(245,158,11,0.35)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-            <Flame size={28} color="#f59e0b" />
-            <h2 style={{ fontSize: '22px', fontWeight: '900' }}>
-              شروط وآلية طلب ترند للفعاليات والمسابقات
-            </h2>
-          </div>
-
-          <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '24px' }}>
-            الظهور في قوائم الترند وبانرات الصفحة الرئيسية يمنح مذيعي الوكالة آلاف الزوار والداعمين الجدد. تخصص المنصة حصص ترند للوكالات النشطة التي تحقق تارجت مرتفع.
-          </p>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div className="glass-card" style={{ padding: '18px' }}>
-              <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#f59e0b', marginBottom: '6px' }}>
-                توقيت تقديم طلب الترند:
-              </h4>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
-                يجب رفع الطلب قبل موعد الفعالية بـ 48 ساعة على الأقل مع تحديد بوستر الفعالية وتوقيتها وعنوان البث.
-              </p>
-            </div>
-            <div className="glass-card" style={{ padding: '18px' }}>
-              <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#f59e0b', marginBottom: '6px' }}>
-                معايير استحقاق الترند:
-              </h4>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
-                أن يكون المذيع ملتزماً بكواليتي لايف عالي، وبث نشط وتفاعل قوي مع الداعمين، وعدم وجود أي مخالفات خلال الـ 30 يوماً السابقة.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ======================================================== */}
-      {/* SUB-SECTION 4: إدارة المشرفين والقلادات */}
-      {/* ======================================================== */}
-      {activeSubOption === 'supervisors' && (
+      {activeSubOption === 'app-features' && (
         <div className="glass-card" style={{ padding: '32px', border: '1px solid rgba(139,92,246,0.35)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-            <Award size={28} color="#8b5cf6" />
-            <h2 style={{ fontSize: '22px', fontWeight: '900' }}>
-              إدارة المشرفين والقلادات المعتمدة
-            </h2>
+            <div
+              style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '12px',
+                background: 'rgba(139,92,246,0.18)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Smartphone size={26} color="#8b5cf6" />
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h2 style={{ fontSize: '22px', fontWeight: '900' }}>
+                  مميزات وإمكانيات تطبيق Bigo Live
+                </h2>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    padding: '3px 8px',
+                    borderRadius: '9999px',
+                    background: 'rgba(139,92,246,0.2)',
+                    color: '#8b5cf6',
+                    fontWeight: '800'
+                  }}
+                >
+                  بيجو لايف الرسمي
+                </span>
+              </div>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+                أبرز مميزات وفرص منصة Bigo Live العالمية لصناع المحتوى والبث المباشر
+              </p>
+            </div>
           </div>
 
           <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '24px' }}>
-            تنظيم هيكل الوكالة يساعد رئيس الوكالة على تفويض المهام ومتابعة المذيعين عبر المشرف المساعد الحاصل على القلادة الفضية المعتمدة.
+            تعتبر منصة بيجو لايف رائدة البث المباشر عالمياً، حيث توفر للمبدعين والمذيعين بيئة احترافية متكاملة لتحقيق الشهرة والانتشار وبناء قاعدة جماهيرية واسعة مع أعلى عوائد أرباح في سوق البث الترفيهي.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-            <div className="glass-card" style={{ padding: '22px', border: '1px solid rgba(245,158,11,0.4)' }}>
-              <span style={{ fontSize: '13px', fontWeight: '800', color: '#f59e0b' }}>الحساب الأساسي</span>
-              <h3 style={{ fontSize: '18px', fontWeight: '800', margin: '8px 0' }}>القلادة الذهبية (صاحب الوكالة)</h3>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                تمنح حصرياً للحساب الرسمي لصاحب الوكالة، وتتيح التحكم الكامل في العقود، استلام العمولات، والتواصل مع الإدارة.
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px', marginBottom: '24px' }}>
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(139,92,246,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Globe size={20} color="#8b5cf6" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#c084fc' }}>
+                  جمهور عالمي وكبار داعمين
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                وصول مباشر لأكثر من 400 مليون مستخدم نشط في أكثر من 150 دولة، مع تواجد أكبر مجتمع للداعمين وكبار الشخصيات في الشرق الأوسط والعالم.
               </p>
             </div>
 
-            <div className="glass-card" style={{ padding: '22px', border: '1px solid rgba(148,163,184,0.4)' }}>
-              <span style={{ fontSize: '13px', fontWeight: '800', color: '#94a3b8' }}>المشرف المساعد</span>
-              <h3 style={{ fontSize: '18px', fontWeight: '800', margin: '8px 0' }}>القلادة الفضية (مشرف معتمد)</h3>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                تمنح لحساب واحد فقط مساعد لرئيس الوكالة لمساعدته في متابعة المذيعين وحل المشكلات اليومية وجداول البث.
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(139,92,246,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Coins size={20} color="#8b5cf6" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#c084fc' }}>
+                  أعلى عوائد وأرباح فورية
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                تحويل فوري ومباشر للفاصوليا والهدايا إلى أرباح نقدية بالدولار عبر خيارات سحب متنوعة وبأعلى نسبة عائد مقارنة بجميع منصات البث المنافسة.
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(139,92,246,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Zap size={20} color="#8b5cf6" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#c084fc' }}>
+                  تحديات الباتل (PK Battles)
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                نظام تنافسي تفاعلي يسمح للمذيعين بخوض جولات تحدي لايف فردية وجماعية تضاعف التفاعل ومعدل الهدايا والدعم من الجماهير في دقائق معدودة.
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(139,92,246,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Sparkles size={20} color="#8b5cf6" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#c084fc' }}>
+                  بث عالي الدقة 1080p وفلاتر تفاعلية
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                سيرفرات بث فائقة السرعة تضمن عدم التقطيع بدقة Full HD، مع فلاتر تجميلية ذكية ومؤثرات صوتية ومقاعد صوتية وغرف عائلية متعددة.
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(139,92,246,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Award size={20} color="#8b5cf6" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#c084fc' }}>
+                  جوائز وفعاليات GALA الكبرى
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                دعوات سنوية لحضور حفل Bigo GALA العالمي، وتكريم أفضل المذيعين والوكالات على مسارح دولية مع جوائز مالية وكؤوس تقديرية.
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(139,92,246,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <ShieldCheck size={20} color="#8b5cf6" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#c084fc' }}>
+                  حماية متقدمة وأمان الحسابات
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                حماية أمنية مشددة للمحافظ الشخصية، ربط بيومتري برقم الهاتف والبريد، وأنظمة ذكاء اصطناعي تراقب المحتوى وتحمي المذيع من الإساءات.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* SUB-SECTION 3: مميزات الوكاله */}
+      {/* ======================================================== */}
+      {activeSubOption === 'agency-features' && (
+        <div className="glass-card" style={{ padding: '32px', border: '1px solid rgba(245,158,11,0.35)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+            <div
+              style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '12px',
+                background: 'rgba(245,158,11,0.18)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Award size={26} color="#f59e0b" />
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h2 style={{ fontSize: '22px', fontWeight: '900' }}>
+                  مميزات وخدمات الدعم الحصرية من وكالة Scope
+                </h2>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    padding: '3px 8px',
+                    borderRadius: '9999px',
+                    background: 'rgba(245,158,11,0.2)',
+                    color: '#f59e0b',
+                    fontWeight: '800'
+                  }}
+                >
+                  وكالة سكوب المعتمدة
+                </span>
+              </div>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+                المزايا الحصرية والخدمات الإدارية والدعم المالي المخصص لمذيعي وكالة سكوب
+              </p>
+            </div>
+          </div>
+
+          <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '24px' }}>
+            الانضمام لوكالة سكوب الرسمية يمنحك ميزة تنافسية لا تتوفر للمذيع المستقل؛ فنحن نوفر لك مظلة حماية متكاملة، ودعم إداري ولوجستي مباشر من إدارة Bigo Live لضمان نجاحك واستمرار تصاعد أرباحك.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px', marginBottom: '24px' }}>
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <FileCheck size={20} color="#f59e0b" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
+                  عقود رسمية وبونص شهري
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                عقد قانوني رسمي يضمن راتبك الشهري وأرباحك كاملة دون أي اقتطاعات مجحفة، مع مكافآت وبونص إضافي يصرف دورياً للمذيعين الملتزمين بالتارجت.
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <ShieldCheck size={20} color="#f59e0b" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
+                  دعم فني وحل مشكلات 24/7
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                خط ساخن مع مديري الحسابات في إدارة Bigo لفك القيود، متابعة الحظر المؤقت، وتوثيق الحسابات بالعلامة الرسمية وحمايتها من البلاغات الكيدية.
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <TrendingUp size={20} color="#f59e0b" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
+                  تصعيد للترند وبانرات الواجهة
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                أولوية ترشيح مذيعي الوكالة للظهور في واجهة التطبيق وقوائم الإكسبلور والترند للفعاليات، مما يجلب آلاف المشاهدين الجدد لبثك.
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Coins size={20} color="#f59e0b" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
+                  صرف فوري للفاصوليا بأفضل سعر
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                خدمة شحن وسحب فورية بدون تأخير عبر الوكلاء المعتمدين والمحافظ الإلكترونية والتحويلات البنكية بأعلى سعر صرف متوفر في السوق.
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Users size={20} color="#f59e0b" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
+                  تدريب وتوجيه صناع المحتوى
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                إشراف مدربين خبراء لمساعدتك في ضبط تجهيزات البث، تحسين الصوت والإضاءة، واختيار أفكار بث جذابة تضمن جذب كبار الداعمين وثباتهم.
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(245,158,11,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Zap size={20} color="#f59e0b" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#fbbf24' }}>
+                  دعم نقاط الوكالة في الباتلات
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                مشاركة الوكالة بنقاط دعم في التحديات والباتلات الكبرى والنهائيات الرسمية لمساندة مذيعي الفريق وحسم الجولات لصالحهم.
               </p>
             </div>
           </div>
@@ -487,7 +618,7 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
       )}
 
       {/* Dynamic view for custom or edited items */}
-      {!['register-hosts', 'unban', 'trend', 'supervisors'].includes(activeSubOption) && (
+      {!['register-hosts', 'app-features', 'agency-features'].includes(activeSubOption) && (
         (() => {
           const activeItem = currentItems.find((it) => it.id === activeSubOption);
           if (!activeItem) return null;

@@ -1210,7 +1210,7 @@ export default function AdminDashboard({
               <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.2)' }}>
                 <span style={{ fontSize: '12px', color: '#06b6d4', fontWeight: '700' }}>1. Agency Ops</span>
                 <h4 style={{ fontSize: '18px', fontWeight: '900', margin: '6px 0 2px 0' }}>{agencyManagementItems.length} Items</h4>
-                <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0 }}>Registration, Unban, Trend</p>
+                <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0 }}>Hosts, App & Agency Features</p>
               </div>
 
               <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}>

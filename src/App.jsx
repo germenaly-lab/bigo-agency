@@ -109,7 +109,17 @@ export default function App() {
   // 5 Core Sections State Management
   const [agencyManagementItems, setAgencyManagementItems] = useState(() => {
     const saved = localStorage.getItem('scope_agencyManagementItems');
-    return saved ? JSON.parse(saved) : defaultAgencyManagementItems;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        const hasOld = parsed.some((it) => it.id === 'unban' || it.id === 'trend' || it.id === 'supervisors');
+        if (hasOld) return defaultAgencyManagementItems;
+        return parsed;
+      } catch {
+        return defaultAgencyManagementItems;
+      }
+    }
+    return defaultAgencyManagementItems;
   });
 
   const [pointsUsageItems, setPointsUsageItems] = useState(() => {
