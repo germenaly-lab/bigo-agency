@@ -8,10 +8,35 @@
     <title>Scoop Agency | BIGO LIVE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Cairo:wght@300;400;600;700;800;900&family=Changa:wght@400;600;800&family=El+Messiri:wght@400;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&family=Readex+Pro:wght@300;400;600;700&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Cairo:wght@300;400;600;700;800;900&family=Changa:wght@400;600;800&family=El+Messiri:wght@400;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&family=Readex+Pro:wght@300;400;600;700&family=Tajawal:wght@400;500;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+      (function() {
+        var match = document.cookie.match(/googtrans=\/ar\/([a-z]{2})/i);
+        var saved = (match && match[1]) ? match[1].toLowerCase() : localStorage.getItem('scope_lang');
+        if (saved === 'en') {
+          document.documentElement.dir = 'ltr';
+          document.documentElement.lang = 'en';
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Hidden Google Translate Element -->
+    <div id="google_translate_element" style="display:none; visibility:hidden; position:absolute; left:-9999px;"></div>
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        if (window.google && window.google.translate) {
+          new window.google.translate.TranslateElement({
+            pageLanguage: 'ar',
+            includedLanguages: 'ar,en',
+            autoDisplay: false
+          }, 'google_translate_element');
+        }
+      }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -11,9 +11,11 @@ import {
   Sun,
   Moon,
   HelpCircle,
-  X
+  X,
+  Languages
 } from 'lucide-react';
 import ScopeLogo from './ScopeLogo';
+import { getSavedLanguage, toggleLanguage } from '../utils/translator';
 
 export default function LoginSection({
   user: _user,
@@ -22,6 +24,7 @@ export default function LoginSection({
   themeMode = 'dark',
   onToggleThemeMode
 }) {
+  const [currentLang, setCurrentLang] = useState(getSavedLanguage());
   const [showPassword, setShowPassword] = useState(false);
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
@@ -105,16 +108,48 @@ export default function LoginSection({
         }}
       />
 
-      {/* Top Floating Controls */}
-      {onToggleThemeMode && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '14px',
-            left: '20px',
-            zIndex: 10
+      {/* Top Floating Controls: Language & Theme Mode */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '14px',
+          left: '20px',
+          zIndex: 10,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}
+      >
+        {/* Small Language Toggle Button */}
+        <button
+          type="button"
+          onClick={() => {
+            const next = toggleLanguage();
+            setCurrentLang(next);
           }}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '4px',
+            padding: '6px 12px',
+            borderRadius: '9999px',
+            background: 'rgba(255, 255, 255, 0.06)',
+            border: currentLang === 'en' ? '1px solid rgba(6,182,212,0.5)' : '1px solid var(--glass-border)',
+            color: currentLang === 'en' ? '#22d3ee' : 'var(--text-main)',
+            cursor: 'pointer',
+            backdropFilter: 'blur(10px)',
+            transition: 'all 0.2s ease',
+            fontSize: '11px',
+            fontWeight: '800'
+          }}
+          title={currentLang === 'en' ? 'التحويل للغة العربية' : 'Translate to English'}
         >
+          <Languages size={14} color={currentLang === 'en' ? '#22d3ee' : '#f59e0b'} />
+          <span>{currentLang === 'en' ? 'عربي' : 'EN'}</span>
+        </button>
+
+        {onToggleThemeMode && (
           <button
             type="button"
             onClick={onToggleThemeMode}
@@ -136,8 +171,8 @@ export default function LoginSection({
           >
             {themeMode === 'dark' ? <Sun size={16} color="#f59e0b" /> : <Moon size={16} color="#8b5cf6" />}
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Main Ultra-Compact Login Card (Fits 100vh on desktop without scrolling) */}
       <div className="glass-card login-card-compact">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Home,
   Users,
@@ -10,9 +10,11 @@ import {
   User,
   LogOut,
   Sun,
-  Moon
+  Moon,
+  Languages
 } from 'lucide-react';
 import ScopeLogo from './ScopeLogo';
+import { getSavedLanguage, toggleLanguage } from '../utils/translator';
 
 const iconMap = {
   Home: Home,
@@ -34,6 +36,15 @@ export default function Navbar({
   themeMode,
   onToggleThemeMode
 }) {
+  const [currentLang, setCurrentLang] = useState(getSavedLanguage());
+
+  useEffect(() => {
+    const handleLangChange = (e) => {
+      setCurrentLang(e.detail || getSavedLanguage());
+    };
+    window.addEventListener('scope_language_changed', handleLangChange);
+    return () => window.removeEventListener('scope_language_changed', handleLangChange);
+  }, []);
   return (
     <header className="main-header">
       <nav className="nav-bar">
@@ -79,8 +90,34 @@ export default function Navbar({
           </ul>
         )}
 
-        {/* Controls: Theme toggle, Search, and Account Button */}
+        {/* Controls: Theme toggle, Language toggle, Search, and Account Button */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Small Language Toggle Icon Button */}
+          <button
+            type="button"
+            className="action-btn-secondary"
+            onClick={() => {
+              const next = toggleLanguage();
+              setCurrentLang(next);
+            }}
+            style={{
+              padding: '6px 10px',
+              borderRadius: '9999px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: '11px',
+              fontWeight: '800',
+              cursor: 'pointer',
+              color: currentLang === 'en' ? '#22d3ee' : '#f59e0b',
+              borderColor: currentLang === 'en' ? 'rgba(6,182,212,0.45)' : 'rgba(245,158,11,0.3)'
+            }}
+            title={currentLang === 'en' ? 'التحويل إلى اللغة العربية' : 'Translate entire site to English'}
+          >
+            <Languages size={14} color={currentLang === 'en' ? '#22d3ee' : '#f59e0b'} />
+            <span style={{ fontSize: '11.5px' }}>{currentLang === 'en' ? 'عربي' : 'EN'}</span>
+          </button>
+
           <button
             type="button"
             className="action-btn-secondary"
