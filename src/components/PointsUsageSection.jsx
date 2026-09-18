@@ -3,11 +3,8 @@ import {
   Sparkles,
   Coins,
   ArrowRight,
-  Gift,
-  Trophy,
-  CheckCircle2,
   TrendingUp,
-  Clock
+  CheckCircle2
 } from 'lucide-react';
 import { defaultPointsUsageItems } from '../data/siteData';
 import { resolveIcon } from '../utils/iconHelper';
@@ -45,7 +42,7 @@ export default function PointsUsageSection({ onBackToHome, setActiveTab, items =
         style={{
           padding: '24px 28px',
           marginBottom: '24px',
-          background: 'linear-gradient(135deg, rgba(245,158,11,0.12), rgba(22,30,49,0.85))',
+          background: 'linear-gradient(135deg, rgba(245,158,11,0.14), rgba(22,30,49,0.88))',
           border: '1px solid rgba(245,158,11,0.3)',
           display: 'flex',
           alignItems: 'center',
@@ -76,7 +73,7 @@ export default function PointsUsageSection({ onBackToHome, setActiveTab, items =
               استخدام النقاط (Points Usage)
             </h1>
             <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-              دليل إدارة رصيد النقاط، آليات الاستبدال، برامج التحفيز، وطلبات الصرف المعتمدة
+              دليل إدارة رصيد نقاط الوكالة، خصائص الدعم، الترويج، والخدمات الرسمية
             </p>
           </div>
         </div>
@@ -91,8 +88,8 @@ export default function PointsUsageSection({ onBackToHome, setActiveTab, items =
         </button>
       </div>
 
-      {/* Main Points Intro Card */}
-      <div className="glass-card" style={{ padding: '24px 26px', marginBottom: '24px', borderRadius: '18px' }}>
+      {/* Main Points Intro Card: 2 Cards (تحقيق التارجت الشهري & مكافأة الاستقطاب والنمو) */}
+      <div className="glass-card" style={{ padding: '24px 26px', marginBottom: '28px', borderRadius: '18px' }}>
         <h2 style={{ fontSize: '17px', fontWeight: '800', color: '#f59e0b', marginBottom: '10px' }}>
           ما هي نقاط الوكالة وكيف يتم اكتسابها؟
         </h2>
@@ -123,73 +120,107 @@ export default function PointsUsageSection({ onBackToHome, setActiveTab, items =
         </div>
       </div>
 
-      {/* Usage Methods Grid */}
-      <h2 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '18px' }}>
-        أوجه ومجالات استخدام النقاط الرسمية:
-      </h2>
+      {/* New Section: نقاط الوكالة - الخصائص والخدمات المتاحة */}
+      <div style={{ marginBottom: '32px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
+          <div>
+            <h2 style={{ fontSize: '22px', fontWeight: '900', margin: 0, color: 'var(--text-main)' }}>
+              نقاط الوكالة
+            </h2>
+            <p style={{ fontSize: '14px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+              يمكنك طلب الخصائص التالية من خلال نقاط الوكالة:
+            </p>
+          </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: '20px',
-          marginBottom: '32px'
-        }}
-      >
-        {currentItems.map((m, idx) => {
-          const Icon = resolveIcon(m.icon, Trophy);
-          return (
-            <div key={m.id || idx} className="glass-card" style={{ padding: '24px', border: `1px solid ${m.color || '#f59e0b'}33` }}>
+          <span
+            style={{
+              fontSize: '12px',
+              fontWeight: '800',
+              padding: '4px 12px',
+              borderRadius: '9999px',
+              background: 'rgba(245,158,11,0.15)',
+              border: '1px solid rgba(245,158,11,0.3)',
+              color: '#fbbf24'
+            }}
+          >
+            {currentItems.length} خاصية وخدمة متاحة
+          </span>
+        </div>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '18px'
+          }}
+        >
+          {currentItems.map((m, idx) => {
+            const Icon = resolveIcon(m.icon, Sparkles);
+            const badgeText = m.pointsCost || (m.points ? `${m.points} نقطة` : '');
+            return (
               <div
+                key={m.id || idx}
+                className="glass-card"
                 style={{
-                  width: '46px',
-                  height: '46px',
-                  borderRadius: '12px',
-                  background: `${m.color || '#f59e0b'}22`,
+                  padding: '22px',
+                  border: `1px solid ${m.color || '#f59e0b'}33`,
+                  borderRadius: '16px',
                   display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: '16px'
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  gap: '14px',
+                  transition: 'all 0.25s ease'
                 }}
               >
-                <Icon size={24} color={m.color || '#f59e0b'} />
-              </div>
-              <h3 style={{ fontSize: '17px', fontWeight: '800', marginBottom: '8px' }}>{m.title}</h3>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>{m.desc}</p>
-            </div>
-          );
-        })}
-      </div>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px', gap: '8px' }}>
+                    <div
+                      style={{
+                        width: '44px',
+                        height: '44px',
+                        borderRadius: '12px',
+                        background: `${m.color || '#f59e0b'}22`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}
+                    >
+                      <Icon size={22} color={m.color || '#f59e0b'} />
+                    </div>
 
-      {/* How to submit points request */}
-      <div
-        className="glass-card"
-        style={{
-          padding: '28px',
-          border: '1px solid rgba(139,92,246,0.3)',
-          background: 'linear-gradient(135deg, rgba(139,92,246,0.08), transparent)'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
-          <Clock size={24} color="#8b5cf6" />
-          <h3 style={{ fontSize: '18px', fontWeight: '800' }}>
-            آلية تقديم طلبات نقاط الوكالة (Points Requests):
-          </h3>
+                    {badgeText && (
+                      <span
+                        style={{
+                          fontSize: '12px',
+                          fontWeight: '800',
+                          padding: '4px 10px',
+                          borderRadius: '9999px',
+                          background: `${m.color || '#f59e0b'}18`,
+                          border: `1px solid ${m.color || '#f59e0b'}44`,
+                          color: m.color || '#f59e0b',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        {badgeText}
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 style={{ fontSize: '16px', fontWeight: '800', marginBottom: '8px', lineHeight: '1.5' }}>
+                    {m.title}
+                  </h3>
+
+                  {m.desc && (
+                    <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6', margin: 0 }}>
+                      {m.desc}
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
-        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '14px', color: 'var(--text-muted)' }}>
-          <li style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-            <CheckCircle2 size={18} color="#8b5cf6" style={{ flexShrink: 0, marginTop: '2px' }} />
-            <span>يتم تقديم طلبات صرف أو ترحيل النقاط في الفترة ما بين 1 و 5 من كل شهر ميلادي.</span>
-          </li>
-          <li style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-            <CheckCircle2 size={18} color="#8b5cf6" style={{ flexShrink: 0, marginTop: '2px' }} />
-            <span>يتم تدقيق كشف النقاط ومطابقته مع تقرير الفاصوليا المعتمد من قبل مدير حساب الوكالة.</span>
-          </li>
-          <li style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-            <CheckCircle2 size={18} color="#8b5cf6" style={{ flexShrink: 0, marginTop: '2px' }} />
-            <span>تحويل رصيد الدعم أو البونص يتم مباشرة إلى محفظة الوكالة الرسمية داخل التطبيق.</span>
-          </li>
-        </ul>
       </div>
     </section>
   );

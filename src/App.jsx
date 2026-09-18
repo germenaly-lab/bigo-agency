@@ -135,7 +135,18 @@ export default function App() {
 
   const [pointsUsageItems, setPointsUsageItems] = useState(() => {
     const saved = localStorage.getItem('scope_pointsUsageItems');
-    return saved ? JSON.parse(saved) : defaultPointsUsageItems;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.some((it) => it.id === 'pk-battles' || it.id === 'gala-upgrade')) {
+          return defaultPointsUsageItems;
+        }
+        return parsed.length > 0 ? parsed : defaultPointsUsageItems;
+      } catch {
+        return defaultPointsUsageItems;
+      }
+    }
+    return defaultPointsUsageItems;
   });
 
   const [beanWithdrawalItems, setBeanWithdrawalItems] = useState(() => {
