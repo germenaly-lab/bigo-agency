@@ -140,7 +140,18 @@ export default function App() {
 
   const [beanWithdrawalItems, setBeanWithdrawalItems] = useState(() => {
     const saved = localStorage.getItem('scope_beanWithdrawalItems');
-    return saved ? JSON.parse(saved) : defaultBeanWithdrawalItems;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        const filtered = Array.isArray(parsed)
+          ? parsed.filter((it) => it.id !== 'bank-wire' && !it.title?.includes('البنكي'))
+          : [];
+        return filtered.length > 0 ? filtered : defaultBeanWithdrawalItems;
+      } catch {
+        return defaultBeanWithdrawalItems;
+      }
+    }
+    return defaultBeanWithdrawalItems;
   });
 
   const [salaryTiers, setSalaryTiers] = useState(() => {

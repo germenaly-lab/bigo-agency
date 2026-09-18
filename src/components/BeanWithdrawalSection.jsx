@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import {
   CreditCard,
-  ArrowDownCircle,
-  Building2,
   Wallet,
   ArrowRight,
   CheckCircle2,
@@ -10,14 +8,121 @@ import {
   ShieldCheck,
   RefreshCw,
   Coins,
-  DollarSign
+  DollarSign,
+  User,
+  PlusCircle,
+  Send,
+  Award,
+  Camera,
+  History,
+  Sparkles,
+  Zap,
+  ArrowUpRight
 } from 'lucide-react';
 import { defaultBeanWithdrawalItems } from '../data/siteData';
 import { resolveIcon } from '../utils/iconHelper';
 
 export default function BeanWithdrawalSection({ onBackToHome, setActiveTab, items = defaultBeanWithdrawalItems }) {
   const currentItems = items && items.length > 0 ? items : defaultBeanWithdrawalItems;
-  const [activeTab, setActiveTabLocal] = useState(currentItems[0]?.id || 'agent');
+  // Filter out any bank wire items
+  const validItems = currentItems.filter((it) => it.id !== 'bank-wire' && !it.title?.includes('البنكي'));
+  const activeItems = validItems.length > 0 ? validItems : defaultBeanWithdrawalItems;
+  const [activeTab, setActiveTabLocal] = useState(activeItems[0]?.id || 'agent-recharge');
+
+  // The 11 withdrawal steps requested by user
+  const withdrawalSteps = [
+    {
+      step: 1,
+      title: 'فتح الملف الشخصي',
+      instruction: '1. نفتح ابلكيشن البيجو ونضغط على me / انا',
+      desc: 'الدخول إلى تطبيق بيجو لايف ثم النقر على تبويب الملف الشخصي (Me / أنا) بالأسفل.',
+      icon: User,
+      color: '#8b5cf6'
+    },
+    {
+      step: 2,
+      title: 'الدخول إلى المحفظة',
+      instruction: '2. نروح علي ال wallet / المحفظه',
+      desc: 'من شاشة الملف الشخصي، اضغط على خيار المحفظة (Wallet).',
+      icon: Wallet,
+      color: '#8b5cf6'
+    },
+    {
+      step: 3,
+      title: 'اختيار الفاصوليا',
+      instruction: '3. ندوس علي ال beans / الفاصوليا',
+      desc: 'داخل المحفظة، اضغط على تبويب الفاصوليا (Beans) لعرض رصيدك الحالي القابل للصرف.',
+      icon: Coins,
+      color: '#8b5cf6'
+    },
+    {
+      step: 4,
+      title: 'استبدال المكافآت',
+      instruction: '4. ندوس علي exchange rewards / استبدال المكافآت',
+      desc: 'الضغط على زر استبدال المكافآت (Exchange Rewards) لبدء إعداد طلب السحب.',
+      icon: RefreshCw,
+      color: '#8b5cf6'
+    },
+    {
+      step: 5,
+      title: 'إضافة طريقة السحب',
+      instruction: '5. ندوس علي اضافه طريقه سحب / Add a withdrawal method',
+      desc: 'الضغط على إضافة طريقة سحب (Add a withdrawal method) وإدخال كل المعلومات والبيانات المطلوبة.',
+      icon: PlusCircle,
+      color: '#8b5cf6'
+    },
+    {
+      step: 6,
+      title: 'السحب عبر قناة الموزع',
+      instruction: '6. بعد كده بنحط السحب عبر قناه الموزع / Withdrawal via a distributor channel',
+      desc: 'من قائمة وسائل السحب، اختيار خيار: السحب عبر قناة الموزع (Withdrawal via a distributor channel).',
+      icon: Send,
+      color: '#8b5cf6'
+    },
+    {
+      step: 7,
+      title: 'اختيار وكالة سكوب الرسمية',
+      instruction: '7. بنختار scoop agency',
+      desc: 'تحديد واختيار الوكالة المعتمدة: scoop agency لتكون هي قناة الموزع لتنفيذ السحب.',
+      icon: Award,
+      color: '#f59e0b',
+      highlight: true
+    },
+    {
+      step: 8,
+      title: 'تحديد كمية السحب',
+      instruction: '8. بعد كده بنختار كل / all أو اكتب المبلغ المراد سحبه',
+      desc: 'اضغط على (All / كل) لسحب كامل رصيد الفاصوليا، أو اكتب يدويًا عدد الفاصوليا المراد سحبه.',
+      icon: DollarSign,
+      color: '#8b5cf6'
+    },
+    {
+      step: 9,
+      title: 'تأكيد السحب وأخذ لقطة شاشة',
+      instruction: '9. بعد كده ندوس تأكيد وكونفيرم وناخد اسكرين',
+      desc: 'اضغط على زر تأكيد (Confirm)، والتقط لقطة شاشة (Screenshot) لصفحة التأكيد فوراً.',
+      icon: Camera,
+      color: '#ec4899',
+      isScreenshot: true
+    },
+    {
+      step: 10,
+      title: 'سجل عمليات السحب',
+      instruction: '10. ندخل علي withdrawal history / سجل عمليات السحب',
+      desc: 'انتقل إلى سجل عمليات السحب (Withdrawal History) لعرض العملية المسجلة وحالتها.',
+      icon: History,
+      color: '#8b5cf6'
+    },
+    {
+      step: 11,
+      title: 'تأكيد السحبة ولقطة الشاشة النهائية',
+      instruction: '11. نضغط علي السحبه ونضغط كونفيرم وناخدها اسكرين',
+      desc: 'اضغط على تفاصيل السحبة من السجل ثم اضغط كونفيرم والتقط لقطة شاشة ثانية لإرسالها للوكيل.',
+      icon: CheckCircle2,
+      color: '#10b981',
+      isScreenshot: true
+    }
+  ];
 
   return (
     <section style={{ maxWidth: '1080px', margin: '0 auto' }}>
@@ -49,7 +154,7 @@ export default function BeanWithdrawalSection({ onBackToHome, setActiveTab, item
         style={{
           padding: '24px 28px',
           marginBottom: '24px',
-          background: 'linear-gradient(135deg, rgba(139,92,246,0.12), rgba(22,30,49,0.85))',
+          background: 'linear-gradient(135deg, rgba(139,92,246,0.14), rgba(22,30,49,0.88))',
           border: '1px solid rgba(139,92,246,0.3)',
           display: 'flex',
           alignItems: 'center',
@@ -77,10 +182,10 @@ export default function BeanWithdrawalSection({ onBackToHome, setActiveTab, item
           </div>
           <div>
             <h1 style={{ fontSize: '21px', fontWeight: '900', marginBottom: '3px' }}>
-              سحب الفاصوليا (Bean Withdrawal & Cashout)
+              سحب الفاصوليا (Bean Withdrawal)
             </h1>
             <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
-              دليل وكيل الشحن المعتمد، إجراءات السحب البنكي، ومواعيد التحويل الرسمية
+              دليل وخطوات السحب الرسمية عبر وكيل الشحن المعتمد وقناة الموزع (Scoop Agency)
             </p>
           </div>
         </div>
@@ -95,293 +200,304 @@ export default function BeanWithdrawalSection({ onBackToHome, setActiveTab, item
         </button>
       </div>
 
-      {/* Main Cards / Sub-section Switcher */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '20px',
-          marginBottom: '32px'
-        }}
-      >
-        {currentItems.map((item, idx) => {
-          const Icon = resolveIcon(item.icon, CreditCard);
-          const isSelected = activeTab === item.id || (idx === 0 && activeTab === 'agent') || (idx === 1 && activeTab === 'withdrawal');
+      {/* Top Method Card */}
+      <div style={{ marginBottom: '28px' }}>
+        {activeItems.map((item, idx) => {
+          const Icon = resolveIcon(item.icon, RefreshCw);
           return (
             <div
               key={item.id || idx}
-              onClick={() => setActiveTabLocal(item.id)}
               className="glass-card"
               style={{
                 padding: '28px',
-                cursor: 'pointer',
-                border: isSelected ? `2px solid ${item.color || '#8b5cf6'}` : '1px solid var(--glass-border)',
-                background: isSelected ? `${item.color || '#8b5cf6'}18` : 'var(--bg-card)',
-                transition: 'var(--transition-fast)'
+                border: '2px solid rgba(139,92,246,0.45)',
+                background: 'linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(15,23,42,0.6) 100%)',
+                borderRadius: '20px'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <div
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '12px',
-                    background: `${item.color || '#8b5cf6'}22`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <Icon size={24} color={item.color || '#8b5cf6'} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                  <div
+                    style={{
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '12px',
+                      background: 'rgba(139,92,246,0.25)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Icon size={26} color="#8b5cf6" />
+                  </div>
+                  <div>
+                    <h2 style={{ fontSize: '21px', fontWeight: '900', margin: 0 }}>{item.title}</h2>
+                    <span style={{ fontSize: '12px', color: '#a78bfa', fontWeight: '700' }}>
+                      قناة الموزع الرسمية: Scoop Agency
+                    </span>
+                  </div>
                 </div>
+
                 <span
                   style={{
                     fontSize: '12px',
-                    padding: '4px 10px',
+                    padding: '5px 12px',
                     borderRadius: '9999px',
-                    background: isSelected ? (item.color || '#8b5cf6') : 'rgba(255,255,255,0.06)',
-                    color: isSelected ? '#fff' : 'var(--text-muted)',
+                    background: '#8b5cf6',
+                    color: '#fff',
                     fontWeight: '800'
                   }}
                 >
-                  {item.category || `الخيار ${idx + 1}`}
+                  {item.category || 'الخيار الوحيد والمعتمد'}
                 </span>
               </div>
-              <h2 style={{ fontSize: '20px', fontWeight: '900', marginBottom: '8px' }}>{item.title}</h2>
+
               {item.features && item.features.length > 0 && (
-                <ul style={{ paddingRight: '18px', margin: '10px 0 0 0', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {item.features.slice(0, 3).map((feat, fIdx) => (
-                    <li key={fIdx} style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{feat}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* ======================================================== */}
-      {/* SECTION CONTENT 1: وكيل شحن */}
-      {/* ======================================================== */}
-      {activeTab === 'agent' && (
-        <div className="glass-card" style={{ padding: '32px', border: '1px solid rgba(139,92,246,0.35)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-            <RefreshCw size={28} color="#8b5cf6" />
-            <h2 style={{ fontSize: '22px', fontWeight: '900' }}>
-              دليل وإجراءات: وكيل الشحن المعتمد (Charging Agent)
-            </h2>
-          </div>
-
-          <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '24px' }}>
-            وكيل الشحن المعتمد هو جهة أو وكالة مرخصة من إدارة Bigo Live لشراء حزم الماس والفاصوليا بأسعار الجملة الرسمية، وإعادة شحنها مباشرة لحسابات المذيعين والمستخدمين بسرعة وأمان.
-          </p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: '28px' }}>
-            <div className="glass-card" style={{ padding: '22px', border: '1px solid rgba(139,92,246,0.2)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <Coins size={22} color="#8b5cf6" />
-                <h3 style={{ fontSize: '17px', fontWeight: '800' }}>أسعار الوكالات الرسمية</h3>
-              </div>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                يحصل وكيل الشحن على خصومات حصرية وهامش ربح مباشر عند شراء الحزم الكبيرة من المنصة، مما يتيح له تقديم أسعار منافسة للمستخدمين والداعمين.
-              </p>
-            </div>
-
-            <div className="glass-card" style={{ padding: '22px', border: '1px solid rgba(139,92,246,0.2)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <ShieldCheck size={22} color="#8b5cf6" />
-                <h3 style={{ fontSize: '17px', fontWeight: '800' }}>الأمان وحماية الحسابات</h3>
-              </div>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                تتم عمليات الشحن الرسمية حصرياً عبر Bigo ID دون الحاجة إطلاقاً لطلب كلمة المرور أو بيانات الدخول الخاصة بحساب المستخدم، لحماية الخصوصية.
-              </p>
-            </div>
-
-            <div className="glass-card" style={{ padding: '22px', border: '1px solid rgba(139,92,246,0.2)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <Wallet size={22} color="#8b5cf6" />
-                <h3 style={{ fontSize: '17px', fontWeight: '800' }}>شروط اعتماد وكيل الشحن</h3>
-              </div>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                يشترط وجود سجل وكالة نشط وخالٍ من المخالفات، وتوفير ضمان مالي معتمد، والالتزام بسياسة التسعير الموحدة الصادرة من الإدارة.
-              </p>
-            </div>
-          </div>
-
-          <div
-            style={{
-              background: 'rgba(239,68,68,0.08)',
-              border: '1px solid rgba(239,68,68,0.3)',
-              borderRadius: '14px',
-              padding: '20px',
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '12px'
-            }}
-          >
-            <AlertCircle size={22} color="#ef4444" style={{ flexShrink: 0, marginTop: '2px' }} />
-            <div style={{ fontSize: '14px', color: '#fca5a5', lineHeight: '1.6' }}>
-              <strong>تحذير أمني هام:</strong> تجنب التعامل مع أي جهات شحن غير معتمدة أو مجهولة المصدر، حيث يؤدي شحن رصيد غير نظامي أو مسروق إلى حظر حساب الوكالة والمذيعين بشكل نهائي.
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ======================================================== */}
-      {/* SECTION CONTENT 2: طريقة السحب */}
-      {/* ======================================================== */}
-      {activeTab === 'withdrawal' && (
-        <div className="glass-card" style={{ padding: '32px', border: '1px solid rgba(6,182,212,0.35)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-            <ArrowDownCircle size={28} color="#06b6d4" />
-            <h2 style={{ fontSize: '22px', fontWeight: '900' }}>
-              دليل وإجراءات: طريقة سحب الفاصوليا (Withdrawal Procedure)
-            </h2>
-          </div>
-
-          <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '24px' }}>
-            يوضح هذا القسم الخطوات الرسمية والشروط المعتمدة لسحب الفاصوليا والأرباح الشهرية من التطبيق إلى الحساب البنكي أو الحسابات الإلكترونية المعتمدة.
-          </p>
-
-          {/* Steps List */}
-          <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#06b6d4', marginBottom: '16px' }}>
-            خطوات سحب الأرباح من محفظة التطبيق:
-          </h3>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '28px' }}>
-            <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#06b6d4', color: '#0b0f19', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', flexShrink: 0 }}>
-                1
-              </div>
-              <div>
-                <h4 style={{ fontSize: '16px', fontWeight: '800', marginBottom: '4px' }}>
-                  الدخول إلى محفظة الفاصوليا
-                </h4>
-                <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
-                  افتح قائمة (أنا) داخل التطبيق، ثم اختر (المحفظة)، وانقر على تبويب (الفاصوليا)، ثم اضغط على زر (سحب الأرباح - Cashout).
-                </p>
-              </div>
-            </div>
-
-            <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#06b6d4', color: '#0b0f19', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', flexShrink: 0 }}>
-                2
-              </div>
-              <div>
-                <h4 style={{ fontSize: '16px', fontWeight: '800', marginBottom: '4px' }}>
-                  اختيار وسيلة السحب وتأكيد الحساب
-                </h4>
-                <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
-                  اختر وسيلة الدفع المناسبة (حساب بنكي محلي عبر IBAN أو حساب Payoneer موثق)، وتأكد من تطابق اسم صاحب الحساب البنكي مع الهوية المسجلة.
-                </p>
-              </div>
-            </div>
-
-            <div className="glass-card" style={{ padding: '20px', display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#06b6d4', color: '#0b0f19', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', flexShrink: 0 }}>
-                3
-              </div>
-              <div>
-                <h4 style={{ fontSize: '16px', fontWeight: '800', marginBottom: '4px' }}>
-                  تحديد كمية الفاصوليا وتأكيد الطلب
-                </h4>
-                <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
-                  أدخل كمية الفاصوليا المراد سحبها. سيظهر لك النظام المبلغ المقابل بالدولار الأمريكي (USD) بعد احتساب أي رسوم تحويل، ثم أكد العملية برمز التحقق.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Key Guidelines Box */}
-          <div
-            style={{
-              background: 'rgba(6,182,212,0.08)',
-              border: '1px solid rgba(6,182,212,0.3)',
-              borderRadius: '16px',
-              padding: '24px'
-            }}
-          >
-            <h4 style={{ fontSize: '17px', fontWeight: '800', color: '#06b6d4', marginBottom: '14px' }}>
-              معلومات وضوابط السحب الأساسية:
-            </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '14px', color: 'var(--text-muted)' }}>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle2 size={16} color="#06b6d4" style={{ flexShrink: 0 }} />
-                <span>معدل التحويل الأساسي: 210 فاصوليا تعادل 1 دولار أمريكي (Gross).</span>
-              </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle2 size={16} color="#06b6d4" style={{ flexShrink: 0 }} />
-                <span>دورة تسوية وتحويل الأرباح الرسمية تتم في الأسبوع الأول من كل شهر ميلادي.</span>
-              </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle2 size={16} color="#06b6d4" style={{ flexShrink: 0 }} />
-                <span>الحد الأدنى لطلب السحب عبر الحساب البنكي هو 6,700 فاصوليا (حوالي $31 USD).</span>
-              </li>
-              <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle2 size={16} color="#06b6d4" style={{ flexShrink: 0 }} />
-                <span>الحوالات البنكية الدولية تستغرق ما بين 3 إلى 5 أيام عمل للوصول إلى حسابك.</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      )}
-
-      {/* Dynamic Details for custom withdrawal items */}
-      {!['agent', 'withdrawal'].includes(activeTab) && (
-        (() => {
-          const activeItem = currentItems.find((it) => it.id === activeTab);
-          if (!activeItem) return null;
-          const ActiveIcon = resolveIcon(activeItem.icon, CreditCard);
-          return (
-            <div className="glass-card" style={{ padding: '32px', border: `1px solid ${activeItem.color || '#8b5cf6'}44` }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-                <div
-                  style={{
-                    width: '44px',
-                    height: '44px',
-                    borderRadius: '12px',
-                    background: `${activeItem.color || '#8b5cf6'}22`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <ActiveIcon size={24} color={activeItem.color || '#8b5cf6'} />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: '22px', fontWeight: '900' }}>{activeItem.title}</h3>
-                  {activeItem.category && (
-                    <span style={{ fontSize: '12px', color: activeItem.color || '#8b5cf6', fontWeight: '700' }}>
-                      {activeItem.category}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {activeItem.features && activeItem.features.length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {activeItem.features.map((feat, fIdx) => (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px', marginTop: '16px' }}>
+                  {item.features.map((feat, fIdx) => (
                     <div
                       key={fIdx}
-                      className="glass-card"
                       style={{
-                        padding: '16px 20px',
                         display: 'flex',
-                        alignItems: 'flex-start',
-                        gap: '12px',
-                        border: `1px solid ${activeItem.color || '#8b5cf6'}22`
+                        alignItems: 'center',
+                        gap: '10px',
+                        padding: '10px 14px',
+                        borderRadius: '10px',
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid rgba(139,92,246,0.15)',
+                        fontSize: '13px',
+                        color: 'var(--text-muted)'
                       }}
                     >
-                      <CheckCircle2 size={18} color={activeItem.color || '#8b5cf6'} style={{ flexShrink: 0, marginTop: '2px' }} />
-                      <span style={{ fontSize: '14px', lineHeight: '1.6' }}>{feat}</span>
+                      <CheckCircle2 size={16} color="#8b5cf6" style={{ flexShrink: 0 }} />
+                      <span>{feat}</span>
                     </div>
                   ))}
                 </div>
               )}
             </div>
           );
-        })()
-      )}
+        })}
+      </div>
+
+      {/* Main Content: Steps of Withdrawal */}
+      <div className="glass-card" style={{ padding: '32px', border: '1px solid rgba(139,92,246,0.35)', borderRadius: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '22px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div
+              style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '12px',
+                background: 'rgba(139,92,246,0.18)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <RefreshCw size={24} color="#8b5cf6" />
+            </div>
+            <div>
+              <h2 style={{ fontSize: '22px', fontWeight: '900', margin: 0 }}>
+                خطوات السحب عبر قناة الموزع (Scoop Agency)
+              </h2>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+                يرجى اتباع الخطوات الـ 11 التالية بدقة من داخل التطبيق لضمان تنفيذ السحب فوراً:
+              </p>
+            </div>
+          </div>
+
+          <div
+            style={{
+              padding: '6px 14px',
+              borderRadius: '9999px',
+              background: 'rgba(245,158,11,0.15)',
+              border: '1px solid rgba(245,158,11,0.3)',
+              color: '#fbbf24',
+              fontSize: '12px',
+              fontWeight: '800',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <Sparkles size={14} />
+            <span>11 خطوة مرقمة ومعتمدة</span>
+          </div>
+        </div>
+
+        {/* 11 Steps Cards Grid/List */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '28px' }}>
+          {withdrawalSteps.map((st) => {
+            const StepIcon = st.icon;
+            return (
+              <div
+                key={st.step}
+                className="glass-card"
+                style={{
+                  padding: '18px 22px',
+                  border: st.isScreenshot
+                    ? '1px solid rgba(236,72,153,0.45)'
+                    : st.highlight
+                    ? '1px solid rgba(245,158,11,0.45)'
+                    : '1px solid rgba(139,92,246,0.22)',
+                  background: st.isScreenshot
+                    ? 'rgba(236,72,153,0.06)'
+                    : st.highlight
+                    ? 'rgba(245,158,11,0.06)'
+                    : 'rgba(15,23,42,0.45)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '16px',
+                  borderRadius: '14px',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {/* Left side: Badge + Info */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1, minWidth: '280px' }}>
+                  <div
+                    style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '12px',
+                      background: st.isScreenshot
+                        ? 'rgba(236,72,153,0.2)'
+                        : st.highlight
+                        ? 'rgba(245,158,11,0.2)'
+                        : 'rgba(139,92,246,0.18)',
+                      color: st.isScreenshot ? '#f472b6' : st.highlight ? '#fbbf24' : '#a78bfa',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: '900',
+                      fontSize: '17px',
+                      flexShrink: 0
+                    }}
+                  >
+                    {st.step}
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                      <StepIcon size={16} color={st.isScreenshot ? '#ec4899' : st.highlight ? '#f59e0b' : '#8b5cf6'} />
+                      <h4 style={{ fontSize: '15.5px', fontWeight: '800', margin: 0, color: '#f1f5f9' }}>
+                        {st.title}
+                      </h4>
+                      {st.isScreenshot && (
+                        <span
+                          style={{
+                            fontSize: '11px',
+                            fontWeight: '800',
+                            padding: '2px 8px',
+                            borderRadius: '9999px',
+                            background: 'rgba(236,72,153,0.2)',
+                            color: '#f472b6',
+                            border: '1px solid rgba(236,72,153,0.4)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}
+                        >
+                          <Camera size={11} />
+                          <span>التقط لقطة شاشة (اسكرين)</span>
+                        </span>
+                      )}
+                      {st.highlight && (
+                        <span
+                          style={{
+                            fontSize: '11px',
+                            fontWeight: '800',
+                            padding: '2px 8px',
+                            borderRadius: '9999px',
+                            background: 'rgba(245,158,11,0.2)',
+                            color: '#fbbf24',
+                            border: '1px solid rgba(245,158,11,0.4)'
+                          }}
+                        >
+                          الموزع المعتمد
+                        </span>
+                      )}
+                    </div>
+
+                    <div
+                      style={{
+                        fontSize: '14.5px',
+                        fontWeight: '700',
+                        color: st.highlight ? '#fef08a' : '#e2e8f0',
+                        lineHeight: '1.5'
+                      }}
+                    >
+                      {st.instruction}
+                    </div>
+
+                    <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', margin: 0, lineHeight: '1.4' }}>
+                      {st.desc}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Screenshot Alert Callout */}
+        <div
+          style={{
+            background: 'rgba(236,72,153,0.09)',
+            border: '1px solid rgba(236,72,153,0.35)',
+            borderRadius: '16px',
+            padding: '20px 24px',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '14px',
+            marginBottom: '24px'
+          }}
+        >
+          <Camera size={24} color="#ec4899" style={{ flexShrink: 0, marginTop: '2px' }} />
+          <div>
+            <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#f472b6', margin: '0 0 4px 0' }}>
+              تنبيه فوري بشأن لقطات الشاشة (Screenshots):
+            </h4>
+            <p style={{ fontSize: '13.5px', color: '#fce7f3', lineHeight: '1.6', margin: 0 }}>
+              يجب التقاط <strong>لقطة شاشة (اسكرين) في الخطوة 9</strong> (صفحة تأكيد الطلب) و<strong>لقطة شاشة في الخطوة 11</strong> (سجل عمليات السحب بعد تأكيد السحبة)، ثم إرسالهما مباشرة إلى مسؤول الوكالة لتأكيد التحويل الفوري لحسابك بأعلى سعر للدولار.
+            </p>
+          </div>
+        </div>
+
+        {/* Official Scoop Rules & Benefits */}
+        <div
+          style={{
+            background: 'rgba(139,92,246,0.08)',
+            border: '1px solid rgba(139,92,246,0.25)',
+            borderRadius: '16px',
+            padding: '24px'
+          }}
+        >
+          <h4 style={{ fontSize: '17px', fontWeight: '800', color: '#a78bfa', marginBottom: '14px' }}>
+            مميزات وضوابط السحب عبر وكالة سكوب:
+          </h4>
+          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '14px', color: 'var(--text-muted)', padding: 0, margin: 0 }}>
+            <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <CheckCircle2 size={16} color="#8b5cf6" style={{ flexShrink: 0 }} />
+              <span>سحب الفاصوليا بأعلى سعر صرف موجود في السوق (على حسب سعر الدولار يوم السحب).</span>
+            </li>
+            <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <CheckCircle2 size={16} color="#8b5cf6" style={{ flexShrink: 0 }} />
+              <span>تحويل فوري وسريع لمستحقاتك فور إرسال لقطات الشاشة والتأكيد.</span>
+            </li>
+            <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <CheckCircle2 size={16} color="#8b5cf6" style={{ flexShrink: 0 }} />
+              <span>طرق دفع محلية مرنة: فودافون كاش، إنستاباي، STC Pay، أورانج كاش، أو نقدًا.</span>
+            </li>
+            <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <CheckCircle2 size={16} color="#8b5cf6" style={{ flexShrink: 0 }} />
+              <span>متابعة شخصية ودعم فني على مدار 24 ساعة من فريق إدارة الوكالة.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </section>
   );
 }

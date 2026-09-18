@@ -1222,7 +1222,7 @@ export default function AdminDashboard({
               <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.2)' }}>
                 <span style={{ fontSize: '12px', color: '#8b5cf6', fontWeight: '700' }}>3. Bean Cashout</span>
                 <h4 style={{ fontSize: '18px', fontWeight: '900', margin: '6px 0 2px 0' }}>{beanWithdrawalItems.length} Methods</h4>
-                <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0 }}>Agent recharge, Wire transfer</p>
+                <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0 }}>Agent recharge / Distributor channel</p>
               </div>
 
               <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }}>
