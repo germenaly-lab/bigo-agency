@@ -113,7 +113,10 @@ export default function App() {
       try {
         const parsed = JSON.parse(saved);
         const hasOld = parsed.some((it) => it.id === 'unban' || it.id === 'trend' || it.id === 'supervisors');
-        if (hasOld) return defaultAgencyManagementItems;
+        const hostFeat = parsed.find((it) => it.id === 'register-hosts');
+        if (hostFeat && (!hostFeat.shortDesc?.includes('صناع المحتوى') || hostFeat.details?.length !== 7)) {
+          return defaultAgencyManagementItems;
+        }
         const appFeat = parsed.find((it) => it.id === 'app-features');
         if (appFeat && (!appFeat.shortDesc?.includes('الي بنقدمو') || appFeat.details?.length !== 7)) {
           return defaultAgencyManagementItems;

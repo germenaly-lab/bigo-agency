@@ -19,7 +19,9 @@ import {
   UserCheck,
   Inbox,
   Flame,
-  Trophy
+  Trophy,
+  Send,
+  FileText
 } from 'lucide-react';
 import { defaultAgencyManagementItems } from '../data/siteData';
 import { resolveIcon } from '../utils/iconHelper';
@@ -172,208 +174,137 @@ export default function AgencyManagementSection({ onBackToHome, setActiveTab, it
       </div>
 
       {/* ======================================================== */}
-      {/* SUB-SECTION 1: تسجيل مذيعين (Main Primary Option) */}
+      {/* ======================================================== */}
+      {/* SUB-SECTION 1: تسجيل صناع المحتوى (Main Primary Option) */}
       {/* ======================================================== */}
       {activeSubOption === 'register-hosts' && (
         <div className="glass-card" style={{ padding: '32px', border: '1px solid rgba(6,182,212,0.35)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-            <UserPlus size={28} color="#06b6d4" />
-            <h2 style={{ fontSize: '22px', fontWeight: '900' }}>
-              دليل وإجراءات: تسجيل مذيعين بالوكالة
-            </h2>
+            <div
+              style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '12px',
+                background: 'rgba(6,182,212,0.18)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <UserPlus size={26} color="#06b6d4" />
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h2 style={{ fontSize: '22px', fontWeight: '900' }}>
+                  تسجيل صناع المحتوى
+                </h2>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    padding: '3px 8px',
+                    borderRadius: '9999px',
+                    background: 'rgba(6,182,212,0.2)',
+                    color: '#06b6d4',
+                    fontWeight: '800'
+                  }}
+                >
+                  الأساسي والأهم
+                </span>
+              </div>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+                يمكنك تسجيل صناع المحتوى من خلال النظام باستخدام الخطوات التالية:
+              </p>
+            </div>
           </div>
 
           <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '24px' }}>
-            عملية تسجيل وضم المذيعين هي الركيزة الأساسية لنجاح ونمو الوكالة. يتضمن هذا القسم الشرح المعتمد والخطوات الرسمية لإضافة مذيع جديد وضمان توثيق حسابه والتزامه بالسياسات.
+            يمكنك تسجيل صناع المحتوى من خلال النظام باستخدام الخطوات التالية:
           </p>
 
-          {/* Step-by-Step Registration Workflow */}
-          <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#06b6d4', marginBottom: '16px' }}>
-            خطوات إضافة وتوقيع عقد المذيع داخل التطبيق:
-          </h3>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '28px' }}>
-            <div
-              className="glass-card"
-              style={{
-                padding: '20px',
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '16px',
-                background: 'rgba(255,255,255,0.02)'
-              }}
-            >
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
-                  color: '#fff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: '900',
-                  fontSize: '16px',
-                  flexShrink: 0
-                }}
-              >
-                1
-              </div>
-              <div>
-                <h4 style={{ fontSize: '16px', fontWeight: '800', marginBottom: '6px' }}>
-                  الدخول إلى مركز المبدعين وإدارة الوكالة
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px', marginBottom: '24px' }}>
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Users size={20} color="#06b6d4" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
+                  1 - مركز صناع المحتوى
                 </h4>
-                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                  يقوم صاحب الوكالة أو المشرف المساعد بفتح تطبيق Bigo Live، ثم النقر على قائمة <strong>(أنا)</strong> أسفل يمين الشاشة، واختيار <strong>(مركز المبدعين)</strong>، ثم النقر على تبويب <strong>(الوكالة)</strong>.
-                </p>
               </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                1- الضغط على خيار: مركز صناع المحتوى
+              </p>
             </div>
 
-            <div
-              className="glass-card"
-              style={{
-                padding: '20px',
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '16px',
-                background: 'rgba(255,255,255,0.02)'
-              }}
-            >
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
-                  color: '#fff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: '900',
-                  fontSize: '16px',
-                  flexShrink: 0
-                }}
-              >
-                2
-              </div>
-              <div>
-                <h4 style={{ fontSize: '16px', fontWeight: '800', marginBottom: '6px' }}>
-                  إرسال دعوة الانضمام للمذيع
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <UserPlus size={20} color="#06b6d4" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
+                  2 - توظيف صناع المحتوى
                 </h4>
-                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                  من قائمة إدارة المذيعين داخل مركز الوكالة، اضغط على <strong>"إضافة مذيع جديد"</strong> وأدخل معرف المذيع (Bigo ID) بدقة. تأكد من صحة الحساب والاسم المستعار قبل الإرسال.
-                </p>
               </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                2- الضغط على خيار: توظيف صناع المحتوى.
+              </p>
             </div>
 
-            <div
-              className="glass-card"
-              style={{
-                padding: '20px',
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '16px',
-                background: 'rgba(255,255,255,0.02)'
-              }}
-            >
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
-                  color: '#fff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: '900',
-                  fontSize: '16px',
-                  flexShrink: 0
-                }}
-              >
-                3
-              </div>
-              <div>
-                <h4 style={{ fontSize: '16px', fontWeight: '800', marginBottom: '6px' }}>
-                  موافقة المذيع وتوقيع العقد الرقمي
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Send size={20} color="#06b6d4" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
+                  3 - دعوة صناع المحتوى
                 </h4>
-                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                  يتلقى المذيع إشعاراً رسمياً في صندوق الرسائل الرسمي داخل تطبيقه. يقوم المذيع بفتح الإشعار، قراءة الشروط والسياسات، ثم النقر على <strong>"الموافقة على الانضمام للوكالة"</strong>.
-                </p>
               </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                3- الضغط على خيار: قدم بدعوة صناع المحتوى.
+              </p>
             </div>
 
-            <div
-              className="glass-card"
-              style={{
-                padding: '20px',
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '16px',
-                background: 'rgba(255,255,255,0.02)'
-              }}
-            >
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #06b6d4, #0891b2)',
-                  color: '#fff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: '900',
-                  fontSize: '16px',
-                  flexShrink: 0
-                }}
-              >
-                4
-              </div>
-              <div>
-                <h4 style={{ fontSize: '16px', fontWeight: '800', marginBottom: '6px' }}>
-                  بدء التوثيق واحتساب الساعات والتارجت
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Sliders size={20} color="#06b6d4" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
+                  4 - اختيار طريقة الدعوة
                 </h4>
-                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                  بمجرد قبول العقد، يظهر المذيع مباشرة في لوحة تحكم وكالتك. يبدأ النظام تلقائياً باحتساب ساعات البث والأيام المعتمدة وجمع الفاصوليا تحت مظلة وكالتك.
-                </p>
               </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                4- وأخيراً بإمكانك إختيار الطريقة المناسبة لك لدعوة صناع المحتوى.
+              </p>
             </div>
-          </div>
 
-          {/* Qualification & Host Requirements */}
-          <div
-            style={{
-              background: 'rgba(245,158,11,0.08)',
-              border: '1px solid rgba(245,158,11,0.3)',
-              borderRadius: '16px',
-              padding: '24px',
-              marginBottom: '24px'
-            }}
-          >
-            <h4 style={{ fontSize: '17px', fontWeight: '800', color: '#f59e0b', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <FileCheck size={20} />
-              <span>الشروط والمعايير الأساسية لقبول المذيع:</span>
-            </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '14px', color: 'var(--text-muted)' }}>
-              <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                <CheckCircle2 size={16} color="#f59e0b" style={{ flexShrink: 0, marginTop: '3px' }} />
-                <span>ألا يكون المذيع مرتبطاً بوكالة أخرى مفعلة في نفس الوقت (يمنع الانتقال المزدوج).</span>
-              </li>
-              <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                <CheckCircle2 size={16} color="#f59e0b" style={{ flexShrink: 0, marginTop: '3px' }} />
-                <span>الالتزام بالحد الأدنى للبث: 30 ساعة شهرياً بمعدل ساعة واحدة على الأقل في الجلسة الواحدة.</span>
-              </li>
-              <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                <CheckCircle2 size={16} color="#f59e0b" style={{ flexShrink: 0, marginTop: '3px' }} />
-                <span>توفر تجهيزات بث واضحة (إضاءة مناسبة، كاميرا ثابتة، صوت نقي، وخلفية مرتبة).</span>
-              </li>
-              <li style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                <CheckCircle2 size={16} color="#f59e0b" style={{ flexShrink: 0, marginTop: '3px' }} />
-                <span>الالتزام الصارم بقواعد السلوك والسلامة (منع البث أثناء القيادة تماماً، ومنع أي محتوى خادش).</span>
-              </li>
-            </ul>
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <Inbox size={20} color="#06b6d4" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
+                  5 - قبول الدعوة
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                5- عند قيام صانع المحتوى بقبول الدعوة يتم إرسال رسالة للوكيل بأن صانع المحتوى قد قبل الدعوة.
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <FileText size={20} color="#06b6d4" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
+                  6 - استكمال المعلومات والمقابلة
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                6- وبذلك يقوم الوكيل بالضغط على الرسالة والسحب لليسار لتظهر كلمة "استكمال المعلومات" ليحدد الوكيل معلومات العقد المناسبة للطرفين، وإرفاق فيديو مقابلة المذيع.
+              </p>
+            </div>
+
+            <div className="glass-card" style={{ padding: '20px', border: '1px solid rgba(6,182,212,0.22)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <CheckCircle2 size={20} color="#06b6d4" />
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: '#22d3ee' }}>
+                  7 - رسالة تسجيل ناجح
+                </h4>
+              </div>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                7- عند استكمال الخطوات السابقة، تظهر رسالة "تسجيل ناجح" وبذلك يكون الحساب قد تم تسجيله بشكل أكيد.
+              </p>
+            </div>
           </div>
         </div>
       )}
